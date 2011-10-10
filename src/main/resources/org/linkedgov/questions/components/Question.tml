@@ -1,0 +1,8 @@
+<div t:type="layout" title="Contact com.example"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+
+	<t:form t:id="questionForm">
+		<t:select t:id="select" model="whereIsModel" value="'How Many'"/>
+	</t:form>
+
+</div>
