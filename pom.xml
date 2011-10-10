@@ -1,10 +1,10 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.example</groupId>
-    <artifactId>newapp</artifactId>
+    <groupId>org.linkedgov</groupId>
+    <artifactId>question-site</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>newapp Tapestry 5 Application</name>
+    <name>LinkedGov Question Site Tapestry 5 Application</name>
         <dependencies>
         <dependency>
             <groupId>org.apache.tapestry</groupId>
@@ -52,7 +52,7 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
 
     </dependencies>
     <build>
-        <finalName>newapp</finalName>
+        <finalName>question-site</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -90,7 +90,7 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
                 <artifactId>tapestry-component-report</artifactId>
                 <version>${tapestry-release-version}</version>
                 <configuration>
-                    <rootPackage>com.example.newapp</rootPackage>
+                    <rootPackage>org.linkedgov.question-site</rootPackage>
                 </configuration>
             </plugin>
         </plugins>
