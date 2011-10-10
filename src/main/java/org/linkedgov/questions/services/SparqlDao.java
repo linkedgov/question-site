@@ -1,6 +1,10 @@
 package org.linkedgov.questions.services;
 
+import uk.me.mmt.sprotocol.SelectResultSet;
+
 public interface SparqlDao {
 
-	//TODO Mischa to put generic calls to 4store in here.
+	public SelectResultSet executeSelect(String query);
+	
+	public int executeCount(String query);
 }
