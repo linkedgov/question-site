@@ -12,17 +12,37 @@
 			</t:form>
 		</t:zone>		
 		
+		<!-- filter below here -->
 		<t:zone t:id="predicateZone">
 			<t:form t:id="predicateForm">
-				<t:select t:id="predicate" model="objects"  blankLabel="Please Select" value="query.predicate" zone="objectZone"/>
+				<t:select t:id="predicate" model="predicates"  blankLabel="Please Select" value="query.predicate" zone="objectZone"/>
 			</t:form>
 		</t:zone>	
 			
 		<t:zone t:id="objectZone">
-			<t:form t:id="objectForm">
-				<t:select t:id="object" model="predicates" blankLabel="Object" value="query.object"/>
-			</t:form>
+			<t:delegate to="objectBlock"/>
 		</t:zone>	
-				
-
+		
+		
+		<t:block t:id="selectObjectBlock">
+			<t:form t:id="selectObjectForm">
+				<t:select t:id="selectObject" model="objects" blankLabel="Object" value="query.object"/>
+			</t:form>
+		</t:block>
+		
+		<t:block t:id="freetextObjectBlock">
+			<t:form t:id="freetextObjectForm">
+				<t:TextField t:id="freeTextObject" model="objects" blankLabel="Object" value="query.object"/>
+			</t:form>
+		</t:block>
+		
+		<t:block t:id="locationObjectBlock">
+			<t:form t:id="locationObjectForm">
+				<t:TextField t:id="locationObject" model="objects" blankLabel="Object" value="query.object"/>
+			</t:form>
+		</t:block>
+		
+		<t:block t:id="noObjectsBlock">
+			<p>No Objects to be find. Consider choosing a different predicate.</p>
+		</t:block>
 </div>

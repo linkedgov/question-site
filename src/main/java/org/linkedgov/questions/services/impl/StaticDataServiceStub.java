@@ -33,7 +33,7 @@ public class StaticDataServiceStub implements StaticDataService {
 		ArrayList<String> predicates = new ArrayList<String>();
 		predicates.add("50");
 		predicates.add("40");
-		predicates.add("Nonsense");
+		predicates.add("location");
 		predicates.add("Jonathan Edwards OBE");
 		
 		return predicates;
