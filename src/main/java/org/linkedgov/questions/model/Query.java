@@ -47,4 +47,10 @@ public class Query {
 	public QueryFilter getFirstFilter() {
 		return firstFilter;
 	}
+	
+	//TODO Mischa
+	public String toSparqlString() {
+		return "lame";
+	}
+	
 }

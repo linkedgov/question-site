@@ -124,6 +124,8 @@ public class Question {
 	@OnEvent("askQuestion")
 	public Object askQuestion(){
 		//TODO: put grid stuff in here.
+		//TODO Mischa log CSV to log file for now
+		
 		return null;
 	}
 	

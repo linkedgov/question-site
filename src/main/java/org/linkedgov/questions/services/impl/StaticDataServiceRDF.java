@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.linkedgov.questions.model.QueryFilter;
 import org.linkedgov.questions.services.SparqlDao;
 import org.linkedgov.questions.services.StaticDataService;
 
@@ -56,6 +57,16 @@ public class StaticDataServiceRDF implements StaticDataService {
 			retValues.add(element.getValue());
 		}
 		return retValues;
+	}
+	
+	//TODO Mischa this is for Filter B
+	public List<String> getObjects(String subject, String predicate, QueryFilter filter) {
+		return new ArrayList<String>();
+	}
+	
+	//TOOD Mischa this is for Filter B
+	public List<String> getPredicates(String subject, QueryFilter filter) {
+		return new ArrayList<String>();
 	}
 	
 	public List<String> getPredicates(String subject) {
