@@ -17,12 +17,15 @@ import org.linkedgov.questions.model.QuestionType;
 import org.linkedgov.questions.services.StaticDataService;
 
 /**
+ * TODO: major question: make this all work as one form and then do validation etc, 
+ * or carry on as now and populate the query object piecemeal whenever events happen on the selects.
  * 
  * Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
  *
  */
 public class Question {
 
+	@Persist
 	private Query query;
 	
 	@Persist
@@ -36,7 +39,6 @@ public class Question {
 	private List<String> predicates;
 	
 	@Persist
-	@SuppressWarnings("unused")
 	@Property
 	private List<String> objects;
 	
@@ -75,31 +77,32 @@ public class Question {
 	@SuppressWarnings("unused")
 	@SetupRender
 	private void setup(){
-		subjects = new ArrayList<String>();
+		if(query != null){
+			query = new Query();
+		}
+		subjects =  staticDataService.getClasses();
 		predicates = new ArrayList<String>();
 		objects = new ArrayList<String>();
 	}
 	
-	//TODO: label/uri pairs
-	@OnEvent(value=EventConstants.VALUE_CHANGED, component="questionType")
-	public Object onQuestionTypeChanged(QuestionType questionType){
-		subjects =  staticDataService.getClasses();
-		return subjectZone.getBody();
+	@OnEvent(value=EventConstants.VALUE_CHANGED, component="subject")
+	public void updateQuestionType(QuestionType questionType){
+		query.setQuestionType(questionType);
 	}
 	
 	@OnEvent(value=EventConstants.VALUE_CHANGED, component="subject")
 	public Object getPredicateZone(String subject){
-		subjectSoFar = subject;
+		query.setSubject(subject);
 		predicates = staticDataService.getPredicates(subject);
 		return predicateZone.getBody();
 	}
 	
 	@OnEvent(value=EventConstants.VALUE_CHANGED, component="predicate")
 	public Object getObjectZone(String predicate){
-		
+		query.setPredicate(predicate);
 		objects = staticDataService.getObjects(subjectSoFar, predicate);
 		
-		if(objects == null){
+		if(objects.isEmpty()){
 			return noObjectsBlock;
 		} else if(isLocationPredicate(predicate)){
 			objectBlock = locationObjectBlock;
@@ -111,10 +114,21 @@ public class Question {
 		
 		return objectZone.getBody();
 	}
-
+	
+	@OnEvent(value=EventConstants.VALUE_CHANGED, component="object")
+	public void updateQuestionType(String object){
+		query.setObject(object);
+	}
+	
 	//TODO: make this more generic and implement it properly; 
 	public boolean isLocationPredicate(String predicate){
 		return predicate.contains("location");
+	}
+	
+	@OnEvent("askQuestion")
+	public Object askQuestion(){
+		//TODO: put grid stuff in here.
+		return null;
 	}
 	
 	public void setQuery(Query query) {

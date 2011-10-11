@@ -13,6 +13,9 @@
 		</t:zone>		
 		
 		<!-- filter below here -->
+		
+		<!--<t:EventLink t:id="addLink" zone="filterZone">Add</t:EventLink>-->
+		
 		<t:zone t:id="predicateZone">
 			<t:form t:id="predicateForm">
 				<t:select t:id="predicate" model="predicates"  blankLabel="Please Select" value="query.predicate" zone="objectZone"/>
@@ -21,8 +24,7 @@
 			
 		<t:zone t:id="objectZone">
 			<t:delegate to="objectBlock"/>
-		</t:zone>	
-		
+		</t:zone>
 		
 		<t:block t:id="selectObjectBlock">
 			<t:form t:id="selectObjectForm">
@@ -45,4 +47,11 @@
 		<t:block t:id="noObjectsBlock">
 			<p>No Objects to be find. Consider choosing a different predicate.</p>
 		</t:block>
+		
+		<t:EventLink t:id="askQuestion" zone="filterZone">Ask Question</t:EventLink>
+		
+		<t:zone t:id="gridZone">
+			
+		</t:zone>
+		
 </div>
