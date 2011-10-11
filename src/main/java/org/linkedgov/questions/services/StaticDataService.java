@@ -13,4 +13,6 @@ public interface StaticDataService {
 	public List<String> getClasses();
 	
 	public List<String> getObjects(String subject, String predicate);
+	
+	public List<String> getPredicates(String subject);
 }

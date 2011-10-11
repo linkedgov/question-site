@@ -5,18 +5,17 @@
 			<t:select t:id="questionType" value="query.questionType" zone="subjectZone"/>
 		</span>
 		<t:zone t:id="subjectZone" elementName="span">
-			<t:select t:id="subject" model="'hats'"  blankLabel="'Of Type'" value="query.subject" zone="predicateZone"/>
+			<t:select t:id="subject" model="subjects"  blankLabel="Of Type" value="query.subject" zone="predicateZone"/>
 		</t:zone>		
 		<t:zone t:id="predicateZone" elementName="span">
-			<t:select t:id="predicate" model="'hats'"  blankLabel="'In" value="query.predicate" zone="objectZone"/>
+			<t:select t:id="predicate" model="objects"  blankLabel="Please Select" value="query.predicate" zone="objectZone"/>
 		</t:zone>		
 		<t:zone t:id="objectZone" elementName="span">
-			<t:delegate to="objectBlock"/>
-			<!-- TODO: delegate to block -->
-			<t:select t:id="object" model="'hats'" blankLabel="'Object'" value="query.object"/>
+			<t:select t:id="object" model="predicates" blankLabel="Object" value="query.object"/>
 		</t:zone>			
 	</t:form>
 	
+	<!-- TODO: sort this out
 	<t:block t:id="locationBlock">
 		<t:input type="text" value="Postcode"/>
 	</t:block>
@@ -24,5 +23,6 @@
 	<t:block t:id="freetextBlock">
 		<t:input type="text" value="Postcode"/>
 	</t:block>
+	-->
 
 </div>

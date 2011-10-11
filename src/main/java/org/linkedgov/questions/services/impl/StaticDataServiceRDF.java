@@ -38,6 +38,11 @@ public class StaticDataServiceRDF implements StaticDataService {
 	public List<String> getObjects(String subject, String predicate){
 		return null;
 	}
+	
+	public List<String> getPredicates(String subject) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	private List<String> queryForClasses() {
 		final SelectResultSet results = sparqlDao.executeSelect(GET_CLASSES_QUERY);		
