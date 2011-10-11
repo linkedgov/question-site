@@ -1,8 +1,5 @@
 package org.linkedgov.questions.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Pojo that represents a query, or question, built up by the user. 
  * 
@@ -15,7 +12,9 @@ public class Query {
 	
 	private String subject;
 
-	private List<QueryFilter> filters = new ArrayList<QueryFilter>(); 
+	private QueryFilter firstFilter = new QueryFilter();
+	
+	private QueryFilter secondFilter = new QueryFilter();
 	
 	public void setSubject(String subject) {
 		this.subject = subject;
@@ -33,12 +32,19 @@ public class Query {
 		return questionType;
 	}
 
-	public void setFilters(List<QueryFilter> filters) {
-		this.filters = filters;
+	public void setSecondFilter(QueryFilter secondFilter) {
+		this.secondFilter = secondFilter;
 	}
 
-	public List<QueryFilter> getFilters() {
-		return filters;
+	public QueryFilter getSecondFilter() {
+		return secondFilter;
 	}
-	
+
+	public void setFirstFilter(QueryFilter firstFilter) {
+		this.firstFilter = firstFilter;
+	}
+
+	public QueryFilter getFirstFilter() {
+		return firstFilter;
+	}
 }

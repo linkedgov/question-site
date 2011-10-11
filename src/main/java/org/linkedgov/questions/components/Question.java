@@ -95,7 +95,7 @@ public class Question {
 	
 	@OnEvent(value=EventConstants.VALUE_CHANGED, component="predicate")
 	public Object getObjectZone(String predicate){
-		query.setPredicate(predicate);
+		query.getFirstFilter().setPredicate(predicate);
 		objects = staticDataService.getObjects(query.getSubject(), predicate);
 		
 		if(objects.isEmpty()){
@@ -112,8 +112,8 @@ public class Question {
 	}
 	
 	@OnEvent(value=EventConstants.VALUE_CHANGED, component="object")
-	public void updateQuestionType(String object){
-		query.setObject(object);
+	public void handleFirstFilterObj(String object){
+		query.getFirstFilter().setObject(object);
 	}
 	
 	//TODO: make this more generic and implement it properly; 
