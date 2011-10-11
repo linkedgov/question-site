@@ -1,8 +1,19 @@
-<div t:type="layout" title="Contact com.example"
-      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+<div xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
 
 	<t:form t:id="questionForm">
-		<t:select t:id="select" model="whereIsModel" value="'How Many'"/>
+		<span>
+			<t:select t:id="questionType" value="query.questionType" zone="subjectZone"/>
+		</span>
+		<t:zone t:id="subjectZone" elementName="span">
+			<t:select t:id="subject" model="'hats'"  blankLabel="'Of Type'" value="query.subject" zone="predicateZone"/>
+		</t:zone>		
+		<t:zone t:id="predicateZone" elementName="span">
+			<t:select t:id="predicate" model="'hats'"  blankLabel="'In" value="query.predicate" zone="objectZone"/>
+		</t:zone>		
+		<t:zone t:id="objectZone" elementName="span">
+			<!-- TODO: delegate to block -->
+			<t:select t:id="object" model="'hats'" blankLabel="'Object'" value="query.object"/>
+		</t:zone>			
 	</t:form>
 
 </div>

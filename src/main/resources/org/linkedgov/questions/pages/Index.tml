@@ -1,9 +1,7 @@
-<html t:type="layout" title="newapp Index"
-      t:sidebarTitle="Current Time"
+<html t:type="layout" title="${message:what_is_your_question}"
+      t:sidebarTitle="Some Other Info"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
       xmlns:p="tapestry:parameter">
-      
-    <h1>${message:what_is_your_question}</h1>
 
     <t:question/>
 

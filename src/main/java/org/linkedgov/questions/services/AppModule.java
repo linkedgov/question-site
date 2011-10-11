@@ -11,27 +11,25 @@ import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestFilter;
 import org.apache.tapestry5.services.RequestHandler;
 import org.apache.tapestry5.services.Response;
-import org.linkedgov.questions.services.impl.ExampleServiceImpl;
+import org.linkedgov.questions.services.impl.CachedDataServiceRDF;
 import org.linkedgov.questions.services.impl.SparqlDaoImpl;
 import org.slf4j.Logger;
 
 /**
+ * 
  * This module is automatically included as part of the Tapestry IoC Registry, it's a good place to
  * configure and extend Tapestry, or to place your own service definitions.
+ * 
+ * Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
+ *
  */
 public class AppModule
 {
     public static void bind(ServiceBinder binder)
     {
         binder.bind(SparqlDao.class, SparqlDaoImpl.class); 
-        binder.bind(ExampleService.class, ExampleServiceImpl.class); 
-        
-        // Make bind() calls on the binder object to define most IoC services.
-        // Use service builder methods (example below) when the implementation
-        // is provided inline, or requires more initialization than simply
-        // invoking the constructor.
+        binder.bind(CachedDataService.class, CachedDataServiceRDF.class);
     }
-    
     
     public static void contributeApplicationDefaults(
             MappedConfiguration<String, String> configuration)
@@ -54,9 +52,11 @@ public class AppModule
         // header. If existing assets are changed, the version number should also
         // change, to force the browser to download new versions.
         configuration.add(SymbolConstants.APPLICATION_VERSION, "1.0-SNAPSHOT");
+        
+        //TODO: add the actual default port for 4store here.
+        configuration.add(QuestionsSymbolConstants.SPARQL_ENDPOINT_URL, "http://localhost:");
     }
     
-
     /**
      * This is a service definition, the service will be named "TimingFilter". The interface,
      * RequestFilter, is used within the RequestHandler service pipeline, which is built from the
