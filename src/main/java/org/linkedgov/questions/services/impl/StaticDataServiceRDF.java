@@ -18,13 +18,14 @@ import uk.me.mmt.sprotocol.SparqlResource;
  *
  */
 public class StaticDataServiceRDF implements StaticDataService {
-	
+		
 	private static final String GET_CLASSES_QUERY = "SELECT DISTINCT ?class WHERE " +
 			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class} ORDER BY ?class"; 
 	
 	private static final String GET_PREDICATE_QUERY = "SELECT DISTINCT ?pred WHERE " +
 			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
-			"?pred ?o} ORDER BY ?class";
+			"?pred ?o . " +
+			"FILTER (?pred != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>) } ORDER BY ?class";
 		
 	private static final String GET_OBJECTS_QUERY = "SELECT DISTINCT ?object WHERE " +
 			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
@@ -48,7 +49,6 @@ public class StaticDataServiceRDF implements StaticDataService {
 	
 	public List<String> getObjects(String subject, String predicate){
 		String query = String.format(GET_OBJECTS_QUERY, subject, predicate);
-
 		List<String> retValues = new ArrayList<String>();
 		final SelectResultSet results = sparqlDao.executeSelect(query);		
 		for (SelectResult result : results.getResults()) {
@@ -64,7 +64,7 @@ public class StaticDataServiceRDF implements StaticDataService {
 		final SelectResultSet results = sparqlDao.executeSelect(query);		
 		for (SelectResult result : results.getResults()) {
 			final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
-			retValues.add(element.getValue());
+				retValues.add(element.getValue());
 		}
 		return retValues;
 	}
