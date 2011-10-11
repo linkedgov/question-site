@@ -47,6 +47,10 @@ public class StaticDataServiceRDF implements StaticDataService {
 	}
 	
 	public List<String> getPredicates(String subject) {
+		return predicates.isEmpty() ? queryForPredicates(subject) : predicates;	
+	}	
+	
+	private List<String> queryForPredicates(String subject) {
 		String query = String.format(GET_PREDICATE_QUERY, subject);
 		System.err.println("LAME "+query);
 		final SelectResultSet results = sparqlDao.executeSelect(query);		
