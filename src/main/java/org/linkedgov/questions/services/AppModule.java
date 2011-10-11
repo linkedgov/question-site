@@ -54,7 +54,7 @@ public class AppModule
         configuration.add(SymbolConstants.APPLICATION_VERSION, "1.0-SNAPSHOT");
         
         //TODO: add the actual default port for 4store here.
-        configuration.add(QuestionsSymbolConstants.SPARQL_ENDPOINT_URL, "http://localhost:");
+        configuration.add(QuestionsSymbolConstants.SPARQL_ENDPOINT_URL, "http://localhost:6666/sparql/");
     }
     
     /**

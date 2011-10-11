@@ -22,6 +22,7 @@ public class SparqlDaoImpl implements SparqlDao {
 	} 
 	
 	public SelectResultSet executeSelect(String query){
+		System.err.println("does this happen? ...");
 		return null;
 	}
 
