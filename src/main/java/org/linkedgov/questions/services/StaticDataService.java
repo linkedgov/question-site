@@ -11,4 +11,6 @@ import java.util.List;
 public interface StaticDataService {
 	
 	public List<String> getClasses();
+	
+	public List<String> getObjects(String subject, String predicate);
 }
