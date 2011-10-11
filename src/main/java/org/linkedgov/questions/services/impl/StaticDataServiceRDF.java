@@ -18,8 +18,8 @@ import uk.me.mmt.sprotocol.SparqlResource;
  */
 public class StaticDataServiceRDF implements StaticDataService {
 	
-	//TODO: add in some sparql to get all the classes/things.
-	private static final String GET_CLASSES_QUERY = "SELECT ?x ?y ?z"; 
+	private static final String GET_CLASSES_QUERY = "SELECT DISTINCT ?class WHERE " +
+			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class}"; 
 	
 	private static final String CLASS_VARIABLE = "class";
 	
@@ -46,9 +46,8 @@ public class StaticDataServiceRDF implements StaticDataService {
 
 	private List<String> queryForClasses() {
 		final SelectResultSet results = sparqlDao.executeSelect(GET_CLASSES_QUERY);		
-		for(SelectResult result : results.getResults()){
+		for (SelectResult result : results.getResults()) {
 			final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
-			System.err.println("This is the :"+element.getValue());
 			classes.add(element.getValue());
 		}
 		return classes;

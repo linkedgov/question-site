@@ -21,9 +21,8 @@ public class SparqlDaoImpl implements SparqlDao {
 		client = new SparqlProtocolClient(endpoint);
 	} 
 	
-	public SelectResultSet executeSelect(String query){
-		System.err.println("does this happen? ...");
-		return null;
+	public SelectResultSet executeSelect(String query) {
+		return client.executeSelect(query);
 	}
 
 	public int executeCount(String query) {
