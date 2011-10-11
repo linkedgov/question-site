@@ -22,15 +22,8 @@ Description: A Web 2.0 design with fluid width suitable for blogs and small webs
         <div id="header">
             <div id="logo">
                 <h1>
-                    <t:pagelink page="index">com.linkedgov:questions</t:pagelink>
+                    <t:pagelink page="index">The Linked Gov Question Site</t:pagelink>
                 </h1>
-            </div>
-            <div id="menu">
-                <ul>
-                    <li t:type="loop" source="pageNames" value="pageName" class="prop:classForPageName">
-                        <t:pagelink page="prop:pageName">${pageName}</t:pagelink>
-                    </li>
-                </ul>
             </div>
         </div>
         <!-- end header -->
@@ -68,7 +61,7 @@ Description: A Web 2.0 design with fluid width suitable for blogs and small webs
         <!-- start footer -->
         <div id="footer">
             <p class="legal">
-                &copy;2009 com.linkedgov. All Rights Reserved.
+                &copy;2009 org.linkedgov. All Rights Reserved.
                 &nbsp;&nbsp;&bull;&nbsp;&nbsp;
                 Design by
                 <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>
