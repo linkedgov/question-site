@@ -20,14 +20,19 @@ import uk.me.mmt.sprotocol.SparqlResource;
 public class StaticDataServiceRDF implements StaticDataService {
 	
 	private static final String GET_CLASSES_QUERY = "SELECT DISTINCT ?class WHERE " +
-			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class}"; 
+			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class} ORDER BY ?class"; 
 	
 	private static final String GET_PREDICATE_QUERY = "SELECT DISTINCT ?pred WHERE " +
 			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
-			"?pred ?o}";
+			"?pred ?o} ORDER BY ?class";
 		
+	private static final String GET_OBJECTS_QUERY = "SELECT DISTINCT ?object WHERE " +
+			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
+			"<%s> ?object} ORDER BY ?object";
+	
 	private static final String CLASS_VARIABLE = "class";
 	private static final String PREDICATE_VARIABLE = "pred";
+	private static final String OBJECT_VARIABLE = "object";
 
 	private final List<String> classes = new CopyOnWriteArrayList<String>();
 		
@@ -42,7 +47,15 @@ public class StaticDataServiceRDF implements StaticDataService {
 	}
 	
 	public List<String> getObjects(String subject, String predicate){
-		return null;
+		String query = String.format(GET_OBJECTS_QUERY, subject, predicate);
+
+		List<String> retValues = new ArrayList<String>();
+		final SelectResultSet results = sparqlDao.executeSelect(query);		
+		for (SelectResult result : results.getResults()) {
+			final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
+			retValues.add(element.getValue());
+		}
+		return retValues;
 	}
 	
 	public List<String> getPredicates(String subject) {

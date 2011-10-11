@@ -42,10 +42,6 @@ public class Question {
 	@Property
 	private List<String> objects;
 	
-	//XXX: correct?
-	@Persist
-	private String subjectSoFar;
-	
 	@Inject
 	private StaticDataService staticDataService;
 	
@@ -100,7 +96,7 @@ public class Question {
 	@OnEvent(value=EventConstants.VALUE_CHANGED, component="predicate")
 	public Object getObjectZone(String predicate){
 		query.setPredicate(predicate);
-		objects = staticDataService.getObjects(subjectSoFar, predicate);
+		objects = staticDataService.getObjects(query.getSubject(), predicate);
 		
 		if(objects.isEmpty()){
 			return noObjectsBlock;
