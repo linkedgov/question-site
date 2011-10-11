@@ -367,3 +367,11 @@ a:hover {
 #footer .legal a {
     padding: 0;
 }
+
+/* Question component */
+.question div {
+	display:-moz-inline-stack;
+	display:inline-block;
+	zoom:1;
+	*display:inline;
+}

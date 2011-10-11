@@ -3,7 +3,6 @@ package org.linkedgov.questions.components;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.tapestry5.Block;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.OnEvent;
@@ -25,14 +24,17 @@ public class Question {
 
 	private Query query;
 	
+	@Persist
 	@SuppressWarnings("unused")
 	@Property
 	private List<String> subjects;
 	
+	@Persist
 	@SuppressWarnings("unused")
 	@Property
 	private List<String> predicates;
 	
+	@Persist
 	@SuppressWarnings("unused")
 	@Property
 	private List<String> objects;
@@ -45,7 +47,7 @@ public class Question {
 	private StaticDataService staticDataService;
 	
 	@InjectComponent
-	private Zone subjectZone;
+	private Zone subjectZone; 
 	
 	@InjectComponent
 	private Zone predicateZone;
@@ -63,20 +65,20 @@ public class Question {
 	
 	//TODO: label/uri pairs
 	@OnEvent(value=EventConstants.VALUE_CHANGED, component="questionType")
-	public Block getSubjectZone(QuestionType questionType){
+	public Object onQuestionTypeChanged(QuestionType questionType){
 		subjects =  staticDataService.getClasses();
 		return subjectZone.getBody();
 	}
 	
 	@OnEvent(value=EventConstants.VALUE_CHANGED, component="subject")
-	public Block getPredicateZone(String subject){
+	public Object getPredicateZone(String subject){
 		subjectSoFar = subject;
 		predicates = staticDataService.getPredicates(subject);
 		return predicateZone.getBody();
 	}
 	
 	@OnEvent(value=EventConstants.VALUE_CHANGED, component="predicate")
-	public Block getObjectZone(String predicate){
+	public Object getObjectZone(String predicate){
 		objects = staticDataService.getObjects(subjectSoFar, predicate);
 		return objectZone.getBody();
 	}

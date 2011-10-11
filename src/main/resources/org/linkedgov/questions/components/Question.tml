@@ -1,28 +1,28 @@
-<div xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+<div class="question" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
 
-	<t:form t:id="questionForm">
-		<span>
-			<t:select t:id="questionType" value="query.questionType" zone="subjectZone"/>
-		</span>
-		<t:zone t:id="subjectZone" elementName="span">
-			<t:select t:id="subject" model="subjects"  blankLabel="Of Type" value="query.subject" zone="predicateZone"/>
+		<div>
+			<t:form t:id="questionTypeForm">
+				<t:select t:id="questionType" value="query.questionType" zone="subjectZone"/>
+			</t:form>
+		</div>
+		
+		<t:zone t:id="subjectZone">
+			<t:form t:id="subjectForm">
+				<t:select t:id="subject" model="subjects" blankLabel="Of Type" value="query.subject" zone="predicateZone"/>
+			</t:form>
 		</t:zone>		
-		<t:zone t:id="predicateZone" elementName="span">
-			<t:select t:id="predicate" model="objects"  blankLabel="Please Select" value="query.predicate" zone="objectZone"/>
-		</t:zone>		
-		<t:zone t:id="objectZone" elementName="span">
-			<t:select t:id="object" model="predicates" blankLabel="Object" value="query.object"/>
-		</t:zone>			
-	</t:form>
-	
-	<!-- TODO: sort this out
-	<t:block t:id="locationBlock">
-		<t:input type="text" value="Postcode"/>
-	</t:block>
-	
-	<t:block t:id="freetextBlock">
-		<t:input type="text" value="Postcode"/>
-	</t:block>
-	-->
+		
+		<t:zone t:id="predicateZone">
+			<t:form t:id="predicateForm">
+				<t:select t:id="predicate" model="objects"  blankLabel="Please Select" value="query.predicate" zone="objectZone"/>
+			</t:form>
+		</t:zone>	
+			
+		<t:zone t:id="objectZone">
+			<t:form t:id="objectForm">
+				<t:select t:id="object" model="predicates" blankLabel="Object" value="query.object"/>
+			</t:form>
+		</t:zone>	
+				
 
 </div>

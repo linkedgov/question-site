@@ -12,7 +12,7 @@ import org.apache.tapestry5.services.RequestFilter;
 import org.apache.tapestry5.services.RequestHandler;
 import org.apache.tapestry5.services.Response;
 import org.linkedgov.questions.services.impl.SparqlDaoImpl;
-import org.linkedgov.questions.services.impl.StaticDataServiceRDF;
+import org.linkedgov.questions.services.impl.StaticDataServiceStub;
 import org.slf4j.Logger;
 
 /**
@@ -28,7 +28,7 @@ public class AppModule
     public static void bind(ServiceBinder binder)
     {
         binder.bind(SparqlDao.class, SparqlDaoImpl.class); 
-        binder.bind(StaticDataService.class, StaticDataServiceRDF.class);
+        binder.bind(StaticDataService.class, StaticDataServiceStub.class);
     }
     
     public static void contributeApplicationDefaults(
