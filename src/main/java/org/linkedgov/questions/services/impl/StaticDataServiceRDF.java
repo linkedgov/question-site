@@ -8,7 +8,7 @@ import org.linkedgov.questions.services.StaticDataService;
 
 import uk.me.mmt.sprotocol.SelectResult;
 import uk.me.mmt.sprotocol.SelectResultSet;
-import uk.me.mmt.sprotocol.SparqlElement;
+import uk.me.mmt.sprotocol.SparqlResource;
 
 /**
  * TODO: decide on what stuff to cache and what not to cache here.
@@ -42,7 +42,8 @@ public class StaticDataServiceRDF implements StaticDataService {
 	private List<String> queryForClasses() {
 		final SelectResultSet results = sparqlDao.executeSelect(GET_CLASSES_QUERY);		
 		for(SelectResult result : results.getResults()){
-			final SparqlElement element = result.getResult().get(CLASS_VARIABLE);
+			final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
+			System.err.println("This is the :"+element.getValue());
 			classes.add(element.getValue());
 		}
 		return classes;
