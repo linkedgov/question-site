@@ -11,6 +11,11 @@ public class QueryFilter {
 	private String predicate;
 	
 	private String object;
+	
+	public QueryFilter(String predicate, String object){
+		this.predicate = predicate;
+		this.object = object;
+	}
 
 	public void setObject(String object) {
 		this.object = object;
