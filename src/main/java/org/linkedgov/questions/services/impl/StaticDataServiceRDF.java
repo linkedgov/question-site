@@ -61,12 +61,12 @@ public class StaticDataServiceRDF implements StaticDataService {
 	
 	//TODO Mischa this is for Filter B
 	public List<String> getObjects(String subject, String predicate, QueryFilter filter) {
-		return new ArrayList<String>();
+		return getObjects(subject, predicate);
 	}
 	
 	//TOOD Mischa this is for Filter B
 	public List<String> getPredicates(String subject, QueryFilter filter) {
-		return new ArrayList<String>();
+		return getPredicates(subject);
 	}
 	
 	public List<String> getPredicates(String subject) {
