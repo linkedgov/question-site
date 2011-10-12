@@ -18,7 +18,7 @@ public interface StaticDataService {
 	
 	public List<String> getPredicates(String subject);
 
-	List<String> getPredicates(String subject, QueryFilter filter);
+	public List<String> getPredicates(String subject, QueryFilter filter);
 
-	List<String> getObjects(String subject, String predicate, QueryFilter filter);
+	public List<String> getObjects(String subject, String predicate, QueryFilter filter);
 }
