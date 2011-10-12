@@ -2,6 +2,8 @@ package org.linkedgov.questions.services;
 
 import java.util.List;
 
+import org.linkedgov.questions.model.QueryFilter;
+
 /**
  * Service for data that doesn't change very often.
  * 
@@ -15,4 +17,8 @@ public interface StaticDataService {
 	public List<String> getObjects(String subject, String predicate);
 	
 	public List<String> getPredicates(String subject);
+
+	List<String> getPredicates(String subject, QueryFilter filter);
+
+	List<String> getObjects(String subject, String predicate, QueryFilter filter);
 }
