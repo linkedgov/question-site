@@ -74,7 +74,7 @@
         		selectElem.empty();	
         	    for(var i = 0; i < options.length; i++){
         	    	var option = options[i];
-        	      		predicateSelect.append("<option value='"+option.value+"'>"+option.label+"</option>");
+        	    	selectElem.append("<option value='"+option.value+"'>"+option.label+"</option>");
         	    } 
         	}
         	
@@ -83,10 +83,11 @@
          		$("#firstFilter").find(".objectContainer").formFragment().hide();
         		var objectEditor = $("#firstFilter").find(".objectContainer#"+data.editorId);
         		objectEditor.formFragment().show();
-        		objectEditor.formFragment().css("display","inline-block");
+        		objectEditor.css("display","inline-block");
         		
         		var field = objectEditor.find(":input");
         		field.show();
+        		field.css("display","inline-block");
         		field.removeAttr("disabled");
         		if(field.is("select")){
         			populateSelectInFilter(field, data.objects);
