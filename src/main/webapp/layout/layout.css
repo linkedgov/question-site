@@ -375,6 +375,18 @@ a:hover {
 	display:none;
 }
 
-.filtersContainer {
-	
+.subject {
+	display:inline-block;
+	width:200px;
+	overflow:hidden;
+}
+.predicate {
+	display:inline-block;
+	width:200px;
+	overflow:hidden;	
+}
+.object {
+	display:inline-block;
+	width:200px;
+	overflow:hidden;	
 }

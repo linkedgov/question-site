@@ -8,7 +8,7 @@ import org.apache.tapestry5.annotations.Property;
 
 /**
  * 
- * Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
  *
  */
 @Import(stylesheet="context:layout/layout.css")

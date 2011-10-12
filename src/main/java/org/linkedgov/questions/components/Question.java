@@ -35,8 +35,6 @@ public class Question {
 	private static final String OBJECTS = "objects";
 
 	private static final String PREDICATES = "predicates";
-	
-	private static final String FIRST_FILTER = "firstFilter";
 
 	private static final String ADD_FIRST_FILTER = "addFirstFilter";
 	
@@ -48,8 +46,10 @@ public class Question {
 	
 	private static final String SECOND_FILTER_PREDICATE = "secondFilterPredicate";
 
+	private static final String FILTERS = "filters";
+
 	/**
-	 * Object to represent out sparql query.
+	 * Object to represent our sparql query.
 	 */
 	@SuppressWarnings("unused")
 	@Property
@@ -114,7 +114,7 @@ public class Question {
 	@AfterRender
 	public void initJs(){		
 		addAddFilterInitializerCall();
-		addFirstFilterPredicateInitializerCall();
+		addFiltersInitializerCall();
 	}
 	
 	/**
@@ -161,7 +161,7 @@ public class Question {
 	 *
 	 */
 	@OnEvent(FIRST_FILTER_PREDICATE)
-	public Object handleFirstFilterPredicateInitializerCall(
+	public Object handleFirstFilterPredicateChanged(
 			@RequestParameter("subject") String subject,
 			@RequestParameter("predicate") String predicate){
 		final List<String> objects = staticDataService.getObjects(subject, predicate);
@@ -169,21 +169,25 @@ public class Question {
 	}
 	
 	/**
-	 * TODO: continue from here (there should be more arguments here)
-	 * 
 	 * Handles change events from the predicate field in the second filter.
 	 * 
 	 * @param subject - the subject of the query/question.
-	 * @param predicate - the predicate of the first filter.
+	 * @param predicate - the predicate of the second filter.
+	 * @param firstFilterPredicate - the predicate of the third filter.
+	 * @param firstFilterObject - the predicate of the third filter.
 	 * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display, 
 	 * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
 	 */
 	@OnEvent(SECOND_FILTER_PREDICATE)
-	public Object handleSecondFilterPredicateInitializerCall(
+	public Object handleSecondFilterPredicateChanged(
 			@RequestParameter("subject") String subject,
-			@RequestParameter("predicate") String predicate){
-		final List<String> objects = staticDataService.getObjects(subject, predicate);
-		return generateJsonForPredicateEvent(subject, objects);
+			@RequestParameter("predicate") String predicate,
+			@RequestParameter("firstFilterPredicate") String firstFilterPredicate,
+			@RequestParameter("firstFilterObject") String firstFilterObject){
+		final QueryFilter firstFilterQueryFilter = new QueryFilter(firstFilterPredicate, firstFilterObject);
+		final List<String> objects = staticDataService.getObjects(subject, predicate, firstFilterQueryFilter);
+		
+		return generateJsonForSecondPredicateEvent(subject, objects);
 	}
 
 	/**
@@ -204,6 +208,30 @@ public class Question {
 			data.put(EDITOR_ID, "firstSelectObjectEditor");
 		} else {
 			data.put(EDITOR_ID, "firstFreetextObjectEditor");
+		}
+
+		return data;
+	}
+	
+	//TODO: duplication between this and the one above
+	/**
+	 * Generates json suitable for populating a select element from a list of objects and a predicate
+	 * 
+	 * @param predicate - the predicate in the filter on which the event was fired.
+	 * @param objects - the objects to be put into the json.
+	 * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display (the editor is chosen based on the predicate), 
+	 * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
+	 */
+	private Object generateJsonForSecondPredicateEvent(String predicate, List<String> objects) {
+		final JSONObject data = generateSelectOptionsJson(objects, OBJECTS);
+		
+		//TODO: make this smarter and perhaps put it into a service or something.
+		if(predicate.contains("postcode")){
+			data.put(EDITOR_ID, "secondLocationObjectEditor");
+		} else if(objects.size() < 100){
+			data.put(EDITOR_ID, "secondSelectObjectEditor");
+		} else {
+			data.put(EDITOR_ID, "secondFreetextObjectEditor");
 		}
 
 		return data;
@@ -244,13 +272,15 @@ public class Question {
 	 * Adds a client side initializer call to set up the event listener for the predicate field of the first filter and related logic. 
 	 * Look in org.linkedgov.questions.components.Question.js to see the javascript function that is called.
 	 */
-	private void addFirstFilterPredicateInitializerCall() {
-		final Link filterFirstPredicateEventLink = resources.createEventLink(FIRST_FILTER_PREDICATE);
+	private void addFiltersInitializerCall() {
+		final Link firstFilterPredicateEventLink = resources.createEventLink(FIRST_FILTER_PREDICATE);
+		final Link secondFilterPredicateEventLink = resources.createEventLink(SECOND_FILTER_PREDICATE);
 		
 		final JSONObject specs = new JSONObject();
-		specs.put("url", filterFirstPredicateEventLink.toAbsoluteURI());
+		specs.put("firstFilterUrl", firstFilterPredicateEventLink.toAbsoluteURI());
+		specs.put("secondFilterUrl", secondFilterPredicateEventLink.toAbsoluteURI());
 		
-		jsSupport.addInitializerCall(FIRST_FILTER, specs);
+		jsSupport.addInitializerCall(FILTERS, specs);
 	}
 
 	/**
@@ -281,9 +311,5 @@ public class Question {
 		
 		
 		return null;
-	}
-	
-	public void setQuery(Query query) {
-		this.query = query;
 	}
 }
