@@ -3,6 +3,7 @@ package org.linkedgov.questions.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.linkedgov.questions.model.QueryFilter;
 import org.linkedgov.questions.services.StaticDataService;
 
 public class StaticDataServiceStub implements StaticDataService {
@@ -38,6 +39,17 @@ public class StaticDataServiceStub implements StaticDataService {
 		
 		return predicates;
 
+	}
+
+	public List<String> getPredicates(String subject, QueryFilter filter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<String> getObjects(String subject, String predicate,
+			QueryFilter filter) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
