@@ -8,7 +8,7 @@ import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlProtocolClient;
 
 /**
- * Just a wrapper of SparqlProtocolClient.
+ * Just a wrapper of sprotocol's SparqlProtocolClient.
  * 
  * @author Luke Wilson-Mawer Viscri Limited for LinkedGov.
  *
