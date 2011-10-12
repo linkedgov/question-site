@@ -22,8 +22,7 @@ import org.linkedgov.questions.model.QueryFilter;
 import org.linkedgov.questions.services.StaticDataService;
 
 /**
- * TODO: major question: make this all work as one form and then do validation etc, 
- * or carry on as now and populate the query object piecemeal whenever events happen on the selects.
+ * The main component for asking questions of the data.
  * 
  * @author Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
  *
@@ -46,22 +45,40 @@ public class Question {
 	private static final String ADD_FILTER = "addFilter";
 	
 	private static final String FIRST_FILTER_PREDICATE = "firstFilterPredicate";
+	
+	private static final String SECOND_FILTER_PREDICATE = "secondFilterPredicate";
 
-	@Persist
+	/**
+	 * Object to represent out sparql query.
+	 */
+	@SuppressWarnings("unused")
+	@Property
 	private Query query;
 	
+	/**
+	 * A list of subjects, used as a model by the subject dropdown.
+	 */
 	@Persist
 	@SuppressWarnings("unused")
 	@Property
 	private List<String> subjects;
 	
+	/**
+	 * An empty list, used as a model by selects whose options are populated later by ajax later.
+	 */
 	@Property
 	@SuppressWarnings("unused")
 	private List<String> emptyList;
 	
+	/**
+	 * Service to get our Sparql from.
+	 */
 	@Inject
 	private StaticDataService staticDataService;
 	
+	/**
+	 * Some bog standard tapestry services. 
+	 */
 	@Inject
 	private JavaScriptSupport jsSupport;
 	
@@ -71,22 +88,58 @@ public class Question {
 	@Inject
 	private Messages messages;
 	
+	/**
+	 * 
+	 * Set up the page. 
+	 * 
+	 * Set up an empty list to be used as a model by select elements that get their options populated later via ajax,
+	 * setup a new query object, and get the list of all available subjects.
+	 * 
+	 */
 	@SuppressWarnings("unused")
 	@SetupRender
-	private void setup(){
-		System.out.println("setupRender");
-		query = new Query();
-		
+	private void setup(){	
+		query = new Query();		
 		subjects =  staticDataService.getClasses();
 		emptyList = new ArrayList<String>();
 	}
 	
+	/**
+	 * Initialise the JS. 
+	 * 
+	 * Uses {@Link org.apache.tapestry5.services.javascript.JavaScriptSupport} to set up bunch of Tapestry initializers
+	 * which get called by Tapestry after the onDomLoaded JavaScript event. To see the matching initializers, look in 
+	 * org.linkedgov.questions.components.Question.js.
+	 */
+	@AfterRender
+	public void initJs(){		
+		addAddFilterInitializerCall();
+		addFirstFilterPredicateInitializerCall();
+	}
+	
+	/**
+	 * Handles change events from the add filter button when there are not yet any filters.
+	 * 
+	 * @param subject - the subject of the query.
+	 * @return a {@Link org.apache.tapestry5.json.JSONObject} object containing an array of predicates, e.g. {predicates : [{value:"http://viscri.co.uk/hats",label:"Hats"}]}. 
+	 * This is used to populate the select element on the client side.
+	 * 
+	 */
 	@OnEvent(ADD_FIRST_FILTER)
 	public Object handleAddFirstFilterEvent(@RequestParameter("subject") String subject){
 		final List<String> predicates = staticDataService.getPredicates(subject);
 		return generateSelectOptionsJson(predicates, PREDICATES);
 	}
 	
+	/**
+	 * Handles change events from the add filter button when the first filter has already been added.
+	 * 
+	 * @param subject - the subject of the query/question.
+	 * @param predicate - the predicate of the first filter.
+	 * @param object - the object of the first filter.
+	 * @return a {@Link org.apache.tapestry5.json.JSONObject} object containing an array of predicates, e.g. {predicates : [{value:"http://viscri.co.uk/hat",label:"Hat"}]}. 
+	 * This is used to populate the select element on the client side.
+	 */
 	@OnEvent(ADD_SECOND_FILTER)
 	public Object handleAddSecondFilterEvent(
 			@RequestParameter("subject") String subject, 
@@ -96,15 +149,56 @@ public class Question {
 		return generateSelectOptionsJson(predicates, PREDICATES);
 	}
 	
+	/**
+	 * TODO: do we want to return these objects even if it's not a select element?
+	 * 
+	 * Handles change events from the predicate field in the first filter by talking to the staticDataService.
+	 * 
+	 * @param subject - the subject of the query/question.
+	 * @param predicate - the predicate of the first filter.
+	 * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display, 
+	 * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
+	 *
+	 */
 	@OnEvent(FIRST_FILTER_PREDICATE)
 	public Object handleFirstFilterPredicateInitializerCall(
 			@RequestParameter("subject") String subject,
 			@RequestParameter("predicate") String predicate){
 		final List<String> objects = staticDataService.getObjects(subject, predicate);
+		return generateJsonForPredicateEvent(subject, objects);
+	}
+	
+	/**
+	 * TODO: continue from here (there should be more arguments here)
+	 * 
+	 * Handles change events from the predicate field in the second filter.
+	 * 
+	 * @param subject - the subject of the query/question.
+	 * @param predicate - the predicate of the first filter.
+	 * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display, 
+	 * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
+	 */
+	@OnEvent(SECOND_FILTER_PREDICATE)
+	public Object handleSecondFilterPredicateInitializerCall(
+			@RequestParameter("subject") String subject,
+			@RequestParameter("predicate") String predicate){
+		final List<String> objects = staticDataService.getObjects(subject, predicate);
+		return generateJsonForPredicateEvent(subject, objects);
+	}
+
+	/**
+	 * Generates json suitable for populating a select element from a list of objects and a predicate
+	 * 
+	 * @param predicate - the predicate in the filter on which the event was fired.
+	 * @param objects - the objects to be put into the json.
+	 * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display (the editor is chosen based on the predicate), 
+	 * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
+	 */
+	private Object generateJsonForPredicateEvent(String predicate, List<String> objects) {
 		final JSONObject data = generateSelectOptionsJson(objects, OBJECTS);
 		
 		//TODO: make this smarter and perhaps put it into a service or something.
-		if(subject.contains("postcode")){
+		if(predicate.contains("postcode")){
 			data.put(EDITOR_ID, "firstLocationObjectEditor");
 		} else if(objects.size() < 100){
 			data.put(EDITOR_ID, "firstSelectObjectEditor");
@@ -115,6 +209,14 @@ public class Question {
 		return data;
 	}
 
+	/**
+	 * Generates json suitable for populating a select element from a list of strings and a name.
+	 * 
+	 * @param itemList the list of items.
+	 * @param name - the name of the property to be set in the returned json object.
+	 * @return a json object with one property, given by 'name', and containing the items in the list, e.g
+	 *  {myName : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}]}
+	 */
 	private JSONObject generateSelectOptionsJson(List<String> itemList, String name) {
 		
 		final JSONArray items = new JSONArray();
@@ -138,12 +240,10 @@ public class Question {
 		return data;
 	}
 	
-	@AfterRender
-	public void initJs(){		
-		addAddFilterInitializerCall();
-		addFirstFilterPredicateInitializerCall();
-	}
-
+	/**
+	 * Adds a client side initializer call to set up the event listener for the predicate field of the first filter and related logic. 
+	 * Look in org.linkedgov.questions.components.Question.js to see the javascript function that is called.
+	 */
 	private void addFirstFilterPredicateInitializerCall() {
 		final Link filterFirstPredicateEventLink = resources.createEventLink(FIRST_FILTER_PREDICATE);
 		
@@ -153,6 +253,10 @@ public class Question {
 		jsSupport.addInitializerCall(FIRST_FILTER, specs);
 	}
 
+	/**
+	 * Adds a client side initializer call to set up the event listener for the add filter button.
+	 * Look in org.linkedgov.questions.components.Question.js to see the javascript function that is called.
+	 */
 	private void addAddFilterInitializerCall() {
 		final Link addFirstFilterEventLink = resources.createEventLink(ADD_FIRST_FILTER);
 		final Link addSecondFilterEventLink = resources.createEventLink(ADD_SECOND_FILTER);
@@ -165,48 +269,11 @@ public class Question {
 		jsSupport.addInitializerCall(ADD_FILTER, specs);
 	}
 	
-//	@OnEvent(value=EventConstants.VALUE_CHANGED, component="subject")
-//	public void updateQuestionType(QuestionType questionType){
-//		query.setQuestionType(questionType);
-//	}
-//	
-//	@OnEvent(value=EventConstants.VALUE_CHANGED, component="subject")
-//	public Object getPredicateZone(String subject){
-//		query.setSubject(subject);
-//		predicates = staticDataService.getPredicates(subject);
-//		return predicateZone.getBody();
-//	}
-//	
-//	@OnEvent(value=EventConstants.VALUE_CHANGED, component="predicate")
-//	public Object getObjectZone(String predicate){
-//		query.getFirstFilter().setPredicate(predicate);
-//		objects = staticDataService.getObjects(query.getSubject(), predicate);
-//		
-////		System.out.println("predicate"+predicate);
-////		if(objects == null || objects.isEmpty()){
-////			return noObjectsBlock;
-////		} else if(isLocationPredicate(predicate)){
-////			objectBlock = locationObjectBlock;
-////			System.out.println("HERE");
-////		} else if(objects.size() < 20){
-////			objectBlock = selectObjectBlock;
-////		} else {
-////			objectBlock = freetextObjectBlock;
-////		}
-//		
-//		return objectZone.getBody();
-//	}
-//	
-//	@OnEvent(value=EventConstants.VALUE_CHANGED, component="object")
-//	public void handleFirstFilterObj(String object){
-//		query.getFirstFilter().setObject(object);
-//	}
-	
-	//TODO: make this more generic and implement it properly; 
-	public boolean isLocationPredicate(String predicate){
-		return predicate.contains("postcode");
-	}
-	
+	/**
+	 * TODO: perhaps this should be a submit event listener.
+	 * Processes the submission of the form.
+	 * @return
+	 */
 	@OnEvent("askQuestion")
 	public Object askQuestion(){
 		//TODO: put grid stuff in here.
@@ -218,12 +285,5 @@ public class Question {
 	
 	public void setQuery(Query query) {
 		this.query = query;
-	}
-
-	public Query getQuery() {
-		if(this.query == null){
-			this.query = new Query();
-		}
-		return this.query;
 	}
 }
