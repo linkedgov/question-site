@@ -12,22 +12,26 @@ import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.RequestParameter;
 import org.apache.tapestry5.annotations.SetupRender;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.json.JSONArray;
 import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.linkedgov.questions.model.Query;
+import org.linkedgov.questions.model.QueryFilter;
 import org.linkedgov.questions.services.StaticDataService;
 
 /**
  * TODO: major question: make this all work as one form and then do validation etc, 
  * or carry on as now and populate the query object piecemeal whenever events happen on the selects.
  * 
- * Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
  *
  */
 @Import(library="Question.js")
 public class Question {
+
+	private static final String PREDICATES = "predicates";
 
 	private static final String ADD_FIRST_FILTER = "addFirstFilter";
 	
@@ -62,6 +66,9 @@ public class Question {
 	@Inject
 	private ComponentResources resources;
 	
+	@Inject
+	private Messages messages;
+	
 	@SuppressWarnings("unused")
 	@SetupRender
 	private void setup(){
@@ -76,21 +83,8 @@ public class Question {
 	
 	@OnEvent(ADD_FIRST_FILTER)
 	public Object handleAddFirstFilterEvent(@RequestParameter("subject") String subject){
-		final List<String> predicateList = staticDataService.getPredicates(subject);
-		final JSONArray predicates  = new JSONArray();
-		
-		for (String predicateString : predicateList) {
-			JSONObject predicate = new JSONObject();
-			predicate.put("value", predicateString);
-			//TODO: this will need to be sorted out to use the rdfs:label once we have that functionality.
-			predicate.put("label", predicateString);
-			predicates.put(predicate);
-		}
-
-		final JSONObject data = new JSONObject();
-		data.put("predicates", predicates);
-		
-		return data;
+		final List<String> predicates = staticDataService.getPredicates(subject);
+		return generateSelectOptionsJson(predicates, PREDICATES);
 	}
 	
 	@OnEvent(ADD_SECOND_FILTER)
@@ -98,12 +92,31 @@ public class Question {
 			@RequestParameter("subject") String subject, 
 			@RequestParameter("predicate")  String predicate, 
 			@RequestParameter("object") String object){
-		System.out.println("handling something event");
+		final List<String> predicates = staticDataService.getPredicates(subject, new QueryFilter(predicate,object));
+		return generateSelectOptionsJson(predicates, PREDICATES);
+	}
+
+	private JSONObject generateSelectOptionsJson(List<String> predicateList, String name) {
 		
-		JSONObject obj = new JSONObject();
-		obj.put("test3","test4");
+		final JSONArray items = new JSONArray();
+		final JSONObject data = new JSONObject();
 		
-		return obj;
+		final JSONObject blankPredicate = new JSONObject();
+		blankPredicate.put("value","");		
+		blankPredicate.put("label",messages.get(name+"BlankLabel"));
+		
+		items.put(blankPredicate);
+		for (String predicateString : predicateList) {
+			final JSONObject predicate = new JSONObject();
+			predicate.put("value", predicateString);
+			//TODO: this will need to be sorted out to use the rdfs:label once we have that functionality.
+			predicate.put("label", predicateString.substring(0,15)+"...");
+			items.put(predicate);
+		}
+
+		data.put(name, items);
+		
+		return data;
 	}
 	
 	@AfterRender
