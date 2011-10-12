@@ -9,6 +9,7 @@ package org.linkedgov.questions.model;
 public class QueryFilter {
 
 	private String predicate;
+	
 	private String object;
 
 	public void setObject(String object) {

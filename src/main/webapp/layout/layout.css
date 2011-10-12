@@ -8,7 +8,7 @@ body {
     margin: 0;
     padding: 0;
     background: #FFFFFF url( images/img01.jpg ) repeat-x;
-    text-align: justify;
+    text-align: left;
     font: 15px Arial, Helvetica, sans-serif;
     color: #626262;
 }
@@ -374,4 +374,8 @@ a:hover {
 	display:inline-block;
 	zoom:1;
 	*display:inline;
+}
+
+.question div.t-invisible {
+	display:none;
 }

@@ -1,57 +1,47 @@
 <div class="question" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
 
-		<div>
-			<t:form t:id="questionTypeForm">
-				<t:select t:id="questionType" value="query.questionType" zone="subjectZone"/>
-			</t:form>
-		</div>
+	<t:form id="questionType">
+
+		<t:select t:id="questionType" value="query.questionType"/>
 		
-		<t:zone t:id="subjectZone">
-			<t:form t:id="subjectForm">
-				<t:select t:id="subject" model="subjects" blankLabel="Of Type" value="query.subject" zone="predicateZone"/>
-			</t:form>
-		</t:zone>		
-		
-		<!-- filter below here -->
-		
-		<!--<t:EventLink t:id="addLink" zone="filterZone">Add</t:EventLink>-->
-		
-		<t:zone t:id="predicateZone">
-			<t:form t:id="predicateForm">
-				<t:select t:id="predicate" model="predicates"  blankLabel="Please Select" value="query.predicate" zone="objectZone"/>
-			</t:form>
-		</t:zone>	
+		<t:select t:id="subject" model="subjects" blankLabel="Of Type" value="query.subject"/>
 			
-		<t:zone t:id="objectZone">
-			<t:delegate to="objectBlock"/>
-		</t:zone>
+		<button id="addFilter" type="button" class="addFilter" href="#">+</button>
 		
-		<t:block t:id="selectObjectBlock">
-			<t:form t:id="selectObjectForm">
-				<t:select t:id="selectObject" model="objects" blankLabel="Object" value="query.object"/>
-			</t:form>
-		</t:block>
+		<!-- TODO: split these out into a filter component??? -->
+		<t:formFragment t:id="firstFilter">
+			<t:select class="predicate" t:id="firstPredicate" model="predicates" blankLabel="Predicate" value="query.firstFilter.predicate"/>
+			<t:formFragment>
+				<t:select class="object" t:id="firstObject" model="objects" blankLabel="Object" value="query.firstFilter.object"/>
+			</t:formFragment>
+			<t:formFragment>>
+				<t:TextField class="object" t:id="firstFreeTextObject" model="objects" blankLabel="Object" value="query.firstFilter.object"/>
+			</t:formFragment>
+			<t:formFragment>>	
+				<t:TextField class="object" t:id="firstLocationObject" model="objects" blankLabel="Object" value="query.firstFilter.object"/>
+			</t:formFragment>
+			<t:EventLink t:id="removeFirstFilter" zone="filterZone">Remove Filter</t:EventLink>
+		</t:formFragment>
 		
-		<t:block t:id="freetextObjectBlock">
-			<t:form t:id="freetextObjectForm">
-				<t:TextField t:id="freeTextObject" model="objects" blankLabel="Object" value="query.object"/>
-			</t:form>
-		</t:block>
+		<t:formFragment t:id="secondFilter">
+			<!-- TODO: split these out into a filter component??? -->
+			<t:select class="predicate" t:id="secondPredicate" model="predicates" blankLabel="Predicate" value="query.secondFilter.predicate"/>
+			<t:formFragment>
+				<t:select t:id="secondSelectObject" model="objects" blankLabel="Object" value="query.secondFilter.object"/>
+			</t:formFragment>
+			<t:formFragment>
+				<t:TextField t:id="secondFreeTextObject" model="objects" blankLabel="Object" value="query.secondFilter.object"/>
+			</t:formFragment>
+			<t:formFragment>	
+				<t:TextField t:id="secondLocationObject" model="objects" blankLabel="Object" value="query.secondFilter.object"/>
+			</t:formFragment>
+			<t:EventLink t:id="removeSecondFilter" zone="filterZone">Remove Filter</t:EventLink>
+		</t:formFragment>
 		
-		<t:block t:id="locationObjectBlock">
-			<t:form t:id="locationObjectForm">
-				<t:TextField t:id="locationObject" model="objects" blankLabel="Object" value="query.object"/>
-			</t:form>
-		</t:block>
-		
-		<t:block t:id="noObjectsBlock">
-			<p>No Objects to be find. Consider choosing a different predicate.</p>
-		</t:block>
-		
-		<t:EventLink t:id="askQuestion" zone="filterZone">Ask Question</t:EventLink>
+		<t:submit t:id="ask" value="Ask"/>
 		
 		<t:zone t:id="gridZone">
 			
 		</t:zone>
-		
+	</t:form>
 </div>
