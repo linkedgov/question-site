@@ -29,20 +29,6 @@ Description: A Web 2.0 design with fluid width suitable for blogs and small webs
         <!-- end header -->
         <!-- start page -->
         <div id="page">
-            <!-- start sidebar -->
-            <div id="sidebar">
-                <ul>
-                    <li id="search" style="background: none;">
-                    </li>
-                    <li t:type="if" test="sidebar">
-                        <h2>${sidebarTitle}</h2>
-                        <div class="sidebar-content">
-                            <t:delegate to="sidebar"/>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <!-- end sidebar -->
             <!-- start content -->
             <div id="content">
                 <div class="post">
