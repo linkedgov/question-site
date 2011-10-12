@@ -17,6 +17,10 @@ public class QueryFilter {
 		this.object = object;
 	}
 
+	public QueryFilter() {
+		
+	}
+
 	public void setObject(String object) {
 		this.object = object;
 	}

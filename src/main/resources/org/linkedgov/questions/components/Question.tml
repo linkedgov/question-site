@@ -8,30 +8,30 @@
 		
 		<!-- TODO: split these out into a filter component??? -->
 		<t:formFragment t:id="firstFilter">
-			<t:select class="predicate" t:id="firstPredicate" model="predicates" blankLabel="${message:predicateBlankLabel}" value="query.firstFilter.predicate"/>
-			<t:formFragment>
-				<t:select class="object" t:id="firstObject" model="objects" blankLabel="${message:objectBlankLabel}" value="query.firstFilter.object"/>
+			<t:select class="predicate" t:id="firstPredicate" model="predicates" blankLabel="${message:predicatesBlankLabel}" value="query.firstFilter.predicate"/>
+			<t:formFragment t:id="firstSelectObjectEditor" class="objectContainer">
+				<t:select class="object" t:id="firstObject" model="objects" blankLabel="${message:objectsBlankLabel}" value="query.firstFilter.object"/>
 			</t:formFragment>
-			<t:formFragment visible="true">
-				<t:TextField class="object" t:id="firstFreeTextObject" model="objects" blankLabel="${message:objectBlankLabel}" value="query.firstFilter.object"/>
+			<t:formFragment t:id="firstFreetextObjectEditor" class="objectContainer" visible="true">
+				<t:TextField class="object" t:id="firstFreeTextObject" model="objects" blankLabel="${message:objectsBlankLabel}" value="query.firstFilter.object"/>
 			</t:formFragment>
-			<t:formFragment>	
-				<t:TextField class="object" t:id="firstLocationObject" model="objects" blankLabel="${message:objectBlankLabel}" value="query.firstFilter.object"/>
+			<t:formFragment t:id="firstLocationObjectEditor" class="objectContainer">	
+				<t:TextField class="object" t:id="firstLocationObject" model="objects" blankLabel="${message:objectsBlankLabel}" value="query.firstFilter.object"/>
 			</t:formFragment>
 			<t:EventLink t:id="removeFirstFilter" zone="filterZone">Remove Filter</t:EventLink>
 		</t:formFragment>
 		
 		<t:formFragment t:id="secondFilter">
 			<!-- TODO: split these out into a filter component??? -->
-			<t:select class="predicate" t:id="secondPredicate" model="predicates"  blankLabel="${message:predicateBlankLabel}" value="query.secondFilter.predicate"/>
-			<t:formFragment>
-				<t:select t:id="secondSelectObject" model="objects" blankLabel="${message:objectBlankLabel}" value="query.secondFilter.object"/>
+			<t:select class="predicate" t:id="secondPredicate" model="predicates"  blankLabel="${message:predicatesBlankLabel}" value="query.secondFilter.predicate"/>
+			<t:formFragment class="objectContainer">
+				<t:select t:id="secondSelectObject" model="objects" blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
 			</t:formFragment>
-			<t:formFragment>
-				<t:TextField t:id="secondFreeTextObject" model="objects"  blankLabel="${message:objectBlankLabel}" value="query.secondFilter.object"/>
+			<t:formFragment class="objectContainer">
+				<t:TextField t:id="secondFreeTextObject" model="objects"  blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
 			</t:formFragment>
-			<t:formFragment>	
-				<t:TextField t:id="secondLocationObject" model="objects" blankLabel="${message:objectBlankLabel}" value="query.secondFilter.object"/>
+			<t:formFragment class="objectContainer">	
+				<t:TextField t:id="secondLocationObject" model="objects" blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
 			</t:formFragment>
 			<t:EventLink t:id="removeSecondFilter" zone="filterZone">Remove Filter</t:EventLink>
 		</t:formFragment>
@@ -40,7 +40,7 @@
 			<button id="addFilter" type="button" class="addFilter" href="#">+</button>
 		</div>
 		
-		<t:submit t:id="ask" value="Ask"/>
+		<t:submit t:id="ask" value="Ask" disabled="true"/>
 		
 		<t:zone t:id="gridZone">
 			

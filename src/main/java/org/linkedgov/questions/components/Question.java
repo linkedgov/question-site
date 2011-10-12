@@ -7,11 +7,13 @@ import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.Link;
 import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.Import;
+import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.RequestParameter;
 import org.apache.tapestry5.annotations.SetupRender;
+import org.apache.tapestry5.corelib.components.FormFragment;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.json.JSONArray;
@@ -31,6 +33,10 @@ import org.linkedgov.questions.services.StaticDataService;
 @Import(library="Question.js")
 public class Question {
 
+	private static final String EDITOR_ID = "editorId";
+
+	private static final String OBJECTS = "objects";
+
 	private static final String PREDICATES = "predicates";
 
 	private static final String ADD_FIRST_FILTER = "addFirstFilter";
@@ -38,6 +44,8 @@ public class Question {
 	private static final String ADD_SECOND_FILTER = "addSecondFilter";
 	
 	private static final String ADD_FILTER = "addFilter";
+	
+	private static final String FIRST_FILTER_PREDICATE = "firstFilterPredicate";
 
 	@Persist
 	private Query query;
@@ -73,10 +81,11 @@ public class Question {
 	@SetupRender
 	private void setup(){
 		System.out.println("setupRender");
-		if(query != null){
-			query = new Query();
-		}
+		query = new Query();
+		
 		subjects =  staticDataService.getClasses();
+		
+		//XXX: maybe these aren't required any more.
 		predicates = new ArrayList<String>();
 		objects = new ArrayList<String>();
 	}
@@ -95,23 +104,42 @@ public class Question {
 		final List<String> predicates = staticDataService.getPredicates(subject, new QueryFilter(predicate,object));
 		return generateSelectOptionsJson(predicates, PREDICATES);
 	}
+	
+	@OnEvent(FIRST_FILTER_PREDICATE)
+	public Object handleFirstFilterPredicateInitializerCall(
+			@RequestParameter("subject") String subject,
+			@RequestParameter("predicate") String predicate){
+		final List<String> objects = staticDataService.getObjects(subject, predicate);
+		final JSONObject data = generateSelectOptionsJson(objects, OBJECTS);
+		
+		//TODO: make this smarter and perhaps put it into a service or something.
+		if(subject.contains("postcode")){
+			data.put(EDITOR_ID, "firstLocationObjectEditor");
+		} else if(objects.size() < 100){
+			data.put(EDITOR_ID, "firstSelectObjectEditor");
+		} else {
+			data.put(EDITOR_ID, "firstFreetextObjectEditor");
+		}
 
-	private JSONObject generateSelectOptionsJson(List<String> predicateList, String name) {
+		return data;
+	}
+
+	private JSONObject generateSelectOptionsJson(List<String> itemList, String name) {
 		
 		final JSONArray items = new JSONArray();
 		final JSONObject data = new JSONObject();
 		
-		final JSONObject blankPredicate = new JSONObject();
-		blankPredicate.put("value","");		
-		blankPredicate.put("label",messages.get(name+"BlankLabel"));
+		final JSONObject blankItem = new JSONObject();
+		blankItem.put("value","");		
+		blankItem.put("label",messages.get(name+"BlankLabel"));
 		
-		items.put(blankPredicate);
-		for (String predicateString : predicateList) {
-			final JSONObject predicate = new JSONObject();
-			predicate.put("value", predicateString);
+		items.put(blankItem);
+		for (String itemString : itemList) {
+			final JSONObject item = new JSONObject();
+			item.put("value", itemString);
 			//TODO: this will need to be sorted out to use the rdfs:label once we have that functionality.
-			predicate.put("label", predicateString.substring(0,15)+"...");
-			items.put(predicate);
+			item.put("label", itemString);
+			items.put(item);
 		}
 
 		data.put(name, items);
@@ -121,6 +149,20 @@ public class Question {
 	
 	@AfterRender
 	public void initJs(){		
+		addAddFilterInitializerCall();
+		addFirstFilterPredicateInitializerCall();
+	}
+
+	private void addFirstFilterPredicateInitializerCall() {
+		final Link filterFirstPredicateEventLink = resources.createEventLink(FIRST_FILTER_PREDICATE);
+		
+		final JSONObject specs = new JSONObject();
+		specs.put("url", filterFirstPredicateEventLink.toAbsoluteURI());
+		
+		jsSupport.addInitializerCall(FIRST_FILTER_PREDICATE, specs);
+	}
+
+	private void addAddFilterInitializerCall() {
 		final Link addFirstFilterEventLink = resources.createEventLink(ADD_FIRST_FILTER);
 		final Link addSecondFilterEventLink = resources.createEventLink(ADD_SECOND_FILTER);
 		

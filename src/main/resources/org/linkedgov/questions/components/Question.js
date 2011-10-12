@@ -5,6 +5,7 @@
     $.extend(Tapestry.Initializer, {
          addFilter: function(specs){
     			
+        	//TODO: remove this and put it into a utility method.
         	var populatePredicatesInFilter = function(filter,predicates){
         		if(predicates.length > 0){
         			var predicateSelect = filter.find(".predicate");
@@ -58,11 +59,57 @@
                         type : "GET"
                 };   
             	
-            	var ajaxRequest = $("#firstFilter").css("display") == "none" ? secondFilterAjaxRequest : firstFilterAjaxRequest;
+            	var ajaxRequest = $("#firstFilter").css("display") === "none" ? secondFilterAjaxRequest : firstFilterAjaxRequest;
             	
             	$.ajax(ajaxRequest);
             });
-        }  
+        },
+        
+        firstFilterPredicate : function(specs){       	
+        	//TODO this is generic, move outside of here.
+        	var populateSelectInFilter = function(selectElem, options){
+        		if(options.length == 0){
+        			return;
+        		}
+        		selectElem.empty();	
+        	    for(var i = 0; i < options.length; i++){
+        	    	var option = options[i];
+        	      		predicateSelect.append("<option value='"+option.value+"'>"+option.label+"</option>");
+        	    } 
+        	}
+        	
+         	var handleFirstFilterPredicateChange = function(data){
+         		
+         		$("#firstFilter").find(".objectContainer").formFragment().hide();
+        		var objectEditor = $("#firstFilter").find(".objectContainer#"+data.editorId);
+        		objectEditor.formFragment().show();
+        		objectEditor.formFragment().css("display","inline-block");
+        		
+        		var field = objectEditor.find(":input");
+        		field.show();
+        		field.removeAttr("disabled");
+        		if(field.is("select")){
+        			populateSelectInFilter(field, data.objects);
+        		}
+        		
+        	};
+        	
+        	var firstFilterPredicate = $("#firstFilter").find(".predicate");
+        	firstFilterPredicate.change(function(){
+        		
+        		var ajaxRequest = {
+                    	url : specs.url,
+                    	success : handleFirstFilterPredicateChange, 
+                    	data : 	{
+                    				subject: $('#subject').val(),
+                    				predicate: firstFilterPredicate.val()
+                    			},
+                        type : "GET"
+                };
+        		
+        		$.ajax(ajaxRequest);
+        	});
+        }
     	
     });
 })(jQuery);
