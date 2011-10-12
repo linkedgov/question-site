@@ -145,10 +145,6 @@ a:hover {
 
 /* Content */
 
-#content {
-    margin-right: 340px;
-}
-
 .post {
     margin-bottom: 10px;
 }
@@ -377,4 +373,8 @@ a:hover {
 
 .question div.t-invisible {
 	display:none;
+}
+
+.filtersContainer {
+	
 }

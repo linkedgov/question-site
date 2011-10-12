@@ -7,13 +7,11 @@ import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.Link;
 import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.Import;
-import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.RequestParameter;
 import org.apache.tapestry5.annotations.SetupRender;
-import org.apache.tapestry5.corelib.components.FormFragment;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.json.JSONArray;
@@ -38,6 +36,8 @@ public class Question {
 	private static final String OBJECTS = "objects";
 
 	private static final String PREDICATES = "predicates";
+	
+	private static final String FIRST_FILTER = "firstFilter";
 
 	private static final String ADD_FIRST_FILTER = "addFirstFilter";
 	
@@ -55,15 +55,9 @@ public class Question {
 	@Property
 	private List<String> subjects;
 	
-	@Persist
-	@SuppressWarnings("unused")
 	@Property
-	private List<String> predicates;
-	
-	@Persist
 	@SuppressWarnings("unused")
-	@Property
-	private List<String> objects;
+	private List<String> emptyList;
 	
 	@Inject
 	private StaticDataService staticDataService;
@@ -84,10 +78,7 @@ public class Question {
 		query = new Query();
 		
 		subjects =  staticDataService.getClasses();
-		
-		//XXX: maybe these aren't required any more.
-		predicates = new ArrayList<String>();
-		objects = new ArrayList<String>();
+		emptyList = new ArrayList<String>();
 	}
 	
 	@OnEvent(ADD_FIRST_FILTER)
@@ -159,7 +150,7 @@ public class Question {
 		final JSONObject specs = new JSONObject();
 		specs.put("url", filterFirstPredicateEventLink.toAbsoluteURI());
 		
-		jsSupport.addInitializerCall(FIRST_FILTER_PREDICATE, specs);
+		jsSupport.addInitializerCall(FIRST_FILTER, specs);
 	}
 
 	private void addAddFilterInitializerCall() {
