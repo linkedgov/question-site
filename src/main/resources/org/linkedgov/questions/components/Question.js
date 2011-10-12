@@ -18,6 +18,7 @@
     
     		var handleAddFirstFilter = function(data){
     			$("#firstFilter").formFragment().show();
+    			$("#firstFilter").css("display","inline-block");
     			var object = $("#firstFilter").find(".object");
     			object.attr("disabled","disabled");
     			$("#addFilter").attr("disabled","disabled");  
@@ -61,8 +62,7 @@
             	
             	$.ajax(ajaxRequest);
             });
-        },
-    
+        }  
     	
     });
 })(jQuery);
