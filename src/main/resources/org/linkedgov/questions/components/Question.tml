@@ -1,6 +1,6 @@
 <div class="question" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
 
-	<t:form id="questionType">
+	<t:form id="questionType" zone="resultsZone">
 		<t:errors/>
 		<t:select  t:validate="required" t:id="questionType" value="query.questionType"/>
 		
@@ -37,7 +37,7 @@
 		</div>
 		<div>
 			<t:formFragment class="removeFilterContainer">
-				<button id="removeFilter" type="button" class="removeFilter" href="#">x</button>
+				<button id="removeFilter" type="button" class="removeFilter" href="#">-</button>
 			</t:formFragment>
 			<t:formFragment class="addFilterContainer" visible="true">
 				<button id="addFilter" type="button" class="addFilter" href="#">+</button>
@@ -46,8 +46,8 @@
 		
 		<t:submit t:id="ask" value="Ask"/>
 		
-		<t:zone t:id="gridZone">
-			
+		<t:zone t:id="resultsZone">
+			<t:results query="query"/>
 		</t:zone>
 	</t:form>
 </div>

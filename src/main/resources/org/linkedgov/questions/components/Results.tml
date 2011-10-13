@@ -1,0 +1,16 @@
+<div class="results" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<t:delegate to="resultsBlock"/>
+	
+	<t:block t:id="resultsTableBlock">
+		<t:grid source="dataSource" pagerPosition="both"/>
+	</t:block>
+	
+	<t:block t:id="emptyResultsBlock">
+		There are no answers for your question. 
+		TODO: put an input field here to allow users to save their email addresses. 
+	</t:block>
+	
+	<t:block t:id="noResultsYetBlock">
+		Results will appear here.
+	</t:block>
+</div>

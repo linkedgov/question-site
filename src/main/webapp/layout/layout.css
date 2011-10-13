@@ -380,13 +380,20 @@ a:hover {
 	width:200px;
 	overflow:hidden;
 }
+
 .predicate {
 	display:inline-block;
 	width:200px;
 	overflow:hidden;	
 }
+
 .object {
 	display:inline-block;
 	width:200px;
 	overflow:hidden;	
+}
+
+.question div#resultsZone, 
+.question div.t-error{
+	display:block;
 }

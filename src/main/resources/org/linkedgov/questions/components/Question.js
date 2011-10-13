@@ -182,20 +182,23 @@
         	
         	//TODO tidy this up since it doesn't look like this belongs here
         	$(".removeFilter").click(function(){
-        		var secondFilter = $("#secondFilter").css("display") !== "none" ; 		
-        		if(!secondFilter){
-        			$(".removeFilterContainer").formFragment().hide();
-        		} else {
+        		var secondFilter = $("#secondFilter").css("display") !== "none" ;
+        		var filterToRemove;
+        		if(secondFilter){
+        			filterToRemove = $("#secondFilter");
         			$("#firstFilter").find(":input").removeAttr("disabled");
+        			$("#addFilter").show();
+        			$("#addFilter").css("display","inline-block");
+        		} else {
+        			filterToRemove = $("#firstFilter");
+        			$(".subject").removeAttr("disabled");
+        			$(".removeFilterContainer").formFragment().hide();
+        			$("#ask").removeAttr("disabled");
         		}
-        		var filter = secondFilter ? $("#secondFilter") : $("#firstFilter");
-        		filter.formFragment().hide();
-        		filter.find(":input").val("");
-        		filter.find("select").empty();
-        		
-        	});
-        	
-        }
-    	
+        		filterToRemove.formFragment().hide();
+        		filterToRemove.find(":input").val("");
+        		filterToRemove.find("select").empty();  
+        	});        	
+        }    	
     });
 })(jQuery);

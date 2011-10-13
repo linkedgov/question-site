@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.tapestry5.ComponentResources;
+import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.Link;
 import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.Import;
+import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.RequestParameter;
 import org.apache.tapestry5.annotations.SetupRender;
+import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.json.JSONArray;
@@ -53,6 +56,7 @@ public class Question {
 	 */
 	@SuppressWarnings("unused")
 	@Property
+	@Persist
 	private Query query;
 	
 	/**
@@ -69,6 +73,12 @@ public class Question {
 	@Property
 	@SuppressWarnings("unused")
 	private List<String> emptyList;
+	
+	/**
+	 * Zone which holds the results.
+	 */
+	@InjectComponent
+	private Zone resultsZone;
 	
 	/**
 	 * Service to get our Sparql from.
@@ -99,6 +109,7 @@ public class Question {
 	@SuppressWarnings("unused")
 	@SetupRender
 	private void setup(){	
+		System.out.println("Setup Render");
 		query = new Query();		
 		subjects =  staticDataService.getClasses();
 		emptyList = new ArrayList<String>();
@@ -258,7 +269,7 @@ public class Question {
 		for (String itemString : itemList) {
 			final JSONObject item = new JSONObject();
 			item.put("value", itemString);
-			//TODO: this will need to be sorted out to use the rdfs:label once we have that functionality.
+			//TODO: this will need to be sorted out to use the rdfs:label once we have that data.
 			item.put("label", itemString);
 			items.put(item);
 		}
@@ -300,16 +311,13 @@ public class Question {
 	}
 	
 	/**
-	 * TODO: perhaps this should be a submit event listener.
-	 * Processes the submission of the form.
+	 * Update the results with those from the query.
+	 * 
 	 * @return
 	 */
-	@OnEvent("askQuestion")
+	@OnEvent(EventConstants.SUCCESS)
 	public Object askQuestion(){
-		//TODO: put grid stuff in here.
-		//TODO Mischa log CSV to log file for now
-		
-		
-		return null;
+		return resultsZone.getBody();
 	}
 }
+

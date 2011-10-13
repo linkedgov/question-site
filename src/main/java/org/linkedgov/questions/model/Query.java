@@ -48,9 +48,14 @@ public class Query {
 		return firstFilter;
 	}
 	
-	//TODO Mischa
+	//TODO Mischa, turn this into a real sparql query that represents the data.
 	public String toSparqlString() {
-		return "lame";
+		if(questionType.equals(QuestionType.COUNT)){
+			return "SELECT COUNT * WHERE {?x ?y ?z} LIMIT 150";
+		}else if(questionType.equals(QuestionType.SELECT)){
+			return "SELECT DISTINCT * WHERE {?x ?y ?z} LIMIT 150";
+		}
+		return subject;
 	}
 	
 }
