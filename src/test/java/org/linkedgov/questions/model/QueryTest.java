@@ -8,13 +8,12 @@ public class QueryTest extends TestCase {
 		super(name);
 	}
 
-
-	/** Test something. **/
+	/** Test the Query to String thing **/
 	public void testThatFeature() throws Exception {
-		Query lame = new Query();
+		Query q = new Query();
+		q.setQuestionType(QuestionType.SELECT);
 
-		assertEquals(lame.toSparqlString(), "lam222e");
+		assertEquals(q.toSparqlString(), "SELECT DISTINCT ?s ?o WHERE {?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o} LIMIT 150");
 	}
-
 
 }
