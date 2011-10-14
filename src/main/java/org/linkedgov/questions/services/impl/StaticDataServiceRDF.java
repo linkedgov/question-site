@@ -32,6 +32,16 @@ public class StaticDataServiceRDF implements StaticDataService {
 			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
 			"<%s> ?object} ORDER BY ?object";
 	
+	private static final String GET_SECONDFILTER_PREDICATE_QUERY = "SELECT DISTINCT ?pred WHERE " +
+			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
+			"<%s> <%s> ; " +
+			"?pred ?obj} ORDER BY ?pred";
+	
+	private static final String GET_SECONDFILTER_OBJECT_QUERY = "SELECT DISTINCT ?object WHERE " +
+			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
+			"<%s> <%s> ; " +
+			"<%s> ?object} ORDER BY ?object";
+	
 	private static final String CLASS_VARIABLE = "class";
 	private static final String PREDICATE_VARIABLE = "pred";
 	private static final String OBJECT_VARIABLE = "object";
@@ -59,14 +69,27 @@ public class StaticDataServiceRDF implements StaticDataService {
 		return retValues;
 	}
 	
-	//TODO Mischa this is for Filter B
 	public List<String> getObjects(String subject, String predicate, QueryFilter filter) {
-		return getObjects(subject, predicate);
+		String query = String.format(GET_SECONDFILTER_OBJECT_QUERY, subject, filter.getPredicate(), filter.getObject(), predicate);
+		List<String> retValues = new ArrayList<String>();
+		final SelectResultSet results = sparqlDao.executeSelect(query);		
+		for (SelectResult result : results.getResults()) {
+			final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
+			retValues.add(element.getValue());
+		}
+		return retValues;		
 	}
 	
-	//TOOD Mischa this is for Filter B
 	public List<String> getPredicates(String subject, QueryFilter filter) {
-		return getPredicates(subject);
+		String query = String.format(GET_SECONDFILTER_PREDICATE_QUERY, subject, filter.getPredicate(), filter.getObject());
+		System.err.println("This is megalame "+query);
+		List<String> retValues = new ArrayList<String>();
+		final SelectResultSet results = sparqlDao.executeSelect(query);		
+		for (SelectResult result : results.getResults()) {
+			final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
+				retValues.add(element.getValue());
+		}
+		return retValues;
 	}
 	
 	public List<String> getPredicates(String subject) {

@@ -146,7 +146,7 @@
                        	success : handleSecondFilterPredicateChange, 
                        	data : 	{
                        				subject : $('#subject').val(),
-                       				predicate : firstFilterPredicate,
+                       				predicate : secondFilterPredicate.val(),
                        				firstFilterPredicate : firstFilterPredicate,
             						firstFilterObject : firstFilterObject
                        			},
