@@ -19,8 +19,6 @@ public class Triple {
 	
 	private Pair<SparqlResource,String> object;
 	
-	private String test = "fdsfds";
-	
 	public Triple(){
 		
 	}
