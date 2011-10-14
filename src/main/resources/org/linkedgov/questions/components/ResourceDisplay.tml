@@ -1,0 +1,24 @@
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<span id="prop:id"/>
+	<t:delegate to="displayBlock"/>
+	
+	<t:block id="literalBlock">
+		<t:remove>TODO: this could display things in any number of exciting ways, but right now just display like a nonLiteral</t:remove>	
+		<t:if test="labelDisplayed">
+			${label}
+			<t:parameter name="else">
+				${value}
+			</t:parameter>
+		</t:if>
+	</t:block>
+	
+	<t:block id="nonLiteralBlock">
+		<t:if test="labelDisplayed">
+			${label}
+			<t:parameter name="else">
+				${value}
+			</t:parameter>
+		</t:if>
+	</t:block>
+	
+</t:container>

@@ -54,7 +54,7 @@ public class Query {
 		if(questionType.equals(QuestionType.COUNT)){
 			return "SELECT COUNT * WHERE {?x ?y ?z} LIMIT 150";
 		}else if(questionType.equals(QuestionType.SELECT)){
-			return "SELECT DISTINCT ?s ?o WHERE {?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o} LIMIT 150";
+			return "SELECT DISTINCT ?s ?p ?o WHERE {?s ?p ?o} LIMIT 150";
 		}
 		return subject;
 	}

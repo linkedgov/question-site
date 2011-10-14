@@ -51,12 +51,11 @@ public class SelectResultDataSource implements GridDataSource {
 	} 
 
 	public Class<?> getRowType() {
-		return List.class;
+		return Triple.class;
 	}
 	
 	public List<Triple> getResults() {
-		return results;
-		
+		return results;	
 	}
 
 }

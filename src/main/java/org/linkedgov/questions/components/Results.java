@@ -7,6 +7,7 @@ import org.apache.tapestry5.annotations.SetupRender;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.SelectResultDataSource;
+import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 
 /**
@@ -21,6 +22,13 @@ public class Results {
 	 */
 	@Parameter
 	private Query query;
+	
+	/**
+	 * A row in the list of triples that come back as results.
+	 */
+	@SuppressWarnings("unused")
+	@Property
+	private Triple triple;
 	
 	/**
 	 * QueryDataService service, to actually do the query with.
@@ -70,5 +78,7 @@ public class Results {
 			return dataSource.getAvailableRows() > 0 ? resultsTableBlock : emptyResultsBlock;
 		}
 	}
+	
+	
 	
 }

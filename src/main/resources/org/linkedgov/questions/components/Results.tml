@@ -1,16 +1,28 @@
-<div class="results" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+<div class="results" 
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" 
+    xmlns:p="tapestry:parameter">
 	<t:delegate to="resultsBlock"/>
 	
-	<t:block t:id="resultsTableBlock">
-		<t:grid source="dataSource" pagerPosition="both"/>
+	<t:block id="resultsTableBlock">
+		<t:grid inplace="true" source="dataSource" pagerPosition="both" row="triple" add="subject,predicate,object">
+			<t:parameter name="subjectCell">
+				<t:resourceDisplay resource="prop:triple.subject"/>	
+			</t:parameter>
+			<t:parameter name="predicateCell">
+				<t:resourceDisplay resource="prop:triple.predicate"/>	
+			</t:parameter>
+			<t:parameter name="objectCell">
+				<t:resourceDisplay resource="prop:triple.object"/>	
+			</t:parameter>
+		</t:grid>
 	</t:block>
 	
-	<t:block t:id="emptyResultsBlock">
+	<t:block id="emptyResultsBlock">
 		There are no answers for your question. 
 		TODO: put an input field here to allow users to save their email addresses. 
 	</t:block>
 	
-	<t:block t:id="noResultsYetBlock">
+	<t:block id="noResultsYetBlock">
 		Results will appear here.
 	</t:block>
 </div>

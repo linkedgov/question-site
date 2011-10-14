@@ -19,10 +19,12 @@ public class Triple {
 	
 	private Pair<SparqlResource,String> object;
 	
+	private String test = "fdsfds";
+	
 	public Triple(){
 		
 	}
-	
+
 	public Triple(
 			Pair<SparqlResource,String> subject, 
 			Pair<SparqlResource,String> predicate, 
