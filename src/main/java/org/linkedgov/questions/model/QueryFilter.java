@@ -36,5 +36,13 @@ public class QueryFilter {
 	public String getPredicate() {
 		return predicate;
 	}
+	
+	public boolean isNull() {
+		if (predicate == null && object == null) {
+			return true;
+		}
+		
+		return false;
+	}
 
 }

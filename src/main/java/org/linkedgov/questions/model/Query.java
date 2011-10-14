@@ -49,14 +49,53 @@ public class Query {
 		return firstFilter;
 	}
 	
-	//TODO Mischa, turn this into a real sparql query that represents the query object.
-	public String toSparqlString() {
-		if(questionType.equals(QuestionType.COUNT)){
-			return "SELECT COUNT * WHERE {?x ?y ?z} LIMIT 150";
-		}else if(questionType.equals(QuestionType.SELECT)){
-			return "SELECT DISTINCT ?s ?p ?o WHERE {?s ?p ?o} LIMIT 150";
+	public boolean isNull() {
+		if (subject == null) {
+			return true;
 		}
-		return subject;
+		
+		return false;
+	}
+	
+	public String toSparqlString() {
+		StringBuilder query = new StringBuilder();
+			
+		if (questionType.equals(QuestionType.COUNT)) {
+			query.append("SELECT (COUNT(?sub) AS ?cnt) ");
+		} else {
+			query.append("SELECT DISTINCT ?sub ?pred ?obj ");
+		}
+		
+		query.append("WHERE { ");
+		
+		query.append("?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <");
+		query.append(subject);
+		query.append("> . ");
+		
+		query.append("?sub ?pred ?obj . ");
+    	
+	    if (!firstFilter.isNull()) {
+	    	query.append("?sub <");
+	    	query.append(firstFilter.getPredicate());
+	    	query.append("> <");
+	    	query.append(firstFilter.getObject());
+	    	query.append("> . ");
+	    }
+	    
+	    if (!secondFilter.isNull()) {
+	    	query.append("?sub <");
+	    	query.append(secondFilter.getPredicate());
+	    	query.append("> <");
+	    	query.append(secondFilter.getObject());
+	    	query.append("> . ");
+	    }
+		
+	    query.append("} ");
+	    
+	    //TOOD Mischa pull this out ...
+		System.err.println("Ÿberlame!"+query.toString());
+		
+		return query.toString();
 	}
 	
 }

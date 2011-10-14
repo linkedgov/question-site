@@ -9,12 +9,12 @@ import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 import org.linkedgov.questions.services.SparqlDao;
 
-import uk.me.mmt.sprotocol.IRI;
-import uk.me.mmt.sprotocol.Literal;
+import uk.me.mmt.sprotocol.SelectResult;
+import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlResource;
 
 /**
- * TODO: this isn't actually used anymore. See if it ends up being required and deleted it if not.
+ * This class generates the object needed by the dataTable component
  * 
  * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
  * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
@@ -23,47 +23,42 @@ import uk.me.mmt.sprotocol.SparqlResource;
 public class QueryDataServiceImpl implements QueryDataService {
 
 	private final SparqlDao sparqlDao;
-	
+
 	public QueryDataServiceImpl(SparqlDao sparqlDao){
 		this.sparqlDao = sparqlDao;
 	}
-	
+
 	public List<Triple> executeQuery(Query query) { 
-		
-		//TODO: Mischa to parse this and return a list of triples.
-		sparqlDao.executeSelect(query.toSparqlString());
-	
 		final List<Triple> triples = new ArrayList<Triple>();
-		final IRI subject = new IRI();
-		subject.setValue("http://viscri.co.uk/myResource");
-		
-		final IRI predicate = new IRI();
-		predicate.setValue("http://viscri.co.uk/date");
-	
-		final Literal object = new Literal();
-		object.setValue("2002-01-01");
-		object.setLanguage("en");
-		object.setDatatype("datatype");
-		
-		final Pair<SparqlResource, String> labelSubjectPair = new Pair<SparqlResource,String>(subject,"subjectLabel");
-		final Pair<SparqlResource, String> labelPredicatePair = new Pair<SparqlResource,String>(predicate,"predicateLabel");
-		final Pair<SparqlResource, String> labelObjectPair = new Pair<SparqlResource,String>(object,"predicateLabel");	
-		final Triple tripleWithLabels = new Triple(labelSubjectPair, labelPredicatePair, labelObjectPair);	
-		
-		final Pair<SparqlResource, String> noLabelSubjectPair = new Pair<SparqlResource,String>(subject,null);
-		final Pair<SparqlResource, String> noLabelPredicatePair = new Pair<SparqlResource,String>(predicate,null);
-		final Pair<SparqlResource, String> noLabelObjectPair = new Pair<SparqlResource,String>(object,null);	
-		final Triple tripleNoLabels = new Triple(noLabelSubjectPair, noLabelPredicatePair, noLabelObjectPair);	
-		
-		sparqlDao.executeSelect(query.toSparqlString());
-		
-		triples.add(tripleWithLabels);
-		triples.add(tripleNoLabels);
-		triples.add(tripleNoLabels);
-		triples.add(tripleWithLabels);
-		triples.add(tripleWithLabels);
-		triples.add(tripleNoLabels);
-		
+
+		if (!query.isNull()) {			
+			SelectResultSet results = sparqlDao.executeSelect(query.toSparqlString());
+
+			for (SelectResult result : results.getResults()) {
+				Triple triple = new Triple();	
+
+				for (String variable : results.getHead() ) {
+					SparqlResource resource =  result.getResult().get(variable);
+					System.err.println("This variable '"+variable+"' with this result: '"+resource.getValue()+"' was returned");
+					Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
+					Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
+					Pair<SparqlResource,String> obj = new Pair<SparqlResource,String>();
+
+					if (variable.equals("sub")) {
+						sub.setFirst(resource);
+						triple.setSubject(sub);
+					} else if (variable.equals("pred")) {
+						pred.setFirst(resource);
+						triple.setPredicate(pred);
+					} else if (variable.equals("obj")) {
+						obj.setFirst(resource);
+						triple.setObject(obj);
+					}
+				}
+				triples.add(triple);
+
+			}
+		}
 		return triples;
 	}
 
