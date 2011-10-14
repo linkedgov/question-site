@@ -48,12 +48,12 @@ public class Query {
 		return firstFilter;
 	}
 	
-	//TODO Mischa, turn this into a real sparql query that represents the data.
+	//TODO Mischa, turn this into a real sparql query that represents the query object.
 	public String toSparqlString() {
 		if(questionType.equals(QuestionType.COUNT)){
 			return "SELECT COUNT * WHERE {?x ?y ?z} LIMIT 150";
 		}else if(questionType.equals(QuestionType.SELECT)){
-			return "SELECT DISTINCT * WHERE {?x ?y ?z} LIMIT 150";
+			return "SELECT DISTINCT ?s ?o WHERE {?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o} LIMIT 150";
 		}
 		return subject;
 	}

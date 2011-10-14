@@ -1,7 +1,6 @@
 package org.linkedgov.questions.model;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.tapestry5.grid.GridDataSource;
 import org.apache.tapestry5.grid.SortConstraint;
@@ -16,21 +15,11 @@ import org.linkedgov.questions.services.QueryDataService;
  *
  */
 public class SelectResultDataSource implements GridDataSource {
-
-	/**
-	 * The query to get the data.
-	 */
-	private final Query query;
-	
-	/**
-	 * For doing the actual sparql query.
-	 */
-	private final QueryDataService queryDataService;
 	
 	/**
 	 * The results of the query.
 	 */
-	private final List<Map<String, String>> results;
+	private final List<Triple> results;
 	
 	/**
 	 * The start index.
@@ -44,8 +33,6 @@ public class SelectResultDataSource implements GridDataSource {
 	 * @param queryService - the service to send the query to to get the data.
 	 */
 	public SelectResultDataSource(Query query, QueryDataService queryDataService){
-		this.query = query;
-		this.queryDataService = queryDataService;
 		this.results = queryDataService.executeQuery(query);
 	}
 	
@@ -63,7 +50,12 @@ public class SelectResultDataSource implements GridDataSource {
 	} 
 
 	public Class<?> getRowType() {
-		return Map.class;
+		return List.class;
+	}
+	
+	public List<Triple> getResults() {
+		return results;
+		
 	}
 
 }

@@ -1,11 +1,9 @@
 package org.linkedgov.questions.services.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.linkedgov.questions.model.Query;
+import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 import org.linkedgov.questions.services.SparqlDao;
 
@@ -23,20 +21,11 @@ public class QueryDataServiceImpl implements QueryDataService {
 		this.sparqlDao = sparqlDao;
 	}
 	
-	public List<Map<String,String>> executeQuery(Query query) {
-		
-		 List<Map<String,String>> results = new ArrayList<Map<String,String>>();
-		 Map<String,String> map = new HashMap<String,String>();
-		 map.put("key", "value");
-		 map.put("key2", "value2");
-		 
-		 Map<String,String> map2 = new HashMap<String,String>();
-		 map.put("a", "bb");
-		 map.put("a", "bbb");
-		 results.add(map);
-		 results.add(map2);
-		 
-		 return results;
+	public List<Triple> executeQuery(Query query) { 
+		sparqlDao.executeSelect(query.toSparqlString());
+		//TODO: Mischa to parse this and return a list of triples.
+		//sparqlDao.executeSelect(query.toSparqlString());
+		return null;
 	}
 
 }

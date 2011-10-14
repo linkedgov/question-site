@@ -56,4 +56,5 @@ public class SparqlDaoImpl implements SparqlDao {
 	public int executeCount(String query) {
 		return 100;
 	}
+
 }

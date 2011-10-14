@@ -4,7 +4,6 @@ import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SetupRender;
-import org.apache.tapestry5.grid.GridDataSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.SelectResultDataSource;
@@ -46,8 +45,8 @@ public class Results {
 	 * Datasource to back the result table.
 	 */
 	@Property
-	private GridDataSource dataSource;
-	
+	private SelectResultDataSource dataSource;
+
 	/**
 	 * Select Result Data Source
 	 */
@@ -56,8 +55,10 @@ public class Results {
 		dataSource = new SelectResultDataSource(query, queryDataService);
 	}
 	
+	/**
+	 * @return - a block which contains the results or an error message if there aren't any.
+	 */
 	public Block getResultsBlock(){
-		System.out.println("My results");
 		if(query.getSubject() == null){
 			return noResultsYetBlock;
 		} else {
