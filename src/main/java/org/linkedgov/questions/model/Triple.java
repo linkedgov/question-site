@@ -18,6 +18,19 @@ public class Triple {
 	private Pair<SparqlResource,String> predicate;
 	
 	private Pair<SparqlResource,String> object;
+	
+	public Triple(){
+		
+	}
+	
+	public Triple(
+			Pair<SparqlResource,String> subject, 
+			Pair<SparqlResource,String> predicate, 
+			Pair<SparqlResource,String> object){
+		this.subject = subject;
+		this.predicate = predicate;
+		this.object = object;
+	}
 
 	public void setSubject(Pair<SparqlResource, String> subject) {
 		this.subject = subject;
