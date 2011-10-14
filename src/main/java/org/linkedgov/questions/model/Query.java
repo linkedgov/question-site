@@ -92,9 +92,6 @@ public class Query {
 		
 	    query.append("} ");
 	    
-	    //TOOD Mischa pull this out ...
-		System.err.println("Ÿberlame!"+query.toString());
-		
 		return query.toString();
 	}
 	
