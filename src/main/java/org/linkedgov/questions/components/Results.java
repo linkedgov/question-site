@@ -78,7 +78,4 @@ public class Results {
 			return dataSource.getAvailableRows() > 0 ? resultsTableBlock : emptyResultsBlock;
 		}
 	}
-	
-	
-	
 }

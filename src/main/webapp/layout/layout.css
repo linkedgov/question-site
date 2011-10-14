@@ -397,3 +397,9 @@ a:hover {
 .question div.t-error{
 	display:block;
 }
+
+/* Result page */
+.results table{
+	width:1000px;
+	margin: 10px	
+}
