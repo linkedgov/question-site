@@ -10,8 +10,9 @@ import uk.me.mmt.sprotocol.SparqlProtocolClient;
 /**
  * Just a wrapper of sprotocol's SparqlProtocolClient.
  * 
- * @author Luke Wilson-Mawer Viscri Limited for LinkedGov.
- *
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
+ * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
+ * 
  */
 public class SparqlDaoImpl implements SparqlDao {
 

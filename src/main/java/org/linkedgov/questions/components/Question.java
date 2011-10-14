@@ -27,8 +27,9 @@ import org.linkedgov.questions.services.StaticDataService;
 /**
  * The main component for asking questions of the data.
  * 
- * @author Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
- *
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
+ * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
+ * 
  */
 @Import(library="Question.js")
 public class Question {

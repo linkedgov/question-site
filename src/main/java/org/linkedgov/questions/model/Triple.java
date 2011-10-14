@@ -2,6 +2,12 @@ package org.linkedgov.questions.model;
 
 import uk.me.mmt.sprotocol.SparqlResource;
 
+/**
+ * 
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
+ * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
+ * 
+ */
 public class Triple {
 	
 	/**
@@ -36,5 +42,4 @@ public class Triple {
 	public Pair<SparqlResource, String> getObject() {
 		return object;
 	}
-	
 }

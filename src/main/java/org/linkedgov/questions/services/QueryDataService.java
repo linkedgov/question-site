@@ -8,8 +8,8 @@ import org.linkedgov.questions.model.Triple;
 /**
  * TODO: this isn't actually used anymore. See if it ends up being required and deleted it if not.
  * 
- * @author Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
- * @param <Answer>
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
+ * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
  *
  */
 public interface QueryDataService {

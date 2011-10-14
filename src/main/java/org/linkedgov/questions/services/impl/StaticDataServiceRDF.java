@@ -15,7 +15,11 @@ import uk.me.mmt.sprotocol.SparqlResource;
 /**
  * TODO: decide on what stuff to cache and what not to cache here.
  * 
- * Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
+ * This Class is used to populate the various drop downs in the Question Answering Site
+ * by creating SPARQL queries based on the user input
+ * 
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
+ * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
  *
  */
 public class StaticDataServiceRDF implements StaticDataService {
@@ -58,6 +62,13 @@ public class StaticDataServiceRDF implements StaticDataService {
 		return classes.isEmpty() ? queryForClasses() : classes;
 	}
 	
+	/**
+	 * @param subject - the subject of the query/question.
+	 * @param predicate - the predicate of the second filter.
+	 * @param firstFilterPredicate - the predicate of the third filter.
+	 * @param firstFilterObject - the predicate of the third filter.
+	 * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display,
+	 */
 	public List<String> getObjects(String subject, String predicate){
 		String query = String.format(GET_OBJECTS_QUERY, subject, predicate);
 		List<String> retValues = new ArrayList<String>();
@@ -68,6 +79,15 @@ public class StaticDataServiceRDF implements StaticDataService {
 		}
 		return retValues;
 	}
+	
+	/**
+	 * 
+	 * This function is used to return a list of objects given the second filter, Class and the First Filter
+	 * 
+	 * @param subject : The Class type to find a list of predicates for
+	 * @param filter : This contains the first filter 
+	 * @return A List of Strings for the second list of predicates 
+	 */
 	
 	public List<String> getObjects(String subject, String predicate, QueryFilter filter) {
 		String query = String.format(GET_SECONDFILTER_OBJECT_QUERY, subject, filter.getPredicate(), filter.getObject(), predicate);
@@ -80,6 +100,14 @@ public class StaticDataServiceRDF implements StaticDataService {
 		return retValues;		
 	}
 	
+	/**
+	 * 
+	 * This function is used to return a list of predicates given a Class and the First Filter
+	 * 
+	 * @param subject : The Class type to find a list of predicates for
+	 * @param filter : This contains the first filter 
+	 * @return A List of Strings for the second list of predicates 
+	 */
 	public List<String> getPredicates(String subject, QueryFilter filter) {
 		String query = String.format(GET_SECONDFILTER_PREDICATE_QUERY, subject, filter.getPredicate(), filter.getObject());
 		System.err.println("This is megalame "+query);
@@ -92,6 +120,13 @@ public class StaticDataServiceRDF implements StaticDataService {
 		return retValues;
 	}
 	
+	/**
+	 * 
+	 * This function is used to return a list of predicates given a Class
+	 * 
+	 * @param subject : The Class type to find a list of predicates for
+	 * @return A List of Strings for the first list of predicates 
+	 */
 	public List<String> getPredicates(String subject) {
 		String query = String.format(GET_PREDICATE_QUERY, subject);
 		List<String> retValues = new ArrayList<String>();
@@ -103,6 +138,11 @@ public class StaticDataServiceRDF implements StaticDataService {
 		return retValues;
 	}
 
+	/**
+	 * This function will get a list of all the classes in the KB
+	 * 
+	 * @return A List of Strings for the first drop-down
+	 */
 	private List<String> queryForClasses() {
 		final SelectResultSet results = sparqlDao.executeSelect(GET_CLASSES_QUERY);		
 		for (SelectResult result : results.getResults()) {

@@ -21,8 +21,9 @@ import org.slf4j.Logger;
  * This module is automatically included as part of the Tapestry IoC Registry, it's a good place to
  * configure and extend Tapestry, or to place your own service definitions.
  * 
- * Luke Wilson-Mawer <a href="http://viscri.co.uk">Viscri</a> for LinkedGov
- *
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
+ * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
+ * 
  */
 public class AppModule
 {
