@@ -2,6 +2,7 @@ package org.linkedgov.questions.components;
 
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.Parameter;
+import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SetupRender;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -62,6 +63,7 @@ public class Results {
      * Datasource to back the result table.
      */
     @Property
+    @Persist
     private SelectResultDataSource dataSource;
 
     /**

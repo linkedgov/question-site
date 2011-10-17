@@ -47,7 +47,7 @@ public class SelectResultDataSource implements GridDataSource {
     }
     
     public Object getRowValue(int index) {
-        return results.get(index-startIndex);
+        return results.get(index);
     } 
 
     public Class<?> getRowType() {
