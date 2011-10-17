@@ -33,7 +33,7 @@ public class SelectResultDataSource implements GridDataSource {
      * @param query - the query to get the data.
      * @param queryService - the service to send the query to to get the data.
      */
-    public SelectResultDataSource(Query query, QueryDataService queryDataService){
+    public SelectResultDataSource(Query query, QueryDataService queryDataService) {
         this.results = queryDataService.executeQuery(query);
     }
     

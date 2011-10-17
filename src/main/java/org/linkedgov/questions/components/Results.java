@@ -25,9 +25,6 @@ public class Results {
     @Parameter
     private Query query;
     
-    //@Property
-    //private String gridColumns = "resultSubject,resultPredicate,resultObject";
-   
     /**
      * A row in the list of triples that come back as results.
      */
