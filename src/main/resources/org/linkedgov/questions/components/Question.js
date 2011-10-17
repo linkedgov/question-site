@@ -141,7 +141,7 @@
         		objectEditor.css("display","inline-block");
         		
         		var field = objectEditor.find(":input");
-        		field.show();
+        		objectEditor.formFragment().show();
         		field.css("display","inline-block");
         		makeReadable(field);
         		if(field.is("select")){
