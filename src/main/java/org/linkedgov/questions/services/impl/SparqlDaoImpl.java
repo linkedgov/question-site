@@ -37,9 +37,9 @@ public class SparqlDaoImpl implements SparqlDao {
      * @throws SprotocolException 
      */
     public SelectResultSet executeSelect(String query)  {
-        try {
+        System.err.println("The is query being fired "+query);
+    	try {
             //TODO Mischa remove this debug
-            System.err.println("The is query being fired "+query);
             return client.executeSelect(query);
         } catch (SprotocolException e) {
             System.err.println("Error making SPARQL protocol call"+e.getMessage());
