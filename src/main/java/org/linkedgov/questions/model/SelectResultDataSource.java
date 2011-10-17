@@ -25,6 +25,7 @@ public class SelectResultDataSource implements GridDataSource {
     /**
      * The start index.
      */
+    @SuppressWarnings("unused")
     private int startIndex = 0;
     
     /**
