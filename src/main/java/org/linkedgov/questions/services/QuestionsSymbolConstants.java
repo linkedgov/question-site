@@ -8,5 +8,5 @@ package org.linkedgov.questions.services;
  */
 public class QuestionsSymbolConstants {
 
-	public static final String SPARQL_ENDPOINT_URL = "sparql.endpoint.url";
+    public static final String SPARQL_ENDPOINT_URL = "sparql.endpoint.url";
 }

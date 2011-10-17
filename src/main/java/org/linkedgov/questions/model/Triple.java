@@ -9,50 +9,50 @@ import uk.me.mmt.sprotocol.SparqlResource;
  * 
  */
 public class Triple {
-	
-	/**
-	 * resource, label
-	 */
-	private Pair<SparqlResource,String> subject;
-	
-	private Pair<SparqlResource,String> predicate;
-	
-	private Pair<SparqlResource,String> object;
-	
-	public Triple(){
-		
-	}
+    
+    /**
+     * resource, label
+     */
+    private Pair<SparqlResource,String> subject;
+    
+    private Pair<SparqlResource,String> predicate;
+    
+    private Pair<SparqlResource,String> object;
+    
+    public Triple(){
+        
+    }
 
-	public Triple(
-			Pair<SparqlResource,String> subject, 
-			Pair<SparqlResource,String> predicate, 
-			Pair<SparqlResource,String> object){
-		this.subject = subject;
-		this.predicate = predicate;
-		this.object = object;
-	}
+    public Triple(
+            Pair<SparqlResource,String> subject, 
+            Pair<SparqlResource,String> predicate, 
+            Pair<SparqlResource,String> object){
+        this.subject = subject;
+        this.predicate = predicate;
+        this.object = object;
+    }
 
-	public void setSubject(Pair<SparqlResource, String> subject) {
-		this.subject = subject;
-	}
+    public void setSubject(Pair<SparqlResource, String> subject) {
+        this.subject = subject;
+    }
 
-	public Pair<SparqlResource, String> getSubject() {
-		return subject;
-	}
+    public Pair<SparqlResource, String> getSubject() {
+        return subject;
+    }
 
-	public void setPredicate(Pair<SparqlResource, String> predicate) {
-		this.predicate = predicate;
-	}
+    public void setPredicate(Pair<SparqlResource, String> predicate) {
+        this.predicate = predicate;
+    }
 
-	public Pair<SparqlResource, String> getPredicate() {
-		return predicate;
-	}
+    public Pair<SparqlResource, String> getPredicate() {
+        return predicate;
+    }
 
-	public void setObject(Pair<SparqlResource, String> object) {
-		this.object = object;
-	}
+    public void setObject(Pair<SparqlResource, String> object) {
+        this.object = object;
+    }
 
-	public Pair<SparqlResource, String> getObject() {
-		return object;
-	}
+    public Pair<SparqlResource, String> getObject() {
+        return object;
+    }
 }

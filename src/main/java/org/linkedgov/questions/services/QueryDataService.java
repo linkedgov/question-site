@@ -14,5 +14,5 @@ import org.linkedgov.questions.model.Triple;
  */
 public interface QueryDataService {
 
-	public List<Triple> executeQuery(Query query);
+    public List<Triple> executeQuery(Query query);
 }

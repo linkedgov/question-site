@@ -12,14 +12,14 @@ import org.linkedgov.questions.model.QueryFilter;
  *
  */
 public interface StaticDataService {
-	
-	public List<String> getClasses();
-	
-	public List<String> getObjects(String subject, String predicate);
-	
-	public List<String> getPredicates(String subject);
+    
+    public List<String> getClasses();
+    
+    public List<String> getObjects(String subject, String predicate);
+    
+    public List<String> getPredicates(String subject);
 
-	public List<String> getPredicates(String subject, QueryFilter filter);
+    public List<String> getPredicates(String subject, QueryFilter filter);
 
-	public List<String> getObjects(String subject, String predicate, QueryFilter filter);
+    public List<String> getObjects(String subject, String predicate, QueryFilter filter);
 }

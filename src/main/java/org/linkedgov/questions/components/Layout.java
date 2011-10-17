@@ -17,21 +17,21 @@ public class Layout
 {
     /** The page title, for the <title> element and the <h1> element. */
     @SuppressWarnings("unused")
-	@Property
+    @Property
     @Parameter(required = true, defaultPrefix = BindingConstants.LITERAL)
     private String title;
 
     @SuppressWarnings("unused")
-	@Property
+    @Property
     private String pageName;
 
     @SuppressWarnings("unused")
-	@Property
+    @Property
     @Parameter(defaultPrefix = BindingConstants.LITERAL)
     private String sidebarTitle;
 
     @SuppressWarnings("unused")
-	@Property
+    @Property
     @Parameter(defaultPrefix = BindingConstants.LITERAL)
     private Block sidebar;
 

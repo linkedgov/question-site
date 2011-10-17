@@ -13,13 +13,13 @@ import java.util.List;
  */
 public class Query {
 
-	private QuestionType questionType = QuestionType.SELECT;
+    private QuestionType questionType = QuestionType.SELECT;
 
-	private String subject;
+    private String subject;
 
-	private QueryFilter firstFilter = new QueryFilter();
+    private QueryFilter firstFilter = new QueryFilter();
 
-	private QueryFilter secondFilter = new QueryFilter();
+    private QueryFilter secondFilter = new QueryFilter();
 
     public final static List<String> URI_PREFIXES;
     static {
@@ -30,101 +30,101 @@ public class Query {
         lst.add("urn");
         URI_PREFIXES = Collections.unmodifiableList(lst);
     };
-	
-	
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+    
+    
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
-	public String getSubject() {
-		return subject;
-	}
+    public String getSubject() {
+        return subject;
+    }
 
-	public void setQuestionType(QuestionType questionType) {
-		this.questionType = questionType;
-	}
+    public void setQuestionType(QuestionType questionType) {
+        this.questionType = questionType;
+    }
 
-	public QuestionType getQuestionType() {
-		return questionType;
-	}
+    public QuestionType getQuestionType() {
+        return questionType;
+    }
 
-	public void setSecondFilter(QueryFilter secondFilter) {
-		this.secondFilter = secondFilter;
-	}
+    public void setSecondFilter(QueryFilter secondFilter) {
+        this.secondFilter = secondFilter;
+    }
 
-	public QueryFilter getSecondFilter() {
-		return secondFilter;
-	}
+    public QueryFilter getSecondFilter() {
+        return secondFilter;
+    }
 
-	public void setFirstFilter(QueryFilter firstFilter) {
-		this.firstFilter = firstFilter;
-	}
+    public void setFirstFilter(QueryFilter firstFilter) {
+        this.firstFilter = firstFilter;
+    }
 
-	public QueryFilter getFirstFilter() {
-		return firstFilter;
-	}
+    public QueryFilter getFirstFilter() {
+        return firstFilter;
+    }
 
-	public boolean isNull() {
-		if (subject == null) {
-			return true;
-		}
+    public boolean isNull() {
+        if (subject == null) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public String toSparqlString() {
-		StringBuilder query = new StringBuilder();
+    public String toSparqlString() {
+        StringBuilder query = new StringBuilder();
 
-		if (questionType.equals(QuestionType.COUNT)) {
-			query.append("SELECT (COUNT(?sub) AS ?cnt) ");
-		} else {
-			query.append("SELECT DISTINCT ?sub ?pred ?obj ");
-		}
+        if (questionType.equals(QuestionType.COUNT)) {
+            query.append("SELECT (COUNT(?sub) AS ?cnt) ");
+        } else {
+            query.append("SELECT DISTINCT ?sub ?pred ?obj ");
+        }
 
-		query.append("WHERE { ");
+        query.append("WHERE { ");
 
-		query.append("?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <");
-		query.append(subject);
-		query.append("> . ");
+        query.append("?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <");
+        query.append(subject);
+        query.append("> . ");
 
-		query.append("?sub ?pred ?obj . ");
+        query.append("?sub ?pred ?obj . ");
 
-		if (!firstFilter.isNull()) {
-			query.append(filterToSparqlBGP(firstFilter));
-		}
-		if (!secondFilter.isNull()) {
-			query.append(filterToSparqlBGP(secondFilter));
-		}
+        if (!firstFilter.isNull()) {
+            query.append(filterToSparqlBGP(firstFilter));
+        }
+        if (!secondFilter.isNull()) {
+            query.append(filterToSparqlBGP(secondFilter));
+        }
 
-		query.append("} ");
+        query.append("} ");
 
-		return query.toString();
-	}
+        return query.toString();
+    }
 
-	public String filterToSparqlBGP(QueryFilter filter) {
-		StringBuilder bgp = new StringBuilder();
-		bgp.append("?sub <");
-		bgp.append(filter.getPredicate());
-		bgp.append("> ");
+    public String filterToSparqlBGP(QueryFilter filter) {
+        StringBuilder bgp = new StringBuilder();
+        bgp.append("?sub <");
+        bgp.append(filter.getPredicate());
+        bgp.append("> ");
 
-		boolean isURI = false;
-		String object = filter.getObject();
-		for (String prefix : URI_PREFIXES) {
-			if (object.startsWith(prefix)) {
-				isURI = true;
-				break;
-			}
-		}
-		if (isURI) {
-			object = "<"+object+">";
-		} else {
-			object = "\""+object+"\"";
-		}
-		
-		bgp.append(object);
+        boolean isURI = false;
+        String object = filter.getObject();
+        for (String prefix : URI_PREFIXES) {
+            if (object.startsWith(prefix)) {
+                isURI = true;
+                break;
+            }
+        }
+        if (isURI) {
+            object = "<"+object+">";
+        } else {
+            object = "\""+object+"\"";
+        }
+        
+        bgp.append(object);
 
-		bgp.append(" . ");
+        bgp.append(" . ");
 
-		return bgp.toString();
-	}
+        return bgp.toString();
+    }
 }

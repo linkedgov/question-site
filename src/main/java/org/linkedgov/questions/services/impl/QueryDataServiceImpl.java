@@ -22,44 +22,44 @@ import uk.me.mmt.sprotocol.SparqlResource;
  */
 public class QueryDataServiceImpl implements QueryDataService {
 
-	private final SparqlDao sparqlDao;
+    private final SparqlDao sparqlDao;
 
-	public QueryDataServiceImpl(SparqlDao sparqlDao){
-		this.sparqlDao = sparqlDao;
-	}
+    public QueryDataServiceImpl(SparqlDao sparqlDao){
+        this.sparqlDao = sparqlDao;
+    }
 
-	public List<Triple> executeQuery(Query query) { 
-		final List<Triple> triples = new ArrayList<Triple>();
+    public List<Triple> executeQuery(Query query) { 
+        final List<Triple> triples = new ArrayList<Triple>();
 
-		if (!query.isNull()) {			
-			SelectResultSet results = sparqlDao.executeSelect(query.toSparqlString());
+        if (!query.isNull()) {            
+            SelectResultSet results = sparqlDao.executeSelect(query.toSparqlString());
 
-			for (SelectResult result : results.getResults()) {
-				Triple triple = new Triple();	
+            for (SelectResult result : results.getResults()) {
+                Triple triple = new Triple();    
 
-				for (String variable : results.getHead() ) {
-					SparqlResource resource =  result.getResult().get(variable);
-					System.err.println("This variable '"+variable+"' with this result: '"+resource.getValue()+"' was returned");
-					Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
-					Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
-					Pair<SparqlResource,String> obj = new Pair<SparqlResource,String>();
+                for (String variable : results.getHead() ) {
+                    SparqlResource resource =  result.getResult().get(variable);
+                    System.err.println("This variable '"+variable+"' with this result: '"+resource.getValue()+"' was returned");
+                    Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
+                    Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
+                    Pair<SparqlResource,String> obj = new Pair<SparqlResource,String>();
 
-					if (variable.equals("sub")) {
-						sub.setFirst(resource);
-						triple.setSubject(sub);
-					} else if (variable.equals("pred")) {
-						pred.setFirst(resource);
-						triple.setPredicate(pred);
-					} else if (variable.equals("obj")) {
-						obj.setFirst(resource);
-						triple.setObject(obj);
-					}
-				}
-				triples.add(triple);
+                    if (variable.equals("sub")) {
+                        sub.setFirst(resource);
+                        triple.setSubject(sub);
+                    } else if (variable.equals("pred")) {
+                        pred.setFirst(resource);
+                        triple.setPredicate(pred);
+                    } else if (variable.equals("obj")) {
+                        obj.setFirst(resource);
+                        triple.setObject(obj);
+                    }
+                }
+                triples.add(triple);
 
-			}
-		}
-		return triples;
-	}
+            }
+        }
+        return triples;
+    }
 
 }

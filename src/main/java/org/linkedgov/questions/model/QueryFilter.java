@@ -9,40 +9,40 @@ package org.linkedgov.questions.model;
  */
 public class QueryFilter {
 
-	private String predicate;
-	
-	private String object;
-	
-	public QueryFilter(String predicate, String object){
-		this.predicate = predicate;
-		this.object = object;
-	}
+    private String predicate;
+    
+    private String object;
+    
+    public QueryFilter(String predicate, String object){
+        this.predicate = predicate;
+        this.object = object;
+    }
 
-	public QueryFilter() {
-	}
+    public QueryFilter() {
+    }
 
-	public void setObject(String object) {
-		this.object = object;
-	}
+    public void setObject(String object) {
+        this.object = object;
+    }
 
-	public String getObject() {
-		return object;
-	}
+    public String getObject() {
+        return object;
+    }
 
-	public void setPredicate(String predicate) {
-		this.predicate = predicate;
-	}
+    public void setPredicate(String predicate) {
+        this.predicate = predicate;
+    }
 
-	public String getPredicate() {
-		return predicate;
-	}
-	
-	public boolean isNull() {
-		if (predicate == null && object == null) {
-			return true;
-		}
-		
-		return false;
-	}
+    public String getPredicate() {
+        return predicate;
+    }
+    
+    public boolean isNull() {
+        if (predicate == null && object == null) {
+            return true;
+        }
+        
+        return false;
+    }
 
 }

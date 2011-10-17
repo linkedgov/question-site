@@ -8,6 +8,6 @@ package org.linkedgov.questions.model;
  */
 public enum QuestionType {
 
-	SELECT, COUNT;
-	
+    SELECT, COUNT;
+    
 }
