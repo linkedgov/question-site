@@ -76,7 +76,7 @@ public class Query {
         StringBuilder query = new StringBuilder();
 
         if (questionType.equals(QuestionType.COUNT)) {
-            query.append("SELECT (COUNT(?sub) AS ?cnt) ");
+            query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
         } else {
             query.append("SELECT DISTINCT ?sub ?pred ?obj ");
         }
