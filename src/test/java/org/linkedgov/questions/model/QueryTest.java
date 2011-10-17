@@ -10,9 +10,18 @@ public class QueryTest extends TestCase {
 
     /** Test the Query to String thing **/
     public void testThatFeature() throws Exception {
+        
+        QueryFilter first = new QueryFilter();
+        first.setPredicate("http://xmlns.com/foaf/0.1/interest");
+        first.setObject("http://dbpedia.org/page/Beer");
+        
         Query q = new Query();
+       
         q.setQuestionType(QuestionType.SELECT);
-        assertEquals(q.toSparqlString(), "SELECT DISTINCT ?s ?o WHERE {?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o} LIMIT 150");
+        q.setSubject("http://xmlns.com/foaf/0.1/Person");
+        q.setFirstFilter(first);
+                
+        assertEquals(q.toSparqlString(), "SELECT DISTINCT ?sub ?pred ?obj WHERE { ?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . ?sub ?pred ?obj . ?sub <http://xmlns.com/foaf/0.1/interest> <http://dbpedia.org/page/Beer> . } ");
     }
 
 }
