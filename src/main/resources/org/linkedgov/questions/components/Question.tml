@@ -8,32 +8,32 @@
 		
 		<div class="filtersContainer">
 			<!-- TODO: split these out into a filter component??? -->
-			<t:formFragment t:id="firstFilter" class="filter">
+			<div id="firstFilter" class="filter">
 				<t:select class="predicate" t:id="firstPredicate" model="emptyList" blankLabel="${message:predicatesBlankLabel}" value="query.firstFilter.predicate"/>
 				<t:formFragment class="selectObjectEditor objectContainer">
-					<t:select class="object" t:id="firstObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.firstFilter.object"/>
+					<t:select class="object" t:id="firstSelectObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.firstFilter.object"/>
 				</t:formFragment>
-				<t:formFragment class="freetextObjectEditor objectContainer" visible="true">
+				<t:formFragment class="freetextObjectEditor objectContainer">
 					<t:TextField class="object" t:id="firstFreeTextObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.firstFilter.object"/>
 				</t:formFragment>
 				<t:formFragment class="locationObjectEditor objectContainer">	
 					<t:TextField class="object"  t:id="firstLocationObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.firstFilter.object"/>
 				</t:formFragment>
-			</t:formFragment>
+			</div>
 			<br/>
-			<t:formFragment t:id="secondFilter" class="filter">
+			<div id="secondFilter" class="filter">
 				<!-- TODO: split these out into a filter component??? -->
 				<t:select class="predicate" t:id="secondPredicate" model="emptyList"  blankLabel="${message:predicatesBlankLabel}" value="query.secondFilter.predicate"/>
 				<t:formFragment class="selectObjectEditor objectContainer" >
 					<t:select class="object" t:id="secondSelectObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
 				</t:formFragment>
-				<t:formFragment class="freetextObjectEditor objectContainer" visible="true">
-					<t:TextField class="object"  t:id="secondFreeTextObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
+				<t:formFragment class="freetextObjectEditor objectContainer">
+					<t:TextField class="object" t:id="secondFreeTextObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
 				</t:formFragment>
 				<t:formFragment class="locationObjectEditor objectContainer">	
-					<t:TextField class="object"  t:id="secondLocationObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
+					<t:TextField class="object" t:id="secondLocationObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
 				</t:formFragment>
-			</t:formFragment>
+			</div>
 		</div>
 		<div>
 			<t:formFragment class="removeFilterContainer">

@@ -1,4 +1,4 @@
-//TODO: try to pass more ids etc through tapestry. This should be tidied up before it gets too hard to understand.
+//TODO: try to pass more ids etc through tapestry.
 (function($){
 	
     /** Container of functions that may be invoked by the Tapestry.init() function. */
@@ -9,17 +9,19 @@
         		$(filterSelector).show();
     			$(filterSelector).css("display","inline-block");
     			var object = $(filterSelector).find(".object");
+    			$(filterSelector).find(".freetextObjectEditor").formFragment().show().css("display","inline-block")
     			$.question.utils.makeReadOnly(object);
     			$.question.utils.populateSelectInFilter($(filterSelector+' .predicate'),data.predicates);
-    			$.question.utils.makeReadOnly($("#ask"));
     			$.question.utils.makeReadOnly($("#subject"));
     			$(".removeFilterContainer").formFragment().show();
     			$(".removeFilterContainer").css("display","inline-block");
+    			$("#ask").attr("disabled","disabled"); 
+    			$("#addFilter").attr("disabled","disabled");
         	}
     
     		var handleAddFirstFilter = function(data){
     			showFilter("#firstFilter", data);
-    			$.question.utils.makeReadOnly($("#addFilter"));
+    			$("#addFilter").attr("disabled","disabled")
     		}
     		
     		var handleAddSecondFilter = function(data){
@@ -128,9 +130,9 @@
 					if($("#secondFilter").css("display") === "none"){
 						$("#addFilter").show();
 						$("#addFilter").css("display","inline-block");
-						$.question.utils.makeReadable($("#addFilter"));
+						$("#addFilter").removeAttr("disabled");
 					} 
-					$.question.utils.makeReadable($("#ask"));
+					$("#ask").removeAttr("disabled");
 				}
         	}
         	
@@ -155,9 +157,9 @@
         			filterToRemove = $("#firstFilter");
         			$.question.utils.makeReadable($(".subject"));
         			$(".removeFilterContainer").formFragment().hide();
-        			$.question.utils.makeReadable($("#ask"));
+        			$("#ask").removeAttr("disabled");
         		}
-        		$.question.utils.makeReadable($("#addFilter"));
+        		$("#addFilter").removeAttr("disabled");
         		filterToRemove.hide();
         		filterToRemove.find(".objectContainer").formFragment().hide();
         		filterToRemove.find(":input:not(.tapestry-formfragment)").val("");
