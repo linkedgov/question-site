@@ -4,58 +4,23 @@
     /** Container of functions that may be invoked by the Tapestry.init() function. */
     $.extend(Tapestry.Initializer, {
          addFilter: function(specs){
-    			
-           	//TODO: remove this and put it into a utility method.
-           	var makeReadOnly = function(elements){
-           		elements.each(function(key,value){
-           			var element = $(value);
-   	        		if(!element.is("select")){
-   	        			element.attr("readonly","readonly");
-   	        			return;
-   	        		}	
-   	        		if(element.siblings("input[type=hidden][name="+element.attr("name")+"]").size() == 0){
-   	        			element.after("<input name="+element.attr("name")+" type='hidden' value='"+element.val()+"'>");		
-   	        			element.attr("disabled","disabled");
-   	        		}
-           		});
-           	}
-         	
-         	var makeReadable = function(element){
-         		if(!element.is("select")){
-         			element.removeAttr("readonly");
-         			return;
-         		}	
-         		element.removeAttr("disabled");
-         		element.siblings("input[type=hidden][name="+element.attr("name")+"]").remove();
-         	}	
-        	
-        	//TODO: remove this and put it into a utility method.
-        	var populatePredicatesInFilter = function(filter,predicates){
-        		if(predicates.length > 0){
-        			var predicateSelect = filter.find(".predicate");
-        			predicateSelect.empty();	
-        			for(var i = 0; i < predicates.length; i++){
-        				var predicate = predicates[i];
-        				predicateSelect.append("<option value='"+predicate.value+"'>"+predicate.label+"</option>");
-        			}
-        		}
-        	}
+
     		
         	var showFilter = function(filterSelector,data){
         		$(filterSelector).show();
     			$(filterSelector).css("display","inline-block");
     			var object = $(filterSelector).find(".object");
-    			makeReadOnly(object);
-    			populatePredicatesInFilter($(filterSelector),data.predicates);
-    			makeReadOnly($("#ask"));
-    			makeReadOnly($("#subject"));
+    			$.question.utils.makeReadOnly(object);
+    			$.question.utils.populateSelectInFilter($(filterSelector+' .predicate'),data.predicates);
+    			$.question.utils.makeReadOnly($("#ask"));
+    			$.question.utils.makeReadOnly($("#subject"));
     			$(".removeFilterContainer").formFragment().show();
     			$(".removeFilterContainer").css("display","inline-block");
         	}
     
     		var handleAddFirstFilter = function(data){
     			showFilter("#firstFilter", data);
-    			makeReadOnly($("#addFilter"));
+    			$.question.utils.makeReadOnly($("#addFilter"));
     		}
     		
     		var handleAddSecondFilter = function(data){
@@ -63,7 +28,7 @@
     			//it's the last filter, so hide the add button.
     			$("#addFilter").hide();
     			$("#firstFilter").find(":input:not(.removeFilter)").each(function(key,value){
-    					makeReadOnly($(value));
+    					$.question.utils.makeReadOnly($(value));
     				});
     		}    	
         	
@@ -95,42 +60,6 @@
         
         filters : function(specs){      
         	
-         	//TODO: remove this and put it into a utility method.
-           	var makeReadOnly = function(elements){
-           		elements.each(function(key,value){
-           			var element = $(value);
-   	        		if(!element.is("select")){
-   	        			element.attr("readonly","readonly");
-   	        			return;
-   	        		}	
-   	        		if(element.siblings("input[type=hidden][name="+element.attr("name")+"]").size() == 0){
-   	        			element.after("<input name="+element.attr("name")+" type='hidden' value='"+element.val()+"'>");		
-   	        			element.attr("disabled","disabled");
-   	        		}
-           		});
-           	}
-        	
-        	var makeReadable = function(element){
-        		if(!element.is("select")){
-        			element.removeAttr("readonly");
-        			return;
-        		}	
-        		element.removeAttr("disabled");
-        		element.siblings("input[type=hidden][name="+element.attr("name")+"]").remove();
-        	}	
-        	
-        	//TODO this is generic, move outside of here.
-        	var populateSelectInFilter = function(selectElem, options){
-        		if(options.length == 0){
-        			return;
-        		}
-        		selectElem.empty();	
-        	    for(var i = 0; i < options.length; i++){
-        	    	var option = options[i];
-        	    	selectElem.append("<option value='"+option.value+"'>"+option.label+"</option>");
-        	    } 
-        	}
-        	
         	//TODO, merge the two functions below - they are the same apart from the id of the filter
          	var handlePredicateChange = function(data){
          		
@@ -139,9 +68,9 @@
         		$("#firstFilter .objectContainer#"+data.editorId).css("display","inline-block");
         		
         		var field = $("#firstFilter .objectContainer#"+data.editorId).find(":input:not(input[type=hidden])").css("display","inline-block");
-        		makeReadable(field);
+        		$.question.utils.makeReadable(field);
         		if(field.is("select")){
-        			populateSelectInFilter(field, data.objects);
+        			$.question.utils.populateSelectInFilter(field, data.objects);
         		}
         	}
         	
@@ -155,9 +84,9 @@
         		var field = objectEditor.find(":input");
         		objectEditor.formFragment().show();
         		field.css("display","inline-block");
-        		makeReadable(field);
+        		$.question.utils.makeReadable(field);
         		if(field.is("select")){
-        			populateSelectInFilter(field, data.objects);
+        			$.question.utils.populateSelectInFilter(field, data.objects);
         		}
         		
         	}
@@ -208,9 +137,9 @@
 					if($("#secondFilter").css("display") === "none"){
 						$("#addFilter").show();
 						$("#addFilter").css("display","inline-block");
-						makeReadable($("#addFilter"));
+						$.question.utils.makeReadable($("#addFilter"));
 					} 
-					makeReadable($("#ask"));
+					$.question.utils.makeReadable($("#ask"));
 				}
         	}
         	
@@ -229,16 +158,16 @@
         		var filterToRemove;
         		if(secondFilter){
         			filterToRemove = $("#secondFilter");
-        			makeReadable($("#firstFilter").find(":input"));
+        			$.question.utils.makeReadable($("#firstFilter").find(":input"));
         			$("#addFilter").show();
         			$("#addFilter").css("display","inline-block");
         		} else {
         			filterToRemove = $("#firstFilter");
-        			makeReadable($(".subject"));
+        			$.question.utils.makeReadable($(".subject"));
         			$(".removeFilterContainer").formFragment().hide();
-        			makeReadable($("#ask"));
+        			$.question.utils.makeReadable($("#ask"));
         		}
-       			makeReadable($("#addFilter"));
+        		$.question.utils.makeReadable($("#addFilter"));
         		filterToRemove.hide();
         		filterToRemove.find(".objectContainer").formFragment().hide();
         		filterToRemove.find(":input:not(.tapestry-formfragment)").val("");
@@ -246,4 +175,62 @@
         	});        	
         }    	
     });
+    
+    /**
+     * Static functions for the question component.
+     */
+    $.question = {
+    	utils: {
+    		/**
+    		 * Makes an form element (input, textarea, select, button, etc.) readonly, which means
+    		 * the value is still submitted but the field is not changeable by the user.
+    		 * 
+    		 * For a select element, this means creating a hidden input with the select's value
+    		 * and making the select disabled.
+    		 */
+           	makeReadOnly: function(elements){
+           		elements.each(function(key,value){
+           			var element = $(value);
+    	        		if(!element.is("select")){
+    	        			element.attr("readonly","readonly");
+    	        			return;
+    	        		}	
+    	        		if(element.siblings("input[type=hidden][name="+element.attr("name")+"]").size() == 0){
+    	        			element.after("<input name="+element.attr("name")+" type='hidden' value='"+element.val()+"'>");		
+    	        			element.attr("disabled","disabled");
+    	        		}
+           		});
+           	},
+           	
+           	/**
+           	 * Undoes $.question.utils.makeFieldReadOnly.
+           	 */
+           	makeReadable: function(element){
+         		if(!element.is("select")){
+         			element.removeAttr("readonly");
+         			return;
+         		}	
+         		element.removeAttr("disabled");
+         		element.siblings("input[type=hidden][name="+element.attr("name")+"]").remove();
+         	},
+         	
+         	/**
+         	 * Empty the select element and populate the options in it
+         	 * 
+         	 * @param selectElem whose options you want to populate.
+         	 * @param options of this form: [{label : myLabel, value: myValue}]
+         	 */
+        	populateSelectInFilter : function(selectElem, options){
+        		if(options.length == 0){
+        			return;
+        		}
+        		selectElem.empty();	
+        	    for(var i = 0; i < options.length; i++){
+        	    	var option = options[i];
+        	    	selectElem.append("<option value='"+option.value+"'>"+option.label+"</option>");
+        	    } 
+        	}
+           	
+    	}	
+    }
 })(jQuery);
