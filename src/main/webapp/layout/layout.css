@@ -398,6 +398,10 @@ a:hover {
 	display:block;
 }
 
+.question div.filter {
+	display:none;	
+}
+
 /* Result page */
 .results table{
 	width:1000px;

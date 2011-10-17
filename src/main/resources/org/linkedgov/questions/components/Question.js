@@ -42,7 +42,7 @@
         	}
     		
         	var showFilter = function(filterSelector,data){
-        		$(filterSelector).formFragment().show();
+        		$(filterSelector).show();
     			$(filterSelector).css("display","inline-block");
     			var object = $(filterSelector).find(".object");
     			makeReadOnly(object);
@@ -73,7 +73,6 @@
                     	url : specs.firstFilterUrl,
                     	success : handleAddFirstFilter, 
                     	data : 	{subject : $('#subject').val()},
-                    	
                         type : "GET"
                 };   
             	
@@ -136,13 +135,10 @@
          	var handlePredicateChange = function(data){
          		
          		$("#firstFilter").find(".objectContainer").formFragment().hide();
-        		var objectEditor = $("#firstFilter").find(".objectContainer#"+data.editorId);
-        		objectEditor.formFragment().show();
-        		objectEditor.css("display","inline-block");
+        		$("#firstFilter .objectContainer#"+data.editorId).formFragment().show();
+        		$("#firstFilter .objectContainer#"+data.editorId).css("display","inline-block");
         		
-        		var field = objectEditor.find(":input");
-        		objectEditor.formFragment().show();
-        		field.css("display","inline-block");
+        		var field = $("#firstFilter .objectContainer#"+data.editorId).find(":input:not(input[type=hidden])").css("display","inline-block");
         		makeReadable(field);
         		if(field.is("select")){
         			populateSelectInFilter(field, data.objects);
@@ -243,8 +239,9 @@
         			makeReadable($("#ask"));
         		}
        			makeReadable($("#addFilter"));
-        		filterToRemove.formFragment().hide();
-        		filterToRemove.find(":input").val("");
+        		filterToRemove.hide();
+        		filterToRemove.find(".objectContainer").formFragment().hide();
+        		filterToRemove.find(":input:not(.tapestry-formfragment)").val("");
         		filterToRemove.find("select").empty();  
         	});        	
         }    	
