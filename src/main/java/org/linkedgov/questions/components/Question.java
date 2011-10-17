@@ -2,7 +2,6 @@ package org.linkedgov.questions.components;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.Link;
@@ -197,8 +196,7 @@ public class Question {
 			@RequestParameter("firstFilterPredicate") String firstFilterPredicate,
 			@RequestParameter("firstFilterObject") String firstFilterObject){
 		final QueryFilter firstFilterQueryFilter = new QueryFilter(firstFilterPredicate, firstFilterObject);
-		final List<String> objects = staticDataService.getObjects(subject, predicate, firstFilterQueryFilter);
-		
+		final List<String> objects = staticDataService.getObjects(subject, predicate, firstFilterQueryFilter);		
 		return generateJsonForSecondPredicateEvent(subject, objects);
 	}
 
@@ -212,20 +210,10 @@ public class Question {
 	 */
 	private Object generateJsonForPredicateEvent(String predicate, List<String> objects) {
 		final JSONObject data = generateSelectOptionsJson(objects, OBJECTS);
-		
-		//TODO: make this smarter and perhaps put it into a service or something.
-		if(predicate.contains("postcode")){
-			data.put(EDITOR_ID, "firstLocationObjectEditor");
-		} else if(objects.size() < 100){
-			data.put(EDITOR_ID, "firstSelectObjectEditor");
-		} else {
-			data.put(EDITOR_ID, "firstFreetextObjectEditor");
-		}
-
+		populateEditorPropertyInJson(predicate, objects, data);
 		return data;
 	}
-	
-	//TODO: duplication between this and the one above
+
 	/**
 	 * Generates json suitable for populating a select element from a list of objects and a predicate
 	 * 
@@ -236,17 +224,29 @@ public class Question {
 	 */
 	private Object generateJsonForSecondPredicateEvent(String predicate, List<String> objects) {
 		final JSONObject data = generateSelectOptionsJson(objects, OBJECTS);
+		populateEditorPropertyInJson(predicate, objects, data);
+		
+		return data;
+	}
+	
+	/**
+	 * Decides which ID to use for the editor of the object.
+	 * 
+	 * @param predicate
+	 * @param objects
+	 * @param data
+	 */
+	private void populateEditorPropertyInJson(String predicate,
+			List<String> objects, final JSONObject data) {
 		
 		//TODO: make this smarter and perhaps put it into a service or something.
 		if(predicate.contains("postcode")){
-			data.put(EDITOR_ID, "secondLocationObjectEditor");
+			data.put(EDITOR_ID, "firstLocationObjectEditor");
 		} else if(objects.size() < 100){
-			data.put(EDITOR_ID, "secondSelectObjectEditor");
+			data.put(EDITOR_ID, "firstSelectObjectEditor");
 		} else {
-			data.put(EDITOR_ID, "secondFreetextObjectEditor");
+			data.put(EDITOR_ID, "firstFreetextObjectEditor");
 		}
-
-		return data;
 	}
 
 	/**

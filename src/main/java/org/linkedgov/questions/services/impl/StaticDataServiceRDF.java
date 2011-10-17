@@ -30,7 +30,7 @@ public class StaticDataServiceRDF implements StaticDataService {
 	private static final String GET_PREDICATE_QUERY = "SELECT DISTINCT ?pred WHERE " +
 			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
 			"?pred ?o . " +
-			"FILTER (?pred != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>) } ORDER BY ?class";
+			"FILTER (?pred != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>) } ORDER BY ?pred";
 		
 	private static final String GET_OBJECTS_QUERY = "SELECT DISTINCT ?object WHERE " +
 			"{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
@@ -110,12 +110,11 @@ public class StaticDataServiceRDF implements StaticDataService {
 	 */
 	public List<String> getPredicates(String subject, QueryFilter filter) {
 		String query = String.format(GET_SECONDFILTER_PREDICATE_QUERY, subject, filter.getPredicate(), filter.getObject());
-		System.err.println("This is megalame "+query);
 		List<String> retValues = new ArrayList<String>();
 		final SelectResultSet results = sparqlDao.executeSelect(query);		
 		for (SelectResult result : results.getResults()) {
 			final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
-				retValues.add(element.getValue());
+			retValues.add(element.getValue());
 		}
 		return retValues;
 	}

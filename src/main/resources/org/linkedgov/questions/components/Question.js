@@ -5,6 +5,30 @@
     $.extend(Tapestry.Initializer, {
          addFilter: function(specs){
     			
+           	//TODO: remove this and put it into a utility method.
+           	var makeReadOnly = function(elements){
+           		elements.each(function(key,value){
+           			var element = $(value);
+   	        		if(!element.is("select")){
+   	        			element.attr("readonly","readonly");
+   	        			return;
+   	        		}	
+   	        		if(element.siblings("input[type=hidden][name="+element.attr("name")+"]").size() == 0){
+   	        			element.after("<input name="+element.attr("name")+" type='hidden' value='"+element.val()+"'>");		
+   	        			element.attr("disabled","disabled");
+   	        		}
+           		});
+           	}
+         	
+         	var makeReadable = function(element){
+         		if(!element.is("select")){
+         			element.removeAttr("readonly");
+         			return;
+         		}	
+         		element.removeAttr("disabled");
+         		element.siblings("input[type=hidden][name="+element.attr("name")+"]").remove();
+         	}	
+        	
         	//TODO: remove this and put it into a utility method.
         	var populatePredicatesInFilter = function(filter,predicates){
         		if(predicates.length > 0){
@@ -16,23 +40,22 @@
         			}
         		}
         	}
-        	
     		
         	var showFilter = function(filterSelector,data){
         		$(filterSelector).formFragment().show();
     			$(filterSelector).css("display","inline-block");
     			var object = $(filterSelector).find(".object");
-    			object.attr("disabled","disabled"); 
+    			makeReadOnly(object);
     			populatePredicatesInFilter($(filterSelector),data.predicates);
-    			$("#ask").attr("disabled","disabled");
-    			$("#subject").attr("disabled","disabled");
+    			makeReadOnly($("#ask"));
+    			makeReadOnly($("#subject"));
     			$(".removeFilterContainer").formFragment().show();
     			$(".removeFilterContainer").css("display","inline-block");
         	}
     
     		var handleAddFirstFilter = function(data){
     			showFilter("#firstFilter", data);
-    			$("#addFilter").attr("disabled","disabled"); 
+    			makeReadOnly($("#addFilter"));
     		}
     		
     		var handleAddSecondFilter = function(data){
@@ -40,7 +63,7 @@
     			//it's the last filter, so hide the add button.
     			$("#addFilter").hide();
     			$("#firstFilter").find(":input:not(.removeFilter)").each(function(key,value){
-    					$(value).attr("disabled","disabled");
+    					makeReadOnly($(value));
     				});
     		}    	
         	
@@ -71,7 +94,32 @@
             });
         },
         
-        filters : function(specs){       	
+        filters : function(specs){      
+        	
+         	//TODO: remove this and put it into a utility method.
+           	var makeReadOnly = function(elements){
+           		elements.each(function(key,value){
+           			var element = $(value);
+   	        		if(!element.is("select")){
+   	        			element.attr("readonly","readonly");
+   	        			return;
+   	        		}	
+   	        		if(element.siblings("input[type=hidden][name="+element.attr("name")+"]").size() == 0){
+   	        			element.after("<input name="+element.attr("name")+" type='hidden' value='"+element.val()+"'>");		
+   	        			element.attr("disabled","disabled");
+   	        		}
+           		});
+           	}
+        	
+        	var makeReadable = function(element){
+        		if(!element.is("select")){
+        			element.removeAttr("readonly");
+        			return;
+        		}	
+        		element.removeAttr("disabled");
+        		element.siblings("input[type=hidden][name="+element.attr("name")+"]").remove();
+        	}	
+        	
         	//TODO this is generic, move outside of here.
         	var populateSelectInFilter = function(selectElem, options){
         		if(options.length == 0){
@@ -95,11 +143,10 @@
         		var field = objectEditor.find(":input");
         		field.show();
         		field.css("display","inline-block");
-        		field.removeAttr("disabled");
+        		makeReadable(field);
         		if(field.is("select")){
         			populateSelectInFilter(field, data.objects);
         		}
-        		
         	}
         	
         	var handleSecondFilterPredicateChange = function(data){
@@ -112,7 +159,7 @@
         		var field = objectEditor.find(":input");
         		field.show();
         		field.css("display","inline-block");
-        		field.removeAttr("disabled");
+        		makeReadable(field);
         		if(field.is("select")){
         			populateSelectInFilter(field, data.objects);
         		}
@@ -165,9 +212,9 @@
 					if($("#secondFilter").css("display") === "none"){
 						$("#addFilter").show();
 						$("#addFilter").css("display","inline-block");
-						$("#addFilter").removeAttr("disabled");
+						makeReadable($("#addFilter"));
 					} 
-					$("#ask").removeAttr("disabled");
+					makeReadable($("#ask"));
 				}
         	}
         	
@@ -186,15 +233,16 @@
         		var filterToRemove;
         		if(secondFilter){
         			filterToRemove = $("#secondFilter");
-        			$("#firstFilter").find(":input").removeAttr("disabled");
+        			makeReadable($("#firstFilter").find(":input"));
         			$("#addFilter").show();
         			$("#addFilter").css("display","inline-block");
         		} else {
         			filterToRemove = $("#firstFilter");
-        			$(".subject").removeAttr("disabled");
+        			makeReadable($(".subject"));
         			$(".removeFilterContainer").formFragment().hide();
-        			$("#ask").removeAttr("disabled");
+        			makeReadable($("#ask"));
         		}
+       			makeReadable($("#addFilter"));
         		filterToRemove.formFragment().hide();
         		filterToRemove.find(":input").val("");
         		filterToRemove.find("select").empty();  
