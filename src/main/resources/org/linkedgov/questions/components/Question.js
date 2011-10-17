@@ -197,13 +197,16 @@
            	/**
            	 * Undoes $.question.utils.makeFieldReadOnly.
            	 */
-           	makeReadable: function(element){
-         		if(!element.is("select")){
-         			element.removeAttr("readonly");
-         			return;
-         		}	
-         		element.removeAttr("disabled");
-         		element.siblings("input[type=hidden][name="+element.attr("name")+"]").remove();
+           	makeReadable: function(elements){
+           		elements.each(function(key,value){
+           			var element = $(value);
+	         		if(!element.is("select")){
+	         			element.removeAttr("readonly");
+	         			return;
+	         		}	
+	         		element.removeAttr("disabled");
+	         		element.siblings("input[type=hidden][name="+element.attr("name")+"]").remove();
+           		});
          	},
          	
          	/**
