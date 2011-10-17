@@ -4,8 +4,7 @@
     /** Container of functions that may be invoked by the Tapestry.init() function. */
     $.extend(Tapestry.Initializer, {
          addFilter: function(specs){
-
-    		
+		
         	var showFilter = function(filterSelector,data){
         		$(filterSelector).show();
     			$(filterSelector).css("display","inline-block");
@@ -60,43 +59,35 @@
         
         filters : function(specs){      
         	
-        	//TODO, merge the two functions below - they are the same apart from the id of the filter
-         	var handlePredicateChange = function(data){
+         	var handlePredicateChange = function(data,filterSelector){
          		
-         		$("#firstFilter").find(".objectContainer").formFragment().hide();
-        		$("#firstFilter .objectContainer#"+data.editorId).formFragment().show();
-        		$("#firstFilter .objectContainer#"+data.editorId).css("display","inline-block");
+         		$(filterSelector).find(".objectContainer").formFragment().hide();
+         		
+         		var objectEditor = $(filterSelector+" .objectContainer."+data.editorClass);
+         		objectEditor.formFragment().show();
+         		objectEditor.css("display","inline-block");
         		
-        		var field = $("#firstFilter .objectContainer#"+data.editorId).find(":input:not(input[type=hidden])").css("display","inline-block");
+        		var field = objectEditor.find(":input:not(input[type=hidden])").css("display","inline-block");
         		$.question.utils.makeReadable(field);
         		if(field.is("select")){
         			$.question.utils.populateSelectInFilter(field, data.objects);
         		}
-        	}
-        	
-        	var handleSecondFilterPredicateChange = function(data){
-         		
-         		$("#secondFilter").find(".objectContainer").formFragment().hide();
-        		var objectEditor = $("#secondFilter").find(".objectContainer#"+data.editorId);
-        		objectEditor.formFragment().show();
-        		objectEditor.css("display","inline-block");
-        		
-        		var field = objectEditor.find(":input");
-        		objectEditor.formFragment().show();
-        		field.css("display","inline-block");
-        		$.question.utils.makeReadable(field);
-        		if(field.is("select")){
-        			$.question.utils.populateSelectInFilter(field, data.objects);
-        		}
-        		
-        	}
-        	
+        	};
+         	
+         	var handleFirstFilterPredicateChange = function(data){
+         		handlePredicateChange(data,"#firstFilter");
+         	};
+         	
+         	var handleSecondFilterPredicateChange = function(data){
+         		handlePredicateChange(data,"#secondFilter");
+         	};
+
         	var firstFilterPredicate = $("#firstFilter").find(".predicate");
         	firstFilterPredicate.change(function(){
         		
         		var ajaxRequest = {
                     	url : specs.firstFilterUrl,
-                    	success : handlePredicateChange, 
+                    	success : handleFirstFilterPredicateChange, 
                     	data : 	{
                     				subject: $('#subject').val(),
                     				predicate: firstFilterPredicate.val()
@@ -152,7 +143,6 @@
         		}
         	});
         	
-        	//TODO tidy this up since it doesn't look like this belongs here
         	$(".removeFilter").click(function(){
         		var secondFilter = $("#secondFilter").css("display") !== "none" ;
         		var filterToRemove;

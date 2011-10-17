@@ -33,7 +33,7 @@ import org.linkedgov.questions.services.StaticDataService;
 @Import(library="Question.js")
 public class Question {
 
-    private static final String EDITOR_ID = "editorId";
+    private static final String EDITOR_CLASS = "editorClass";
 
     private static final String OBJECTS = "objects";
 
@@ -214,40 +214,40 @@ public class Question {
         return data;
     }
 
-    /**
-     * Generates json suitable for populating a select element from a list of objects and a predicate
-     * 
-     * @param predicate - the predicate in the filter on which the event was fired.
-     * @param objects - the objects to be put into the json.
-     * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display (the editor is chosen based on the predicate), 
-     * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
-     */
-    private Object generateJsonForSecondPredicateEvent(String predicate, List<String> objects) {
-        final JSONObject data = generateSelectOptionsJson(objects, OBJECTS);
-        populateEditorPropertyInJson(predicate, objects, data);
-        
-        return data;
-    }
-    
-    /**
-     * Decides which ID to use for the editor of the object.
-     * 
-     * @param predicate
-     * @param objects
-     * @param data
-     */
-    private void populateEditorPropertyInJson(String predicate,
-            List<String> objects, final JSONObject data) {
-        
-        //TODO: make this smarter and perhaps put it into a service or something.
-        if(predicate.contains("postcode")){
-            data.put(EDITOR_ID, "firstLocationObjectEditor");
-        } else if(objects.size() < 100){
-            data.put(EDITOR_ID, "firstSelectObjectEditor");
-        } else {
-            data.put(EDITOR_ID, "firstFreetextObjectEditor");
-        }
-    }
+	/**
+	 * Generates json suitable for populating a select element from a list of objects and a predicate
+	 * 
+	 * @param predicate - the predicate in the filter on which the event was fired.
+	 * @param objects - the objects to be put into the json.
+	 * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display (the editor is chosen based on the predicate), 
+	 * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
+	 */
+	private Object generateJsonForSecondPredicateEvent(String predicate, List<String> objects) {
+		final JSONObject data = generateSelectOptionsJson(objects, OBJECTS);
+		populateEditorPropertyInJson(predicate, objects, data);
+		
+		return data;
+	}
+	
+	/**
+	 * Decides which ID to use for the editor of the object.
+	 * 
+	 * @param predicate
+	 * @param objects
+	 * @param data
+	 */
+	private void populateEditorPropertyInJson(String predicate,
+			List<String> objects, final JSONObject data) {
+		
+		//TODO: make this smarter and perhaps put it into a service or something.
+		if(predicate.contains("postcode")){
+			data.put(EDITOR_CLASS, "locationObjectEditor");
+		} else if(objects.size() < 100){
+			data.put(EDITOR_CLASS, "selectObjectEditor");
+		} else {
+			data.put(EDITOR_CLASS, "freetextObjectEditor");
+		}
+	}
 
     /**
      * Generates json suitable for populating a select element from a list of strings and a name.
