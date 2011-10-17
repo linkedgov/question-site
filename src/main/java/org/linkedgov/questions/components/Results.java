@@ -6,6 +6,7 @@ import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SetupRender;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.linkedgov.questions.model.Query;
+import org.linkedgov.questions.model.QuestionType;
 import org.linkedgov.questions.model.SelectResultDataSource;
 import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
@@ -23,6 +24,9 @@ public class Results {
     @Parameter
     private Query query;
     
+    //@Property
+    //private String gridColumns = "resultSubject,resultPredicate,resultObject";
+   
     /**
      * A row in the list of triples that come back as results.
      */
@@ -76,6 +80,14 @@ public class Results {
             return noResultsYetBlock;
         } else {
             return dataSource.getAvailableRows() > 0 ? resultsTableBlock : emptyResultsBlock;
+        }
+    }
+    
+    public String getGridColumns() {
+        if (query.getQuestionType().equals(QuestionType.SELECT)) {
+            return "resultSubject,resultPredicate,resultObject";
+        } else {
+            return "resultCount";
         }
     }
 }

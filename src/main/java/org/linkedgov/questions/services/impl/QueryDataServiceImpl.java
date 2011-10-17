@@ -53,6 +53,9 @@ public class QueryDataServiceImpl implements QueryDataService {
                     } else if (variable.equals("obj")) {
                         obj.setFirst(resource);
                         triple.setObject(obj);
+                    } else if (variable.equals("cnt")) {
+                        sub.setFirst(resource);
+                        triple.setSubject(sub);
                     }
                 }
                 triples.add(triple);

@@ -4,7 +4,7 @@
 	<t:delegate to="resultsBlock"/>
 	
 	<t:block id="resultsTableBlock">
-		<t:grid inplace="true" source="dataSource" pagerPosition="both" row="triple" add="resultSubject,resultPredicate,resultObject">
+		<t:grid inplace="true" source="dataSource" pagerPosition="both" row="triple" add="${gridColumns}">
 			<t:parameter name="resultSubjectCell">
 				<t:resourceDisplay resource="prop:triple.subject"/>	
 			</t:parameter>
@@ -14,6 +14,9 @@
 			<t:parameter name="resultObjectCell">
 				<t:resourceDisplay resource="prop:triple.object"/>	
 			</t:parameter>
+			<t:parameter name="resultCountCell">
+                <t:resourceDisplay resource="prop:triple.subject"/>  
+            </t:parameter>
 		</t:grid>
 	</t:block>
 	
