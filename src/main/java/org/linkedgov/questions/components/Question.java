@@ -108,7 +108,7 @@ public class Question {
 	 */
 	@SuppressWarnings("unused")
 	@SetupRender
-	private void setup(){	
+	private void setup() {	
 		System.out.println("Setup Render");
 		query = new Query();		
 		subjects =  staticDataService.getClasses();
@@ -137,7 +137,7 @@ public class Question {
 	 * 
 	 */
 	@OnEvent(ADD_FIRST_FILTER)
-	public Object handleAddFirstFilterEvent(@RequestParameter("subject") String subject){
+	public Object handleAddFirstFilterEvent(@RequestParameter("subject") String subject) {
 		final List<String> predicates = staticDataService.getPredicates(subject);
 		return generateSelectOptionsJson(predicates, PREDICATES);
 	}
@@ -155,7 +155,7 @@ public class Question {
 	public Object handleAddSecondFilterEvent(
 			@RequestParameter("subject") String subject, 
 			@RequestParameter("predicate")  String predicate, 
-			@RequestParameter("object") String object){
+			@RequestParameter("object") String object) {
 		final List<String> predicates = staticDataService.getPredicates(subject, new QueryFilter(predicate,object));
 		return generateSelectOptionsJson(predicates, PREDICATES);
 	}
@@ -174,7 +174,7 @@ public class Question {
 	@OnEvent(FIRST_FILTER_PREDICATE)
 	public Object handleFirstFilterPredicateChanged(
 			@RequestParameter("subject") String subject,
-			@RequestParameter("predicate") String predicate){
+			@RequestParameter("predicate") String predicate) {
 		final List<String> objects = staticDataService.getObjects(subject, predicate);
 		return generateJsonForPredicateEvent(subject, objects);
 	}
@@ -194,7 +194,7 @@ public class Question {
 			@RequestParameter("subject") String subject,
 			@RequestParameter("predicate") String predicate,
 			@RequestParameter("firstFilterPredicate") String firstFilterPredicate,
-			@RequestParameter("firstFilterObject") String firstFilterObject){
+			@RequestParameter("firstFilterObject") String firstFilterObject) {
 		final QueryFilter firstFilterQueryFilter = new QueryFilter(firstFilterPredicate, firstFilterObject);
 		final List<String> objects = staticDataService.getObjects(subject, predicate, firstFilterQueryFilter);		
 		return generateJsonForSecondPredicateEvent(subject, objects);

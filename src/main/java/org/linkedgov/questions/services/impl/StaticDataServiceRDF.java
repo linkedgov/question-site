@@ -58,7 +58,7 @@ public class StaticDataServiceRDF implements StaticDataService {
 		this.sparqlDao = sparqlDao; 
 	}
 	
-	public List<String> getClasses(){	
+	public List<String> getClasses() {	
 		return classes.isEmpty() ? queryForClasses() : classes;
 	}
 	
@@ -69,7 +69,7 @@ public class StaticDataServiceRDF implements StaticDataService {
 	 * @param firstFilterObject - the predicate of the third filter.
 	 * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display,
 	 */
-	public List<String> getObjects(String subject, String predicate){
+	public List<String> getObjects(String subject, String predicate) {
 		String query = String.format(GET_OBJECTS_QUERY, subject, predicate);
 		List<String> retValues = new ArrayList<String>();
 		final SelectResultSet results = sparqlDao.executeSelect(query);		

@@ -6,6 +6,7 @@ import org.linkedgov.questions.services.SparqlDao;
 
 import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlProtocolClient;
+import uk.me.mmt.sprotocol.SprotocolException;
 
 /**
  * Just a wrapper of sprotocol's SparqlProtocolClient.
@@ -33,9 +34,17 @@ public class SparqlDaoImpl implements SparqlDao {
 	 * 
 	 * @param query - the sparql select query string, e.g. SELECT ?x ?y ?z
 	 * @return a {@Link SelectResultSet} representing the results of the query.
+	 * @throws SprotocolException 
 	 */
-	public SelectResultSet executeSelect(String query) {
-		return client.executeSelect(query);
+	public SelectResultSet executeSelect(String query)  {
+		try {
+		    //TODO Mischa remove this debug
+		    System.err.println("The is query being fired "+query);
+		    return client.executeSelect(query);
+		} catch (SprotocolException e) {
+		    System.err.println("Error making SPARQL protocol call"+e.getMessage());
+		}
+		return new SelectResultSet();
 	}
 	
 	/**
@@ -43,9 +52,15 @@ public class SparqlDaoImpl implements SparqlDao {
 	 * 
 	 * @param query - the sparql select query string, e.g. SELECT ?x ?y ?z
 	 * @return a {@Link SelectResultSet} representing the results of the query.
+	 * @throws SprotocolException 
 	 */
 	public SelectResultSet executeSelect(String query, int offset, int limit) {
-		return client.executeSelect(query);
+		try {
+		    return client.executeSelect(query);
+		} catch (SprotocolException e) {
+		    System.err.println("Error making SPARQL protocol call"+e.getMessage());
+		}
+		return new SelectResultSet();
 	}
 
 	/**

@@ -65,7 +65,7 @@ public class Results {
 	 */
 	@SetupRender
 	public void setupDataSource(){
-		dataSource = new SelectResultDataSource(query, queryDataService);
+	    dataSource = new SelectResultDataSource(query, queryDataService);
 	}
 	
 	/**
