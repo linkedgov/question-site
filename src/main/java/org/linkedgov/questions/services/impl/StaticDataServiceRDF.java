@@ -1,6 +1,8 @@
 package org.linkedgov.questions.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,8 +63,11 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @param sparqlDao
      * @param configuration
      */
-    public StaticDataServiceRDF (SparqlDao sparqlDao, List<String> configuration){
-        this.sparqlDao = sparqlDao; 
+    public StaticDataServiceRDF (SparqlDao sparqlDao, Collection<String> configuration){
+        this.sparqlDao = sparqlDao;
+        Collection<String> lame = new HashSet<String>(configuration);
+        
+        System.err.println("THIS BLACKLIST HAS THIS MANY ITEMS in it: "+lame.size());
     }
     
     public Map<String,String> getClasses() {    
