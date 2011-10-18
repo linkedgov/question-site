@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * Pojo that represents a query, or question, built up by the user. 
+ * This class has a function which turns the user input into a SPARQL query
  * 
  * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
  * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
@@ -13,14 +14,30 @@ import java.util.List;
  */
 public class Query {
 
+    /**
+     * Currently one of SELECT or SELECT COUNT 
+     */
     private QuestionType questionType = QuestionType.SELECT;
 
+    /**
+     * This is the rdf:type of the sub, 
+     * i.e. http://xmlns.com/foaf/0.1/Person for example
+     * 
+     */
     private String subject;
 
+    /**
+     * These are the two filters which the user can 
+     * currently add to narrow down their search results 
+     * 
+     */
     private QueryFilter firstFilter = new QueryFilter();
-
     private QueryFilter secondFilter = new QueryFilter();
 
+    /**
+     * This enumerates a list of well known URI prefixes
+     * 
+     */
     public final static List<String> URI_PREFIXES;
     static {
         final ArrayList<String> lst = new ArrayList<String>();
@@ -32,7 +49,6 @@ public class Query {
         lst.add("tel");
         URI_PREFIXES = Collections.unmodifiableList(lst);
     };
-    
     
     public void setSubject(String subject) {
         this.subject = subject;
@@ -74,6 +90,14 @@ public class Query {
         return false;
     }
 
+    /**
+     * This function is used to turn a given instance of 
+     * a Query class into a SPARQL query. 
+     * 
+     * There are unit tests for this function in the repo
+     * 
+     * @return A Sparql Query String
+     */
     public String toSparqlString() {
         StringBuilder query = new StringBuilder();
 
@@ -103,6 +127,12 @@ public class Query {
         return query.toString();
     }
 
+    /**
+     * This function takes a filter and turns it into a 
+     * single SPARQL Basic Graph Pattern (BGP)
+     * @param filter
+     * @return a fragment of a SPARQL query
+     */
     public String filterToSparqlBGP(QueryFilter filter) {
         StringBuilder bgp = new StringBuilder();
         bgp.append("?sub <");
