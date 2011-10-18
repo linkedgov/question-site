@@ -174,7 +174,6 @@ public class Question {
     }
     
     /**
-     * TODO: do we want to return these objects even if it's not a select element?
      * 
      * Handles change events from the predicate field in the first filter by talking to the staticDataService.
      * 
