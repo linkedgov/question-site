@@ -60,30 +60,6 @@ public class Question {
     @Persist
     private Query query;
     
-    @Property
-    @Persist
-    private String firstSelectObject;
-
-    @Property
-    @Persist
-    private String firstFreeTextObject;
-    
-    @Property
-    @Persist
-    private String firstLocationObject;
-    
-    @Property
-    @Persist
-    private String secondSelectObject;
-    
-    @Property
-    @Persist
-    private String secondFreeTextObject;
-    
-    @Property
-    @Persist
-    private String secondLocationObject;
-    
     /**
      * A list of subjects, used as a model by the subject dropdown.
      */
@@ -104,6 +80,18 @@ public class Question {
      */
     @InjectComponent
     private Zone resultsZone;
+    
+    /**
+     * First filter.
+     */
+    @InjectComponent
+    private Filter firstFilter;
+    
+    /**
+     * Second filter.
+     */
+    @InjectComponent
+    private Filter secondFilter;
     
     /**
      * Service to populate dropdowns with.
@@ -343,27 +331,8 @@ public class Question {
      */
     @OnEvent(EventConstants.SUCCESS)
     public Object askQuestion(){
-    	//TODO: make this more general/cleaner to help extensibility
-    	if(firstSelectObject != null){
-    		query.getFirstFilter().setObject(firstSelectObject);
-    	} else if(firstFreeTextObject != null){
-    		query.getFirstFilter().setObject(firstFreeTextObject);		
-    	} else if(firstLocationObject != null){
-    		query.getFirstFilter().setObject(firstLocationObject);
-    	} else {
-    		query.getFirstFilter().setObject(null);
-    	}
-    	
-    	if(secondSelectObject != null){
-    		query.getSecondFilter().setObject(secondSelectObject);
-    	} else if(secondFreeTextObject != null){
-    		query.getSecondFilter().setObject(secondFreeTextObject);		
-    	} else if(secondLocationObject != null){
-    		query.getSecondFilter().setObject(secondLocationObject);
-    	} else {
-    		query.getSecondFilter().setObject(null);
-    	}
-    	
+    	query.setFirstFilter(firstFilter.getFilter());
+    	query.setSecondFilter(secondFilter.getFilter());
         return resultsZone.getBody();
     }
 }

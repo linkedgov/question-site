@@ -34,5 +34,5 @@ public class Layout
     @Property
     @Parameter(defaultPrefix = BindingConstants.LITERAL)
     private Block sidebar;
-
+    
 }

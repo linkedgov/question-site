@@ -2,36 +2,14 @@
 	
 	<t:form id="questionType" zone="resultsZone">
 		<t:errors/>
+		
 		<t:select t:id="questionType" value="query.questionType"/>
-		
 		<t:select t:id="subject" class="subject" model="subjects" blankLabel="Of Type" value="query.subject"/>
-		
+				
 		<div class="filtersContainer">
-			<div id="firstFilter" class="filter">
-				<t:select class="predicate" t:id="firstPredicate" model="emptyList" blankLabel="${message:predicatesBlankLabel}" value="query.firstFilter.predicate"/>
-				<div class="selectObjectEditor objectContainer">
-					<t:select class="object" t:id="firstSelectObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="firstSelectObject"/>
-				</div>
-				<div class="freetextObjectEditor objectContainer">
-					<t:TextField class="object" t:id="firstFreeTextObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="firstFreeTextObject"/>
-				</div>
-				<div class="locationObjectEditor objectContainer">	
-					<t:TextField class="object"  t:id="firstLocationObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="firstLocationObject"/>
-				</div>
-			</div>
+			<t:filter t:id="firstFilter"/>
 			<br/>
-			<div id="secondFilter" class="filter">
-				<t:select class="predicate" t:id="secondPredicate" model="emptyList"  blankLabel="${message:predicatesBlankLabel}" value="query.secondFilter.predicate"/>
-				<div class="selectObjectEditor objectContainer" >
-					<t:select class="object" t:id="secondSelectObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="secondSelectObject"/>
-				</div>
-				<div class="freetextObjectEditor objectContainer">
-					<t:TextField class="object" t:id="secondFreeTextObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="secondFreeTextObject"/>
-				</div>
-				<div class="locationObjectEditor objectContainer">	
-					<t:TextField class="object" t:id="secondLocationObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="secondLocationObject"/>
-				</div>
-			</div>
+			<t:filter t:id="secondFilter"/>
 		</div>
 		<div>
 			<div class="removeFilterContainer">
