@@ -39,11 +39,13 @@ public class QueryDataServiceImpl implements QueryDataService {
 
                 for (String variable : results.getHead() ) {
                     SparqlResource resource =  result.getResult().get(variable);
-                    System.err.println("This variable '"+variable+"' with this result: '"+resource.getValue()+"' was returned");
+                    if (resource != null) {
+                        System.err.println("This variable '"+variable+"' with this result: '"+resource.getValue()+"' was returned");
+                    }
                     Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
                     Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
                     Pair<SparqlResource,String> obj = new Pair<SparqlResource,String>();
-
+                    
                     if (variable.equals("sub")) {
                         sub.setFirst(resource);
                         triple.setSubject(sub);
@@ -56,13 +58,20 @@ public class QueryDataServiceImpl implements QueryDataService {
                     } else if (variable.equals("cnt")) {
                         sub.setFirst(resource);
                         triple.setSubject(sub);
+                    } else if (variable.equals("slabel") && resource != null) {
+                        sub.setFirst(resource);
+                        triple.setSubject(sub);
+                    } else if (variable.equals("plabel") && resource != null) {
+                        pred.setFirst(resource);
+                        triple.setPredicate(pred);
+                    } else if (variable.equals("olabel") && resource != null) {
+                        obj.setFirst(resource);
+                        triple.setObject(obj);
                     }
                 }
                 triples.add(triple);
-
             }
         }
         return triples;
     }
-
 }

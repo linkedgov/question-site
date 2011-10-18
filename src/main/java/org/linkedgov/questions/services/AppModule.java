@@ -34,6 +34,15 @@ public class AppModule
         binder.bind(QueryDataService.class, QueryDataServiceImpl.class);
     }
     
+    /**
+     * This is where we are going to add in a blacklist of Predicate URIs
+     * 
+     * @param configuration
+     */
+    public static void contributeStaticDataService (OrderedConfiguration<RequestFilter> configuration) {
+    
+    }
+    
     public static void contributeApplicationDefaults(
             MappedConfiguration<String, String> configuration)
     {

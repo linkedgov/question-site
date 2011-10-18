@@ -104,7 +104,7 @@ public class Query {
         if (questionType.equals(QuestionType.COUNT)) {
             query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
         } else {
-            query.append("SELECT DISTINCT ?sub ?pred ?obj ");
+            query.append("SELECT DISTINCT ?sub ?pred ?obj ?slabel ?plabel ?olabel ");
         }
 
         query.append("WHERE { ");
@@ -122,6 +122,12 @@ public class Query {
             query.append(filterToSparqlBGP(secondFilter));
         }
 
+        if (questionType.equals(QuestionType.SELECT)) {
+            query.append(" OPTIONAL {?sub <http://www.w3.org/2000/01/rdf-schema#label> ?slabel } . ");
+            query.append(" OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . ");
+            query.append(" OPTIONAL {?obj <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . ");
+        }
+        
         query.append("} ");
 
         return query.toString();

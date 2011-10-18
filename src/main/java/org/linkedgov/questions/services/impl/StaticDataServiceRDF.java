@@ -54,7 +54,12 @@ public class StaticDataServiceRDF implements StaticDataService {
         
     private final SparqlDao sparqlDao;
     
-    public StaticDataServiceRDF (SparqlDao sparqlDao){
+    /**
+     * TODO Mischa need to populate this configuration thingy
+     * @param sparqlDao
+     * @param configuration
+     */
+    public StaticDataServiceRDF (SparqlDao sparqlDao, List<String> configuration){
         this.sparqlDao = sparqlDao; 
     }
     
