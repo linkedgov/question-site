@@ -152,9 +152,7 @@ public class Query {
         } else {
             object = "\""+object+"\"";
         }
-        
         bgp.append(object);
-
         bgp.append(" . ");
 
         return bgp.toString();
