@@ -2,7 +2,8 @@ package org.linkedgov.questions.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.linkedgov.questions.model.QueryFilter;
 import org.linkedgov.questions.services.SparqlDao;
@@ -24,8 +25,9 @@ import uk.me.mmt.sprotocol.SparqlResource;
  */
 public class StaticDataServiceRDF implements StaticDataService {
         
-    private static final String GET_CLASSES_QUERY = "SELECT DISTINCT ?class WHERE " +
-            "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class} ORDER BY ?class"; 
+    private static final String GET_CLASSES_QUERY = "SELECT DISTINCT ?class ?clabel WHERE " +
+            "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class . " +
+            "OPTIONAL {?class <http://www.w3.org/2000/01/rdf-schema#label> ?clabel } } ORDER BY ?class"; 
     
     private static final String GET_PREDICATE_QUERY = "SELECT DISTINCT ?pred WHERE " +
             "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
@@ -50,7 +52,7 @@ public class StaticDataServiceRDF implements StaticDataService {
     private static final String PREDICATE_VARIABLE = "pred";
     private static final String OBJECT_VARIABLE = "object";
 
-    private final List<String> classes = new CopyOnWriteArrayList<String>();
+    private final Map<String,String> classes = new ConcurrentHashMap<String,String>();
         
     private final SparqlDao sparqlDao;
     
@@ -63,7 +65,7 @@ public class StaticDataServiceRDF implements StaticDataService {
         this.sparqlDao = sparqlDao; 
     }
     
-    public List<String> getClasses() {    
+    public Map<String,String> getClasses() {    
         return classes.isEmpty() ? queryForClasses() : classes;
     }
     
@@ -147,11 +149,15 @@ public class StaticDataServiceRDF implements StaticDataService {
      * 
      * @return A List of Strings for the first drop-down
      */
-    private List<String> queryForClasses() {
+    private Map<String,String> queryForClasses() {
         final SelectResultSet results = sparqlDao.executeSelect(GET_CLASSES_QUERY);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
-            classes.add(element.getValue());
+            if (result.getResult().get("clabel") != null) {
+                classes.put(element.getValue(), result.getResult().get("clabel").getValue());
+            } else {
+                classes.put(element.getValue(),element.getValue());
+            }
         }
         return classes;
     }

@@ -18,16 +18,14 @@ public class QueryTest extends TestCase {
         Query qone = new Query();
         qone.setQuestionType(QuestionType.SELECT);
         qone.setSubject("http://xmlns.com/foaf/0.1/Person");
-        qone.setFirstFilter(first);                
-        assertEquals(qone.toSparqlString(), "SELECT DISTINCT ?sub ?pred ?obj WHERE { ?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . ?sub ?pred ?obj . ?sub <http://xmlns.com/foaf/0.1/interest> <http://dbpedia.org/page/Beer> . } ");
+        qone.setFirstFilter(first);   
+        assertEquals(qone.toSparqlString(), "SELECT DISTINCT ?sub ?pred ?obj ?slabel ?plabel ?olabel WHERE { ?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . ?sub ?pred ?obj . ?sub <http://xmlns.com/foaf/0.1/interest> <http://dbpedia.org/page/Beer> . OPTIONAL {?sub <http://www.w3.org/2000/01/rdf-schema#label> ?slabel } . OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . OPTIONAL {?obj <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . } ");
 
         Query qtwo = new Query();
         qtwo.setQuestionType(QuestionType.COUNT);
         qtwo.setSubject("http://xmlns.com/foaf/0.1/Person");
         qtwo.setFirstFilter(first);                
 
-        
-        System.err.println(qtwo.toSparqlString());
         assertEquals(qtwo.toSparqlString(), "SELECT DISTINCT (COUNT(?sub) AS ?cnt) WHERE { ?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . ?sub ?pred ?obj . ?sub <http://xmlns.com/foaf/0.1/interest> <http://dbpedia.org/page/Beer> . } ");
 
     }

@@ -2,6 +2,8 @@ package org.linkedgov.questions.components;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.Link;
@@ -88,7 +90,7 @@ public class Question {
     @Persist
     @SuppressWarnings("unused")
     @Property
-    private List<String> subjects;
+    private Map<String,String> subjects;
     
     /**
      * An empty list, used as a model by selects whose options are populated later by ajax later.

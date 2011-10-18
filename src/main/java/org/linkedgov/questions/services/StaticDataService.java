@@ -1,6 +1,7 @@
 package org.linkedgov.questions.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.linkedgov.questions.model.QueryFilter;
 
@@ -13,7 +14,7 @@ import org.linkedgov.questions.model.QueryFilter;
  */
 public interface StaticDataService {
     
-    public List<String> getClasses();
+    public Map<String, String> getClasses();
     
     public List<String> getObjects(String subject, String predicate);
     
