@@ -15,4 +15,6 @@ public interface SparqlDao {
     public int executeCount(String query);
 
     public SelectResultSet executeSelect(String query, int offset, int limit);
+
+	String getCsv(String query);
 }

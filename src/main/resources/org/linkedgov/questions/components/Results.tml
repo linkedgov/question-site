@@ -4,6 +4,7 @@
 	<t:delegate to="resultsBlock"/>
 	
 	<t:block id="resultsTableBlock">
+	    <t:PageLink page="csvResults" context="allTriples">
 		<t:grid inplace="true" source="dataSource" pagerPosition="both" row="triple" add="${gridColumns}">
 			<t:parameter name="resultSubjectCell">
 				<t:resourceDisplay resource="prop:triple.subject"/>	

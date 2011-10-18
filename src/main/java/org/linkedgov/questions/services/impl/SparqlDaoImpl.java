@@ -48,6 +48,37 @@ public class SparqlDaoImpl implements SparqlDao {
     }
     
     /**
+     * 
+     * 
+     * @param query
+     * @return
+     */
+    public String getTsv(String query) {
+        try {
+			return client.sparqlQueryRawAccept(query, "text/tab-separated-values");
+		} catch (SprotocolException e) {
+			//TODO remove this debug
+			System.err.println("Error making SPARQL protocol call"+e.getMessage());
+		}
+		return null;
+    }
+    
+    /**
+     *  
+     * @param query
+     * @return
+     */
+    public String getCsv(String query) {
+        try {
+			return client.sparqlQueryRawAccept(query, "text/csv");
+		} catch (SprotocolException e) {
+			//TODO remove this debug
+			System.err.println("Error making SPARQL protocol call"+e.getMessage());
+		}
+		return null;
+    }
+    
+    /**
      * Execute a select query with an offset and limit.
      * 
      * @param query - the sparql select query string, e.g. SELECT ?x ?y ?z

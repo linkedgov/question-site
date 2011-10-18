@@ -1,5 +1,7 @@
 package org.linkedgov.questions.components;
 
+import java.util.List;
+
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Persist;
@@ -89,4 +91,9 @@ public class Results {
             return "resultCount";
         }
     }
+    
+    public List<Triple> getAllTriples() {
+    	return dataSource.getResults();
+    }
+   
 }

@@ -3,8 +3,8 @@
 	<t:form id="questionType" zone="resultsZone">
 		<t:errors/>
 		
-		<t:select t:id="questionType" value="query.questionType"/>
-		<t:select t:id="subject" class="subject" model="subjects" blankLabel="Of Type" value="query.subject"/>
+		<t:select t:id="questionType" blankLabel="Question Type" value="query.questionType"/>
+		<t:select t:id="subject" class="subject" model="subjects" blankLabel="Choose Type" value="query.subject"/>
 				
 		<div class="filtersContainer">
 			<t:filter t:id="firstFilter"/>
