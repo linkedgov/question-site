@@ -28,6 +28,8 @@ public class Query {
         lst.add("ftp");
         lst.add("tag");
         lst.add("urn");
+        lst.add("mailto");
+        lst.add("tel");
         URI_PREFIXES = Collections.unmodifiableList(lst);
     };
     
