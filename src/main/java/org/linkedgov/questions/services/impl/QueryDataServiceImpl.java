@@ -39,9 +39,8 @@ public class QueryDataServiceImpl implements QueryDataService {
 
                 for (String variable : results.getHead() ) {
                     SparqlResource resource =  result.getResult().get(variable);
-                    if (resource != null) {
-                        System.err.println("This variable '"+variable+"' with this result: '"+resource.getValue()+"' was returned");
-                    }
+                    //System.err.println("This variable '"+variable+"' with this result: '"+resource.getValue()+"' was returned");
+                    
                     Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
                     Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
                     Pair<SparqlResource,String> obj = new Pair<SparqlResource,String>();
