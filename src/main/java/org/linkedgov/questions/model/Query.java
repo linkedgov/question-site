@@ -91,10 +91,10 @@ public class Query {
 
         query.append("?sub ?pred ?obj . ");
 
-        if (!firstFilter.isNull()) {
+        if (!firstFilter.isComplete()) {
             query.append(filterToSparqlBGP(firstFilter));
         }
-        if (!secondFilter.isNull()) {
+        if (!secondFilter.isComplete()) {
             query.append(filterToSparqlBGP(secondFilter));
         }
 

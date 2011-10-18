@@ -1,6 +1,5 @@
 package org.linkedgov.questions.model;
 
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Pojo that represents a query, or question, built up by the user. 
@@ -24,9 +23,6 @@ public class QueryFilter {
     }
 
     public void setObject(String object) {
-        if(StringUtils.isBlank(object)){
-            return;
-        }
         this.object = object;
     }
 
@@ -35,9 +31,6 @@ public class QueryFilter {
     }
 
     public void setPredicate(String predicate) {
-        if(StringUtils.isBlank(predicate)){
-            return;
-        }
         this.predicate = predicate;
     }
 
@@ -45,8 +38,8 @@ public class QueryFilter {
         return predicate;
     }
     
-    public boolean isNull() {
-        if (predicate == null && object == null) {
+    public boolean isComplete() {
+        if (predicate == null || object == null) {
             return true;
         }
         

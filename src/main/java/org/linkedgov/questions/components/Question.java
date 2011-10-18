@@ -52,12 +52,35 @@ public class Question {
     private static final String FILTERS = "filters";
 
     /**
-     * Object to represent our sparql query.
+     * Object to represent our sparql query. 
      */
-    @SuppressWarnings("unused")
     @Property
     @Persist
     private Query query;
+    
+    @Property
+    @Persist
+    private String firstSelectObject;
+
+    @Property
+    @Persist
+    private String firstFreeTextObject;
+    
+    @Property
+    @Persist
+    private String firstLocationObject;
+    
+    @Property
+    @Persist
+    private String secondSelectObject;
+    
+    @Property
+    @Persist
+    private String secondFreeTextObject;
+    
+    @Property
+    @Persist
+    private String secondLocationObject;
     
     /**
      * A list of subjects, used as a model by the subject dropdown.
@@ -81,7 +104,7 @@ public class Question {
     private Zone resultsZone;
     
     /**
-     * Service to get our Sparql from.
+     * Service to populate dropdowns with.
      */
     @Inject
     private StaticDataService staticDataService;
@@ -318,6 +341,27 @@ public class Question {
      */
     @OnEvent(EventConstants.SUCCESS)
     public Object askQuestion(){
+    	//TODO: make this more general/cleaner to help extensibility
+    	if(firstSelectObject != null){
+    		query.getFirstFilter().setObject(firstSelectObject);
+    	} else if(firstFreeTextObject != null){
+    		query.getFirstFilter().setObject(firstFreeTextObject);		
+    	} else if(firstLocationObject != null){
+    		query.getFirstFilter().setObject(firstLocationObject);
+    	} else {
+    		query.getFirstFilter().setObject(null);
+    	}
+    	
+    	if(secondSelectObject != null){
+    		query.getSecondFilter().setObject(secondSelectObject);
+    	} else if(secondFreeTextObject != null){
+    		query.getSecondFilter().setObject(secondFreeTextObject);		
+    	} else if(secondLocationObject != null){
+    		query.getSecondFilter().setObject(secondLocationObject);
+    	} else {
+    		query.getSecondFilter().setObject(null);
+    	}
+    	
         return resultsZone.getBody();
     }
 }

@@ -9,37 +9,37 @@
 		<div class="filtersContainer">
 			<div id="firstFilter" class="filter">
 				<t:select class="predicate" t:id="firstPredicate" model="emptyList" blankLabel="${message:predicatesBlankLabel}" value="query.firstFilter.predicate"/>
-				<t:formFragment class="selectObjectEditor objectContainer">
-					<t:select class="object" t:id="firstSelectObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.firstFilter.object"/>
-				</t:formFragment>
-				<t:formFragment class="freetextObjectEditor objectContainer">
-					<t:TextField class="object" t:id="firstFreeTextObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.firstFilter.object"/>
-				</t:formFragment>
-				<t:formFragment class="locationObjectEditor objectContainer">	
-					<t:TextField class="object"  t:id="firstLocationObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.firstFilter.object"/>
-				</t:formFragment>
+				<div class="selectObjectEditor objectContainer">
+					<t:select class="object" t:id="firstSelectObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="firstSelectObject"/>
+				</div>
+				<div class="freetextObjectEditor objectContainer">
+					<t:TextField class="object" t:id="firstFreeTextObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="firstFreeTextObject"/>
+				</div>
+				<div class="locationObjectEditor objectContainer">	
+					<t:TextField class="object"  t:id="firstLocationObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="firstLocationObject"/>
+				</div>
 			</div>
 			<br/>
 			<div id="secondFilter" class="filter">
 				<t:select class="predicate" t:id="secondPredicate" model="emptyList"  blankLabel="${message:predicatesBlankLabel}" value="query.secondFilter.predicate"/>
-				<t:formFragment class="selectObjectEditor objectContainer" >
-					<t:select class="object" t:id="secondSelectObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
-				</t:formFragment>
-				<t:formFragment class="freetextObjectEditor objectContainer">
-					<t:TextField class="object" t:id="secondFreeTextObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
-				</t:formFragment>
-				<t:formFragment class="locationObjectEditor objectContainer">	
-					<t:TextField class="object" t:id="secondLocationObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="query.secondFilter.object"/>
-				</t:formFragment>
+				<div class="selectObjectEditor objectContainer" >
+					<t:select class="object" t:id="secondSelectObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="secondSelectObject"/>
+				</div>
+				<div class="freetextObjectEditor objectContainer">
+					<t:TextField class="object" t:id="secondFreeTextObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="secondFreeTextObject"/>
+				</div>
+				<div class="locationObjectEditor objectContainer">	
+					<t:TextField class="object" t:id="secondLocationObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="secondLocationObject"/>
+				</div>
 			</div>
 		</div>
 		<div>
-			<t:formFragment class="removeFilterContainer">
+			<div class="removeFilterContainer">
 				<button id="removeFilter" type="button" class="removeFilter" href="#">-</button>
-			</t:formFragment>
-			<t:formFragment class="addFilterContainer" visible="true">
+			</div>
+			<div class="addFilterContainer" visible="true">
 				<button id="addFilter" type="button" class="addFilter" href="#">+</button>
-			</t:formFragment>
+			</div>
 		</div>
 		
 		<t:submit t:id="ask" value="Ask"/>
