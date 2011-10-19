@@ -10,7 +10,7 @@
     	startingPredicate: function(specs){
     		
     		var handleStartingPredicateChange = function(data){
-    			$.question.util.populateSelectInFilter($("#subject"),data.subjects);
+    			$.question.utils.populateSelectInFilter($("#subject"),data.subjects);
     		};
     		
     		$("#startingPredicate").change(function(){
@@ -20,13 +20,13 @@
 	        	var ajaxRequest = {
 	                	url : specs.url,
 	                	success : handleStartingPredicateChange, 
-	                	data : 	{predicate : $('#startingPredicate').val()},
+	                	data : 	{startingPredicate : $('#startingPredicate').val()},
 	                    type : "GET"
 	            };   
 	        	
 	        	$.ajax(ajaxRequest);
-    		}
-    	}
+    		});
+    	},
     
     	 /**
     	  * Initializer that handles the add filter button.
