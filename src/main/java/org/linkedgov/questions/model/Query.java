@@ -164,7 +164,13 @@ public class Query {
         return bgp.toString();
     }
     
-    
+    /**
+     * This function takes in a literal value and returns a skolemised bnode if
+     * the literal value passed in, is a 4store bnode identifier
+     * 
+     * @param object a literal value is passed through to query
+     * @return a literal value or a skolemised bnode
+     */
     public String skolemiseBnode(String object) {
         if (object.startsWith("b") && object.length() == 16 && !object.contains(" ")) {
             object = "<bnode:"+object+">";
