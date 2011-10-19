@@ -1,9 +1,8 @@
 package org.linkedgov.questions.services.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,28 +30,38 @@ public class StaticDataServiceRDF implements StaticDataService {
             "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class . " +
             "OPTIONAL {?class <http://www.w3.org/2000/01/rdf-schema#label> ?clabel } } ORDER BY ?class"; 
     
-    private static final String GET_PREDICATE_QUERY = "SELECT DISTINCT ?pred WHERE " +
+    private static final String GET_PREDICATE_QUERY = "SELECT DISTINCT ?pred ?plabel WHERE " +
             "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
             "?pred ?o . " +
+            "OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . " +
             "FILTER (?pred != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>) } ORDER BY ?pred";
         
-    private static final String GET_OBJECTS_QUERY = "SELECT DISTINCT ?object WHERE " +
+    private static final String GET_OBJECTS_QUERY = "SELECT DISTINCT ?object ?olabel WHERE " +
             "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
-            "<%s> ?object} ORDER BY ?object";
+            "<%s> ?object . " +
+            "OPTIONAL {?object <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . " +
+            "} ORDER BY ?object";
     
-    private static final String GET_SECONDFILTER_PREDICATE_QUERY = "SELECT DISTINCT ?pred WHERE " +
+    private static final String GET_SECONDFILTER_PREDICATE_QUERY = "SELECT DISTINCT ?pred ?plabel WHERE " +
             "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
             "<%s> <%s> ; " +
-            "?pred ?obj} ORDER BY ?pred";
+            "?pred ?obj . " +
+            "OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . " +
+            "} ORDER BY ?pred";
     
-    private static final String GET_SECONDFILTER_OBJECT_QUERY = "SELECT DISTINCT ?object WHERE " +
+    private static final String GET_SECONDFILTER_OBJECT_QUERY = "SELECT DISTINCT ?object ?olabel WHERE " +
             "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
             "<%s> <%s> ; " +
-            "<%s> ?object} ORDER BY ?object";
+            "<%s> ?object . " +
+            "OPTIONAL {?object <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . " +
+            "} ORDER BY ?object";
     
     private static final String CLASS_VARIABLE = "class";
+    private static final String CLASS_VARIABLE_LABEL = "clabel";
     private static final String PREDICATE_VARIABLE = "pred";
+    private static final String PREDICATE_VARIABLE_LABEL = "plabel";
     private static final String OBJECT_VARIABLE = "object";
+    private static final String OBJECT_VARIABLE_LABEL = "olabel";
 
     private final Map<String,String> classes = new ConcurrentHashMap<String,String>();
         
@@ -81,13 +90,17 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @param firstFilterObject - the predicate of the third filter.
      * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display,
      */
-    public List<String> getObjects(String subject, String predicate) {
+    public Map<String,String> getObjects(String subject, String predicate) {
         String query = String.format(GET_OBJECTS_QUERY, subject, predicate);
-        List<String> retValues = new ArrayList<String>();
+        Map<String,String> retValues = new HashMap<String,String>();
         final SelectResultSet results = sparqlDao.executeSelect(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
-            retValues.add(element.getValue());
+            if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
+                retValues.put(element.getValue(), result.getResult().get(OBJECT_VARIABLE_LABEL).getValue());
+            } else {
+                retValues.put(element.getValue(),element.getValue());
+            }
         }
         return retValues;
     }
@@ -101,13 +114,17 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @return A List of Strings for the second list of predicates 
      */
     
-    public List<String> getObjects(String subject, String predicate, QueryFilter filter) {
+    public Map<String,String> getObjects(String subject, String predicate, QueryFilter filter) {
         String query = String.format(GET_SECONDFILTER_OBJECT_QUERY, subject, filter.getPredicate(), filter.getObject(), predicate);
-        List<String> retValues = new ArrayList<String>();
+        Map<String,String> retValues = new HashMap<String,String>();
         final SelectResultSet results = sparqlDao.executeSelect(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
-            retValues.add(element.getValue());
+            if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
+                retValues.put(element.getValue(), result.getResult().get(OBJECT_VARIABLE_LABEL).getValue());
+            } else {
+                retValues.put(element.getValue(),element.getValue());
+            }            
         }
         return retValues;        
     }
@@ -120,13 +137,17 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @param filter : This contains the first filter 
      * @return A List of Strings for the second list of predicates 
      */
-    public List<String> getPredicates(String subject, QueryFilter filter) {
+    public Map<String,String> getPredicates(String subject, QueryFilter filter) {
         String query = String.format(GET_SECONDFILTER_PREDICATE_QUERY, subject, filter.getPredicate(), filter.getObject());
-        List<String> retValues = new ArrayList<String>();
+        Map<String,String> retValues = new HashMap<String,String>();
         final SelectResultSet results = sparqlDao.executeSelect(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
-            retValues.add(element.getValue());
+            if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
+                retValues.put(element.getValue(), result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue());
+            } else {
+                retValues.put(element.getValue(),element.getValue());
+            }
         }
         return retValues;
     }
@@ -138,28 +159,32 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @param subject : The Class type to find a list of predicates for
      * @return A List of Strings for the first list of predicates 
      */
-    public List<String> getPredicates(String subject) {
+    public Map<String,String> getPredicates(String subject) {
         String query = String.format(GET_PREDICATE_QUERY, subject);
-        List<String> retValues = new ArrayList<String>();
+        Map<String,String> retValues = new HashMap<String,String>();
         final SelectResultSet results = sparqlDao.executeSelect(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
-                retValues.add(element.getValue());
+                if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
+                    retValues.put(element.getValue(), result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue());
+                } else {
+                    retValues.put(element.getValue(),element.getValue());
+                }
         }
         return retValues;
     }
 
     /**
      * This function will get a list of all the classes in the KB
-     * 
+     * if no label then return a Map of URI,URI
      * @return A List of Strings for the first drop-down
      */
     private Map<String,String> queryForClasses() {
         final SelectResultSet results = sparqlDao.executeSelect(GET_CLASSES_QUERY);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
-            if (result.getResult().get("clabel") != null) {
-                classes.put(element.getValue(), result.getResult().get("clabel").getValue());
+            if (result.getResult().get(CLASS_VARIABLE_LABEL) != null) {
+                classes.put(element.getValue(), result.getResult().get(CLASS_VARIABLE_LABEL).getValue());
             } else {
                 classes.put(element.getValue(),element.getValue());
             }

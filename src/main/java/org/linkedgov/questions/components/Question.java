@@ -1,6 +1,7 @@
 package org.linkedgov.questions.components;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -151,8 +152,8 @@ public class Question {
      */
     @OnEvent(ADD_FIRST_FILTER)
     public Object handleAddFirstFilterEvent(@RequestParameter("subject") String subject) {
-        final List<String> predicates = staticDataService.getPredicates(subject);
-        return generateSelectOptionsJson(predicates, PREDICATES);
+        final Map<String,String> predicates = staticDataService.getPredicates(subject);
+        return generateSelectOptionsJson((HashMap<String, String>) predicates, PREDICATES);
     }
     
     /**
@@ -169,8 +170,8 @@ public class Question {
             @RequestParameter("subject") String subject, 
             @RequestParameter("predicate")  String predicate, 
             @RequestParameter("object") String object) {
-        final List<String> predicates = staticDataService.getPredicates(subject, new QueryFilter(predicate,object));
-        return generateSelectOptionsJson(predicates, PREDICATES);
+        final Map<String,String> predicates = staticDataService.getPredicates(subject, new QueryFilter(predicate,object));
+        return generateSelectOptionsJson((HashMap<String, String>) predicates, PREDICATES);
     }
     
     /**
@@ -187,8 +188,8 @@ public class Question {
     public Object handleFirstFilterPredicateChanged(
             @RequestParameter("subject") String subject,
             @RequestParameter("predicate") String predicate) {
-        final List<String> objects = staticDataService.getObjects(subject, predicate);
-        return generateJsonForPredicateEvent(subject, objects);
+        final Map<String,String> objects = staticDataService.getObjects(subject, predicate);
+        return generateJsonForPredicateEvent(subject, (HashMap<String, String>) objects);
     }
     
     /**
@@ -208,8 +209,8 @@ public class Question {
             @RequestParameter("firstFilterPredicate") String firstFilterPredicate,
             @RequestParameter("firstFilterObject") String firstFilterObject) {
         final QueryFilter firstFilterQueryFilter = new QueryFilter(firstFilterPredicate, firstFilterObject);
-        final List<String> objects = staticDataService.getObjects(subject, predicate, firstFilterQueryFilter);        
-        return generateJsonForSecondPredicateEvent(subject, objects);
+        final Map<String, String> objects = staticDataService.getObjects(subject, predicate, firstFilterQueryFilter);        
+        return generateJsonForSecondPredicateEvent(subject, (HashMap<String, String>) objects);
     }
 
     /**
@@ -220,7 +221,7 @@ public class Question {
      * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display (the editor is chosen based on the predicate), 
      * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
      */
-    private Object generateJsonForPredicateEvent(String predicate, List<String> objects) {
+    private Object generateJsonForPredicateEvent(String predicate, HashMap<String,String> objects) {
         final JSONObject data = generateSelectOptionsJson(objects, OBJECTS);
         populateEditorPropertyInJson(predicate, objects, data);
         return data;
@@ -234,7 +235,7 @@ public class Question {
 	 * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display (the editor is chosen based on the predicate), 
 	 * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
 	 */
-	private Object generateJsonForSecondPredicateEvent(String predicate, List<String> objects) {
+	private Object generateJsonForSecondPredicateEvent(String predicate, HashMap<String,String> objects) {
 		final JSONObject data = generateSelectOptionsJson(objects, OBJECTS);
 		populateEditorPropertyInJson(predicate, objects, data);
 		
@@ -249,12 +250,12 @@ public class Question {
 	 * @param data
 	 */
 	private void populateEditorPropertyInJson(String predicate,
-			List<String> objects, final JSONObject data) {
+			HashMap<String,String> objects, final JSONObject data) {
 		
 		//TODO: make this smarter and perhaps put it into a service or something.
-		if(predicate.contains("postcode")){
+		if (predicate.contains("postcode")) {
 			data.put(EDITOR_CLASS, "locationObjectEditor");
-		} else if(objects.size() < 100){
+		} else if(objects.size() < 100) {
 			data.put(EDITOR_CLASS, "selectObjectEditor");
 		} else {
 			data.put(EDITOR_CLASS, "freetextObjectEditor");
@@ -264,12 +265,12 @@ public class Question {
     /**
      * Generates json suitable for populating a select element from a list of strings and a name.
      * 
-     * @param itemList the list of items.
+     * @param itemMap the list of items.
      * @param name - the name of the property to be set in the returned json object.
      * @return a json object with one property, given by 'name', and containing the items in the list, e.g
      *  {myName : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}]}
      */
-    private JSONObject generateSelectOptionsJson(List<String> itemList, String name) {
+    private JSONObject generateSelectOptionsJson(HashMap<String,String> itemMap, String name) {
         
         final JSONArray items = new JSONArray();
         final JSONObject data = new JSONObject();
@@ -279,11 +280,11 @@ public class Question {
         blankItem.put("label",messages.get(name+"BlankLabel"));
         
         items.put(blankItem);
-        for (String itemString : itemList) {
+        for (String itemString : itemMap.keySet()) {
             final JSONObject item = new JSONObject();
             item.put("value", itemString);
             //TODO: this will need to be sorted out to use the rdfs:label once we have that data.
-            item.put("label", itemString);
+            item.put("label", itemMap.get(itemString));
             items.put(item);
         }
 
