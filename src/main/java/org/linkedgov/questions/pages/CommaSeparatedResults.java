@@ -13,6 +13,10 @@ public class CommaSeparatedResults {
 	@SuppressWarnings("unused")
 	private StreamResponse onActivate(String query){
 		final String results = sparqlDao.getCsv(query);
+		final String[] resArray = results.split("\\r?\\n");
+		for(String line : resArray){
+			
+		}
 		return new MultiformatStreamResponse("text/csv", results,"csv");
 	}
 }

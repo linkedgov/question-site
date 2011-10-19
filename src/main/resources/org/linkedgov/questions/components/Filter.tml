@@ -4,9 +4,9 @@
         <t:select class="object" t:id="selectObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="selectObject"/>
     </div>
     <div class="freetextObjectEditor objectContainer">
-        <t:TextField class="object" t:id="freetextObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="freeTextObject"/>
+        <t:TextField class="object" t:id="freetextObject" blankLabel="${message:objectsBlankLabel}" value="freeTextObject"/>
     </div>
     <div class="locationObjectEditor objectContainer">
-        <t:TextField class="object"  t:id="locationObject" model="emptyList" blankLabel="${message:objectsBlankLabel}" value="locationObject"/>
+        <t:TextField class="object"  t:id="locationObject" blankLabel="${message:objectsBlankLabel}" value="locationObject"/>
     </div>
 </div>

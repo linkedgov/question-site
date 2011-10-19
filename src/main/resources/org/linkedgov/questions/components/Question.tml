@@ -3,8 +3,8 @@
 	<t:form id="questionType" zone="resultsZone" method="get">
 		<t:errors/>
 		
-		
 		<t:select t:id="questionType" blankLabel="Question Type" value="query.questionType"/>
+		<t:select t:id="startingPredicate" class="startingPredicate" model="predicates" blankLabel="Everything" value="query.predicate"/>
 		<t:select t:id="subject" class="subject" model="subjects" blankLabel="Choose Type" value="query.subject"/>
 				
 		<div class="filtersContainer">

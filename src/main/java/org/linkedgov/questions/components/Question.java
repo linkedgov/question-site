@@ -35,6 +35,8 @@ import org.linkedgov.questions.services.StaticDataService;
  */
 @Import(library="Question.js")
 public class Question {
+    
+    private static final String SUBJECTS = "subjects";
 
     private static final String EDITOR_CLASS = "editorClass";
 
@@ -42,6 +44,8 @@ public class Question {
 
     private static final String PREDICATES = "predicates";
 
+    private static final String STARTING_PREDICATE_CHANGE = "startingPredicateChange";
+    
     private static final String ADD_FIRST_FILTER = "addFirstFilter";
     
     private static final String ADD_SECOND_FILTER = "addSecondFilter";
@@ -68,6 +72,14 @@ public class Question {
     @SuppressWarnings("unused")
     @Property
     private Map<String,String> subjects;
+    
+    /**
+     * A list of subjects, used as a model by the subject dropdown.
+     */
+    @Persist
+    @SuppressWarnings("unused")
+    @Property
+    private Map<String,String> predicates;
     
     /**
      * An empty list, used as a model by selects whose options are populated later by ajax later.
@@ -126,6 +138,7 @@ public class Question {
         System.out.println("Setup Render");
         query = new Query();        
         subjects =  staticDataService.getClasses();
+        predicates = staticDataService.getPredicates();
         emptyList = new ArrayList<String>();
     }
     
@@ -138,10 +151,21 @@ public class Question {
      */
     @AfterRender
     public void initJs(){        
+        addStartingPredicateInitializerCall();
         addAddFilterInitializerCall();
         addFiltersInitializerCall();
     }
-    
+
+    /**
+     * Does stuff for the new dropdown.
+     */
+    @OnEvent("startingPredicateChange")
+    public Object handleStartingPredicateChange(@RequestParameter("startingPredicate") String startingPredicate) { 
+        //TODO: mischa, pass the startingPredicatehere
+        // final Map<String,String> predicates = staticDataService.getClasses(startingPredicate);
+        final Map<String,String> predicates = staticDataService.getClasses();
+        return generateSelectOptionsJson((HashMap<String, String>) predicates, SUBJECTS);
+    }
     /**
      * Handles change events from the add filter button when there are not yet any filters.
      * 
@@ -291,6 +315,18 @@ public class Question {
         data.put(name, items);
         
         return data;
+    }
+    
+    /**
+     * 
+     */
+    private void addStartingPredicateInitializerCall() {
+        final Link startingPredicateEventLink = resources.createEventLink(STARTING_PREDICATE_CHANGE);
+        
+        final JSONObject specs = new JSONObject();
+        specs.put("url", startingPredicateEventLink.toAbsoluteURI());
+        
+        jsSupport.addInitializerCall("startingPredicate", specs);
     }
     
     /**

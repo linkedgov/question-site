@@ -159,9 +159,9 @@ public class StaticDataServiceRDF implements StaticDataService {
     public Map<String,String> queryForGetPredicates() {
         final SelectResultSet results = sparqlDao.executeSelect(GET_INITIALPREDICATE_QUERY);        
         for (SelectResult result : results.getResults()) {
-            final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
-            if (result.getResult().get(CLASS_VARIABLE_LABEL) != null) {
-                predicates.put(element.getValue(), result.getResult().get(CLASS_VARIABLE_LABEL).getValue());
+            final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
+            if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
+                predicates.put(element.getValue(), result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue());
             } else {
                 predicates.put(element.getValue(),element.getValue());
             }

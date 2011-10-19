@@ -4,6 +4,30 @@
     /** Container of functions that may be invoked by the Tapestry.init() function. */
     $.extend(Tapestry.Initializer, {
     	
+    	/**
+    	 * Initializer that handles the first predicate.
+    	 */
+    	startingPredicate: function(specs){
+    		
+    		var handleStartingPredicateChange = function(data){
+    			$.question.util.populateSelectInFilter($("#subject"),data.subjects);
+    		};
+    		
+    		$("#startingPredicate").change(function(){
+	    		/**
+	        	 * Ajax request when adding the first filter.
+	        	 */
+	        	var ajaxRequest = {
+	                	url : specs.url,
+	                	success : handleStartingPredicateChange, 
+	                	data : 	{predicate : $('#startingPredicate').val()},
+	                    type : "GET"
+	            };   
+	        	
+	        	$.ajax(ajaxRequest);
+    		}
+    	}
+    
     	 /**
     	  * Initializer that handles the add filter button.
     	  * 
