@@ -13,6 +13,10 @@ import org.linkedgov.questions.model.QueryFilter;
  */
 public interface StaticDataService {
     
+    public Map<String,String> queryForGetPredicates();
+
+    public Map<String,String> getPredicates();
+    
     public Map<String,String> getClasses();
     
     public Map<String,String> getObjects(String subject, String predicate);
