@@ -18,6 +18,13 @@ public class Query {
      * Currently one of SELECT or SELECT COUNT 
      */
     private QuestionType questionType = QuestionType.SELECT;
+    
+    /**
+     * This is the predicate the user has chosen to filter on. 
+     * 
+     * If blank, the user wants everything.
+     */
+    private String predicate;
 
     /**
      * This is the rdf:type of the sub, 
@@ -179,4 +186,13 @@ public class Query {
         }
         return object;
     }
+
+    public void setPredicate(String predicate) {
+        this.predicate = predicate;
+    }
+
+    public String getPredicate() {
+        return predicate;
+    }
+
 }
