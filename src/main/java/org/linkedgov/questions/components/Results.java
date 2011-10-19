@@ -1,6 +1,10 @@
 package org.linkedgov.questions.components;
 
+import java.io.IOException;
+
 import org.apache.tapestry5.Block;
+import org.apache.tapestry5.annotations.InjectPage;
+import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
@@ -10,6 +14,7 @@ import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.QuestionType;
 import org.linkedgov.questions.model.SelectResultDataSource;
 import org.linkedgov.questions.model.Triple;
+import org.linkedgov.questions.pages.ExcelResults;
 import org.linkedgov.questions.services.QueryDataService;
 
 /**
@@ -58,6 +63,12 @@ public class Results {
     private Block noResultsYetBlock;
     
     /**
+     * Page to go to if somebody asks for CSV.
+     */
+    @InjectPage
+    private ExcelResults excelResults;
+    
+    /**
      * Datasource to back the result table.
      */
     @Property
@@ -83,6 +94,10 @@ public class Results {
         }
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getGridColumns() {
         if (query.getQuestionType().equals(QuestionType.SELECT)) {
             return "resultSubject,resultPredicate,resultObject";
@@ -97,5 +112,20 @@ public class Results {
     public String getSparql(){
     	return query.toSparqlString();
     }
-   
+  
+
+    /**
+     * Handles clicks on the excel link
+     * 
+     * @return the excel results page with the triples set.
+     * 
+     * @throws IOException
+     */
+    @SuppressWarnings("unused")
+	@OnEvent("excelEvent")
+	private Object excel() throws IOException{
+    	excelResults.setTriples(dataSource.getResults());
+    	return excelResults;
+	}
+
 }

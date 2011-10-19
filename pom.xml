@@ -19,7 +19,13 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <artifactId>testng</artifactId>
             <version>5.12.1</version>
             <scope>test</scope>
-        </dependency>	
+        </dependency>
+
+	    <dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi</artifactId>
+		    <version>3.7</version>
+		</dependency>
         
 		<dependency>
         	<groupId>org.got5</groupId>
