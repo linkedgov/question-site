@@ -11,6 +11,7 @@
     		
     		var handleStartingPredicateChange = function(data){
     			$.question.utils.populateSelectInFilter($("#subject"),data.subjects);
+    			$("#addFilter").removeAttr("disabled");
     		};
     		
     		$("#startingPredicate").change(function(){

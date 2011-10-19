@@ -13,11 +13,11 @@
 			<t:filter t:id="secondFilter"/>
 		</div>
 		<div>
-			<div class="removeFilterContainer">
+			<div class="removeFilterContainer" style="display:none">
 				<button id="removeFilter" type="button" class="removeFilter" href="#">-</button>
 			</div>
-			<div class="addFilterContainer" visible="true">
-				<button id="addFilter" type="button" class="addFilter" href="#">+</button>
+			<div class="addFilterContainer">
+				<button id="addFilter" type="button" disabled="disabled" class="addFilter" href="#">+</button>
 			</div>
 		</div>
 		
