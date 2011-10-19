@@ -289,8 +289,8 @@
         			$.question.utils.makeReadable($(".subject"));
         			$.question.utils.makeReadable($(".startingPredicate"));
         			$(".removeFilterContainer").hide();
-        			$("#ask").removeAttr("disabled");
         		}
+        		$("#ask").removeAttr("disabled");
         		$("#addFilter").removeAttr("disabled");
         		filterToRemove.hide();
         		filterToRemove.find(".objectContainer").hide();
