@@ -354,7 +354,10 @@
         		selectElem.empty();	
         	    for(var i = 0; i < options.length; i++){
         	    	var option = options[i];
-        	    	selectElem.append("<option value='"+option.value+"'>"+option.label+"</option>");
+        	    	var optionElem = $("<option></option>");
+        	    	optionElem.text(option.label);
+        	    	optionElem.attr("value",option.value);   	
+        	    	selectElem.append(optionElem);
         	    } 
         	},
          	
