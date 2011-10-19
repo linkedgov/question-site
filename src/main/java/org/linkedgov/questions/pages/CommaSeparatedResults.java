@@ -12,7 +12,7 @@ public class CommaSeparatedResults {
 	
 	@SuppressWarnings("unused")
 	private StreamResponse onActivate(String query){
-		final String results = sparqlDao.getTsv(query);
+		final String results = sparqlDao.getCsv(query);
 		return new MultiformatStreamResponse("text/csv", results,"csv");
 	}
 }
