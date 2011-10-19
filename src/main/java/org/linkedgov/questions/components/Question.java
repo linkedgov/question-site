@@ -162,8 +162,8 @@ public class Question {
     @OnEvent("startingPredicateChange")
     public Object handleStartingPredicateChange(@RequestParameter("startingPredicate") String startingPredicate) { 
         //TODO: mischa, pass the startingPredicatehere
-        // final Map<String,String> predicates = staticDataService.getClasses(startingPredicate);
-        final Map<String,String> predicates = staticDataService.getClasses();
+         final Map<String,String> predicates = staticDataService.getClasses(startingPredicate);
+        //final Map<String,String> predicates = staticDataService.getClasses();
         return generateSelectOptionsJson((HashMap<String, String>) predicates, SUBJECTS);
     }
     /**

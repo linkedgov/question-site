@@ -34,6 +34,11 @@ public class StaticDataServiceRDF implements StaticDataService {
             "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class . " +
             "OPTIONAL {?class <http://www.w3.org/2000/01/rdf-schema#label> ?clabel } } ORDER BY ?class"; 
     
+    private static final String GET_CLASSES_WITHPRED_QUERY = "SELECT DISTINCT ?class ?clabel WHERE " +
+            "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class . " +
+            "?s <%s> ?foo . " +
+             "OPTIONAL {?class <http://www.w3.org/2000/01/rdf-schema#label> ?clabel } } ORDER BY ?class"; 
+    
     private static final String GET_FIRSTFILTER_PREDICATE_QUERY = "SELECT DISTINCT ?pred ?plabel WHERE " +
             "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
             "?pred ?o . " +
@@ -198,6 +203,22 @@ public class StaticDataServiceRDF implements StaticDataService {
      */
     public Map<String,String> getClasses() {    
         final SelectResultSet results = sparqlDao.executeSelect(GET_CLASSES_QUERY);  
+        Map<String,String> retValues = new HashMap<String,String>();
+        for (SelectResult result : results.getResults()) {
+            final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
+            if (result.getResult().get(CLASS_VARIABLE_LABEL) != null) {
+                retValues.put(element.getValue(), result.getResult().get(CLASS_VARIABLE_LABEL).getValue());
+            } else {
+                retValues.put(element.getValue(),element.getValue());
+            }
+        }
+        return retValues;
+    }
+    
+    public Map<String,String> getClasses(String predicate) {
+        String query = String.format(GET_CLASSES_WITHPRED_QUERY, predicate);
+
+        final SelectResultSet results = sparqlDao.executeSelect(query);  
         Map<String,String> retValues = new HashMap<String,String>();
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(CLASS_VARIABLE);

@@ -19,6 +19,8 @@ public interface StaticDataService {
     
     public Map<String,String> getClasses();
     
+    public Map<String,String> getClasses(String predicate);
+
     public Map<String,String> getObjects(String subject, String predicate);
     
     public Map<String,String> getPredicates(String subject);
