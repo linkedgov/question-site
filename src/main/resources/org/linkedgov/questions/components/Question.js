@@ -60,8 +60,9 @@
     			//Populate the select element containing the predicates.
     			$.question.utils.populateSelectInFilter($(filterSelector+' .predicate'),data.predicates);
     			
-    			//Make the subject readonly (since changing it now would have a knock on effect)
+    			//Make the subject and startingPredicate readonly (since changing it now would have a knock on effect)
     			$.question.utils.makeReadOnly($("#subject"));
+    			$.question.utils.makeReadOnly($("#startingPredicate"));
     			
     			//Now we have a filter, we can remove it, so show the remove container.
     			$(".removeFilterContainer").show();
@@ -285,6 +286,7 @@
         		} else {
         			filterToRemove = $("#firstFilter");
         			$.question.utils.makeReadable($(".subject"));
+        			$.question.utils.makeReadable($(".startingPredicate"));
         			$(".removeFilterContainer").hide();
         			$("#ask").removeAttr("disabled");
         		}
