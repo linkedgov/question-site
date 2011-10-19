@@ -1,6 +1,6 @@
 <div class="question" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
 	
-	<t:form id="questionType" zone="resultsZone">
+	<t:form id="questionType" zone="resultsZone" method="get">
 		<t:errors/>
 		
 		<t:select t:id="questionType" blankLabel="Question Type" value="query.questionType"/>

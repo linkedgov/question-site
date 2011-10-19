@@ -403,7 +403,10 @@ a:hover {
 }
 
 /* Result page */
-.results table{
+.results table {
 	width:800px;
 	margin: 10px	
+}
+#resultsOptions {
+	float:right;
 }

@@ -1,7 +1,5 @@
 package org.linkedgov.questions.components;
 
-import java.util.List;
-
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Persist;
@@ -24,6 +22,7 @@ public class Results {
     /**
      * The value of the query.
      */
+	@Property
     @Parameter
     private Query query;
     
@@ -92,8 +91,11 @@ public class Results {
         }
     }
     
-    public List<Triple> getAllTriples() {
-    	return dataSource.getResults();
+    /**
+     * Return the sparql query.
+     */
+    public String getSparql(){
+    	return query.toSparqlString();
     }
    
 }

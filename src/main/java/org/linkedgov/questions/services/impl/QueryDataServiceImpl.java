@@ -32,45 +32,56 @@ public class QueryDataServiceImpl implements QueryDataService {
         final List<Triple> triples = new ArrayList<Triple>();
 
         if (!query.isNull()) {            
-            SelectResultSet results = sparqlDao.executeSelect(query.toSparqlString());
-
+            final SelectResultSet results = sparqlDao.executeSelect(query.toSparqlString());
             for (SelectResult result : results.getResults()) {
-                Triple triple = new Triple();    
-
-                for (String variable : results.getHead() ) {
-                    SparqlResource resource =  result.getResult().get(variable);
-                    //System.err.println("This variable '"+variable+"' with this result: '"+resource.getValue()+"' was returned");
-                    
-                    Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
-                    Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
-                    Pair<SparqlResource,String> obj = new Pair<SparqlResource,String>();
-                    
-                    if (variable.equals("sub")) {
-                        sub.setFirst(resource);
-                        triple.setSubject(sub);
-                    } else if (variable.equals("pred")) {
-                        pred.setFirst(resource);
-                        triple.setPredicate(pred);
-                    } else if (variable.equals("obj")) {
-                        obj.setFirst(resource);
-                        triple.setObject(obj);
-                    } else if (variable.equals("cnt")) {
-                        sub.setFirst(resource);
-                        triple.setSubject(sub);
-                    } else if (variable.equals("slabel") && resource != null) {
-                        sub.setFirst(resource);
-                        triple.setSubject(sub);
-                    } else if (variable.equals("plabel") && resource != null) {
-                        pred.setFirst(resource);
-                        triple.setPredicate(pred);
-                    } else if (variable.equals("olabel") && resource != null) {
-                        obj.setFirst(resource);
-                        triple.setObject(obj);
-                    }
-                }
+                final Triple triple = resultToTriple(results.getHead(), result);
                 triples.add(triple);
             }
         }
         return triples;
     }
+
+    /**
+     * Converts a result into a triple.
+     * 
+     * @param head a list of the variable names in the results.
+     * @param result the result to convert.
+     * @return the triple that represents the result. 
+     */
+	private Triple resultToTriple(List<String> head, SelectResult result) {
+		final Triple triple = new Triple();    
+
+		for (String variable : head) {
+		    final SparqlResource resource =  result.getResult().get(variable);
+		    
+		    final Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
+		    final Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
+		    final Pair<SparqlResource,String> obj = new Pair<SparqlResource,String>();
+		    
+		    if (variable.equals("sub")) {
+		        sub.setFirst(resource);
+		        triple.setSubject(sub);
+		    } else if (variable.equals("pred")) {
+		        pred.setFirst(resource);
+		        triple.setPredicate(pred);
+		    } else if (variable.equals("obj")) {
+		        obj.setFirst(resource);
+		        triple.setObject(obj);
+		    } else if (variable.equals("cnt")) {
+		        sub.setFirst(resource);
+		        triple.setSubject(sub);
+		    } else if (variable.equals("slabel") && resource != null) {
+		        sub.setFirst(resource);
+		        triple.setSubject(sub);
+		    } else if (variable.equals("plabel") && resource != null) {
+		        pred.setFirst(resource);
+		        triple.setPredicate(pred);
+		    } else if (variable.equals("olabel") && resource != null) {
+		        obj.setFirst(resource);
+		        triple.setObject(obj);
+		    }
+		}
+		return triple;
+	}
+
 }

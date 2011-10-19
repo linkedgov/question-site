@@ -70,7 +70,7 @@ public class SparqlDaoImpl implements SparqlDao {
      */
     public String getCsv(String query) {
         try {
-			return client.sparqlQueryRawAccept(query, "text/csv");
+			return client.sparqlQueryRawAccept(query,"text/csv");
 		} catch (SprotocolException e) {
 			//TODO remove this debug
 			System.err.println("Error making SPARQL protocol call"+e.getMessage());
