@@ -27,6 +27,15 @@
 	        	
 	        	$.ajax(ajaxRequest);
     		});
+    		
+    		$("#subject").change(function(){
+    			if(typeof($(this).val()) != 'undefined' 
+					&& $(this).val() != null &&
+					$(this).val() != ""){
+    				$("#addFilter").removeAttr("disabled");
+    			}
+    		});
+   
     	},
     
     	 /**
