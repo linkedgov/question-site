@@ -108,6 +108,9 @@ public class Query {
     public String toSparqlString() {
         StringBuilder query = new StringBuilder();
 
+        System.err.println("LAME is the predicate "+predicate);
+        
+        
         if (questionType.equals(QuestionType.COUNT)) {
             query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
         } else {
@@ -134,7 +137,13 @@ public class Query {
             query.append("OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . ");
             query.append("OPTIONAL {?obj <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . ");
         }
-                
+         
+        if (predicate != null) {
+            query.append("FILTER (?pred = <");
+            query.append(predicate);
+            query.append(">) . ");
+        }
+        
         query.append("} ");
 
         return query.toString();
