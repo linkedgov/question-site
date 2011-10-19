@@ -156,11 +156,21 @@ public class Query {
         if (isURI) {
             object = "<"+object+">";
         } else {
-            object = "\""+object+"\"";
+            object = skolemiseBnode(object);
         }
         bgp.append(object);
         bgp.append(" . ");
 
         return bgp.toString();
+    }
+    
+    
+    public String skolemiseBnode(String object) {
+        if (object.startsWith("b") && object.length() == 16 && !object.contains(" ")) {
+            object = "<bnode:"+object+">";
+        } else {
+            object = "\""+object+"\"";
+        }
+        return object;
     }
 }
