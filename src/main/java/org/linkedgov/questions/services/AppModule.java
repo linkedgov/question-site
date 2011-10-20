@@ -38,12 +38,11 @@ public class AppModule
     /**
      * This is where we are going to add in a blacklist of Predicate URIs
      * 
-     * @param configuration
+     * @param configClassBlacklist
      */
     public static void contributeStaticDataService (Configuration<String> configuration) {
         configuration.add("http://www.w3.org/2002/07/owl#ObjectProperty");
         configuration.add("http://mmt.me.uk/ns/lame");
-
     }
     
     public static void contributeApplicationDefaults(

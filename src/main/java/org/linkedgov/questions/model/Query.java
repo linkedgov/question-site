@@ -183,29 +183,16 @@ public class Query {
         }
         if (isURI) {
             object = "<"+object+">";
+        //check if it is a 4store bnode identifier ....
+        } else if (object.startsWith("b") && object.length() == 16 && !object.contains(" ")) {
+            object = "<bnode:"+object+">";
         } else {
-            object = skolemiseBnode(object);
+            object = "?obj . FILTER (?obj = \""+object+"\" || ?obj = \""+object+"\"@EN || ?obj = \""+object+"\"@en)";
         }
         bgp.append(object);
         bgp.append(" . ");
 
         return bgp.toString();
-    }
-    
-    /**
-     * This function takes in a literal value and returns a skolemised bnode if
-     * the literal value passed in, is a 4store bnode identifier
-     * 
-     * @param object a literal value is passed through to query
-     * @return a literal value or a skolemised bnode
-     */
-    public String skolemiseBnode(String object) {
-        if (object.startsWith("b") && object.length() == 16 && !object.contains(" ")) {
-            object = "<bnode:"+object+">";
-        } else {
-            object = "\""+object+"\"";
-        }
-        return object;
     }
 
     public void setPredicate(String predicate) {
