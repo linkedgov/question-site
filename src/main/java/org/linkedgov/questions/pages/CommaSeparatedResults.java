@@ -39,12 +39,12 @@ public class CommaSeparatedResults {
             csv.append(row.getPredicate().getFirst().getValue());
             csv.append(",");
             object = row.getObject().getFirst().getValue();
-            if (object.contains(",")) {
-                object = "\""+object+"\"";
-            } else if (object.contains("\"")) {
+            if (object.contains("\"")) {
                 object.replace("\"", "\"\"");
                 object = "\""+object+"\"";
-            }
+            } else if (object.contains(",")) {
+                object = "\""+object+"\"";
+            } 
             csv.append(object);
             csv.append("\n");
         }

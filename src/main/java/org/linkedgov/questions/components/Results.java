@@ -16,6 +16,7 @@ import org.linkedgov.questions.model.SelectResultDataSource;
 import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.pages.CommaSeparatedResults;
 import org.linkedgov.questions.pages.ExcelResults;
+import org.linkedgov.questions.pages.TabSeparatedResults;
 import org.linkedgov.questions.services.QueryDataService;
 
 /**
@@ -64,16 +65,22 @@ public class Results {
     private Block noResultsYetBlock;
 
     /**
-     * Page to go to if somebody asks for .xls file.
+     * Page to go to if somebody asks for a .xls file.
      */
     @InjectPage
     private ExcelResults excelResults;
 
     /**
-     * Page to go to if somebody asks for .xls file.
+     * Page to go to if somebody asks for a csv file.
      */
     @InjectPage
     private CommaSeparatedResults csvResults;
+    
+    /**
+     * Page to go to if somebody asks for a tsv file.
+     */
+    @InjectPage
+    private TabSeparatedResults tsvResults;
 
     /**
      * Datasource to back the result table.
@@ -148,5 +155,19 @@ public class Results {
     private Object csv() {
         csvResults.setTriples(dataSource.getResults());
         return csvResults;
+    }
+    
+    /**
+     * Handles clicks on the excel link
+     * 
+     * @return the excel results page with the triples set.
+     * 
+     * @throws IOException
+     */
+    @SuppressWarnings("unused")
+    @OnEvent("tsvEvent")
+    private Object tsv() {
+        tsvResults.setTriples(dataSource.getResults());
+        return tsvResults;
     }
 }

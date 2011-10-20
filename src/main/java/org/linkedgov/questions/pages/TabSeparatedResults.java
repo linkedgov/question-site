@@ -1,33 +1,63 @@
 package org.linkedgov.questions.pages;
 
+import java.util.List;
+
 import org.apache.tapestry5.StreamResponse;
-import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.annotations.Persist;
 import org.linkedgov.questions.http.MultiformatStreamResponse;
-import org.linkedgov.questions.services.SparqlDao;
+import org.linkedgov.questions.model.Triple;
 
 /**
- *  Class that serves up tab separated results for a given SPARQL query.
+ *  Class that serves up tab separated results based on the Grid component
  * 
- * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> for LinkedGov
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> 
+ * @author <a hred="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
  *
  */
 public class TabSeparatedResults {
 
     /**
-     * The sparqlDao, for making queries.
+     * A list of triples representing the results.
      */
-	@Inject
-	private SparqlDao sparqlDao;
-	
+    @Persist
+    private List<Triple> triples;
+
     /**
-     * Sends the query to 4store and turns the results into a {@Link StreamResponse}.
+     * This is used to iterate through the triples used to generate the Grid component
      * 
-     * @param query
-     * @return the response to send to the client.
+     * @return returns a tsv file to the user via their browser
      */
-	@SuppressWarnings("unused")
-	private StreamResponse onActivate(String query){
-		final String results = sparqlDao.getTsv(query);
-		return new MultiformatStreamResponse("text/tab-separated-values", results,"tsv");
-	}
+    @SuppressWarnings("unused")
+    private StreamResponse onActivate(){
+        final StreamResponse streamResponse;
+
+        StringBuilder tsv = new StringBuilder();
+        String object = "";
+        for (Triple row : triples) {
+            tsv.append(row.getSubject().getFirst().getValue());
+            tsv.append("\t");
+            tsv.append(row.getPredicate().getFirst().getValue());
+            tsv.append("\t");
+            object = row.getObject().getFirst().getValue();
+            if (object.contains("\"")) {
+                object.replace("\"", "\"\"");
+                object = "\""+object+"\"";
+            } else if (object.contains("\t")) {
+                object = "\""+object+"\"";
+            }
+            tsv.append(object);
+            tsv.append("\n");
+        }
+
+        return new MultiformatStreamResponse("text/tab-separated-values", tsv.toString(),"tsv");
+    }
+
+    /**
+     * Set the triples to be outputted.
+     * 
+     * @param triples
+     */
+    public void setTriples(List<Triple> triples) {
+        this.triples = triples;
+    }
 }

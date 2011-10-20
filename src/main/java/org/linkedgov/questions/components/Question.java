@@ -361,7 +361,6 @@ public class Question {
     /**
      * Update the results with those from the query.
      * 
-     * @return
      */
     @OnEvent(EventConstants.SUCCESS)
     public Object askQuestion(){
