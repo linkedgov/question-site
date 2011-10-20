@@ -3,6 +3,12 @@ package org.linkedgov.questions.http;
 import org.apache.tapestry5.services.Response;
 import org.apache.tapestry5.util.TextStreamResponse;
 
+/**
+ * Extension of {@Link TextStreamResponse} to return csv and tsv files with http headers set to try to make the browser pop up a download box.
+ * 
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> for LinkedGov
+ *
+ */
 public class MultiformatStreamResponse extends TextStreamResponse {
 
 	private final String fileExtension;

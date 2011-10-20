@@ -95,8 +95,9 @@ public class Results {
     }
     
     /**
+     * Returns a comma separated list of the grid columns.
      * 
-     * @return
+     * @return a comma separated list of the grid columns.
      */
     public String getGridColumns() {
         if (query.getQuestionType().equals(QuestionType.SELECT)) {

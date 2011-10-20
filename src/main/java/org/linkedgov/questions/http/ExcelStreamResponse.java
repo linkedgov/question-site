@@ -7,6 +7,12 @@ import java.io.InputStream;
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.services.Response;
 
+/**
+ * Implementation of {@Link StreamResponse} for excel files.
+ * 
+ * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> for LinkedGov
+ *
+ */
 public class ExcelStreamResponse implements StreamResponse {
 
 	private final byte[] bytes;

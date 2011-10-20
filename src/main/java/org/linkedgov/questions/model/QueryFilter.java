@@ -2,7 +2,7 @@ package org.linkedgov.questions.model;
 
 
 /**
- * Pojo that represents a query, or question, built up by the user. 
+ * Pojo that represents a predicate object pair which is used to narrow a result.
  * 
  * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
  * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
@@ -10,10 +10,21 @@ package org.linkedgov.questions.model;
  */
 public class QueryFilter {
 
+    /**
+     * The predicate.
+     */
     private String predicate;
     
+    /**
+     * The object.
+     */
     private String object;
     
+    /**
+     * 
+     * @param predicate
+     * @param object
+     */
     public QueryFilter(String predicate, String object){
         this.predicate = predicate;
         this.object = object;

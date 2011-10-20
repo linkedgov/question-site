@@ -5,7 +5,7 @@ import java.util.Map;
 import org.linkedgov.questions.model.QueryFilter;
 
 /**
- * Service for data that doesn't change very often.
+ * Service for data that populates dropdowns.
  * 
  * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
  * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov

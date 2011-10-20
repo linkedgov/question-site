@@ -22,12 +22,21 @@ import uk.me.mmt.sprotocol.SparqlResource;
  */
 public class QueryDataServiceImpl implements QueryDataService {
 
+    /**
+     * To do the actual querying with.
+     */
     private final SparqlDao sparqlDao;
 
     public QueryDataServiceImpl(SparqlDao sparqlDao){
         this.sparqlDao = sparqlDao;
     }
 
+    /**
+     * Get results for the user's question.
+     * 
+     * @param Query object representing a user's question.
+     * @return a list of triples representing the answer to the question.
+     */
     public List<Triple> executeQuery(Query query) { 
         final List<Triple> triples = new ArrayList<Triple>();
 

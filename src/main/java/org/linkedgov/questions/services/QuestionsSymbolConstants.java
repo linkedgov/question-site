@@ -1,6 +1,7 @@
 package org.linkedgov.questions.services;
 
 /**
+ * Question site specific version of {@Link SymbolConstants}
  * 
  * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
  * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov

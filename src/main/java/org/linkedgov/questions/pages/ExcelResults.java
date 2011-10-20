@@ -20,6 +20,9 @@ import uk.me.mmt.sprotocol.SparqlResource;
 
 public class ExcelResults {
 	
+    /**
+     * A list of triples representing the results.
+     */
 	@Persist
 	private List<Triple> triples;
 	
@@ -35,7 +38,6 @@ public class ExcelResults {
 		final StreamResponse streamResponse;
 		final Workbook wb = new HSSFWorkbook();
 		final Sheet sh = wb.createSheet();
-		
 		for (int rownum = 0; rownum < triples.size(); rownum++) {
 			addRow(triples.get(rownum), sh, rownum);
 		}

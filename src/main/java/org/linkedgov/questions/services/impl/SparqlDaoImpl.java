@@ -17,6 +17,9 @@ import uk.me.mmt.sprotocol.SprotocolException;
  */
 public class SparqlDaoImpl implements SparqlDao {
 
+    /**
+     * The client that does the actual querying.
+     */
     private final SparqlProtocolClient client;
     
     /**
