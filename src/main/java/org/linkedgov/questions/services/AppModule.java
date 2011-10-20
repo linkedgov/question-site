@@ -42,7 +42,9 @@ public class AppModule
      */
     public static void contributeStaticDataService (Configuration<String> configuration) {
         configuration.add("http://www.w3.org/2002/07/owl#ObjectProperty");
-        configuration.add("http://mmt.me.uk/ns/lame");
+        configuration.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+        configuration.add("http://www.w3.org/2000/01/rdf-schema#comment");
+
     }
     
     public static void contributeApplicationDefaults(

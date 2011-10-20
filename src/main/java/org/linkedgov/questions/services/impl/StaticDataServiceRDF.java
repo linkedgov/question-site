@@ -1,8 +1,8 @@
 package org.linkedgov.questions.services.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -76,7 +76,7 @@ public class StaticDataServiceRDF implements StaticDataService {
         
     private final SparqlDao sparqlDao;
     
-    private final Collection<String> blacklist;
+    private final ArrayList<String> blacklist;
         
     /**
      * TODO Mischa need to populate this configuration thingy
@@ -85,7 +85,7 @@ public class StaticDataServiceRDF implements StaticDataService {
      */
     public StaticDataServiceRDF (SparqlDao sparqlDao, Collection<String> configBlacklist) {
         this.sparqlDao = sparqlDao;
-        this.blacklist = new HashSet<String>(configBlacklist);
+        this.blacklist = new ArrayList<String>(configBlacklist);
         System.err.println("This is size of the predicate blacklist "+blacklist.size());
     }
     
@@ -169,10 +169,19 @@ public class StaticDataServiceRDF implements StaticDataService {
         final SelectResultSet results = sparqlDao.executeSelect(GET_INITIALPREDICATE_QUERY);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
-            if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
-                predicates.put(element.getValue(), result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue());
-            } else {
-                predicates.put(element.getValue(),element.getValue());
+            boolean blacklisted = false;
+            for (String lame : blacklist) {
+                if (lame.equals(element.getValue())) {
+                    blacklisted = true; 
+                    break;
+                }
+            }
+            if (!blacklisted) {
+                if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
+                    predicates.put(element.getValue(), result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue());
+                } else {
+                    predicates.put(element.getValue(),element.getValue());
+                }
             }
         }
         return predicates;
@@ -191,11 +200,20 @@ public class StaticDataServiceRDF implements StaticDataService {
         final SelectResultSet results = sparqlDao.executeSelect(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
+            boolean blacklisted = false;
+            for (String lame : blacklist) {
+                if (lame.equals(element.getValue())) {
+                    blacklisted = true; 
+                    break;
+                }
+            }
+            if (!blacklisted) {
                 if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
                     retValues.put(element.getValue(), result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue());
                 } else {
                     retValues.put(element.getValue(),element.getValue());
                 }
+            }
         }
         return retValues;
     }
@@ -210,10 +228,19 @@ public class StaticDataServiceRDF implements StaticDataService {
         Map<String,String> retValues = new HashMap<String,String>();
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
-            if (result.getResult().get(CLASS_VARIABLE_LABEL) != null) {
-                retValues.put(element.getValue(), result.getResult().get(CLASS_VARIABLE_LABEL).getValue());
-            } else {
-                retValues.put(element.getValue(),element.getValue());
+            boolean blacklisted = false;
+            for (String lame : blacklist) {
+                if (lame.equals(element.getValue())) {
+                    blacklisted = true; 
+                    break;
+                }
+            }
+            if (!blacklisted) {
+                if (result.getResult().get(CLASS_VARIABLE_LABEL) != null) {
+                    retValues.put(element.getValue(), result.getResult().get(CLASS_VARIABLE_LABEL).getValue());
+                } else {
+                    retValues.put(element.getValue(),element.getValue());
+                }
             }
         }
         return retValues;
@@ -221,15 +248,24 @@ public class StaticDataServiceRDF implements StaticDataService {
     
     public Map<String,String> getClasses(String predicate) {
         String query = String.format(GET_CLASSES_WITHPRED_QUERY, predicate);
-
         final SelectResultSet results = sparqlDao.executeSelect(query);  
         Map<String,String> retValues = new HashMap<String,String>();
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
-            if (result.getResult().get(CLASS_VARIABLE_LABEL) != null) {
-                retValues.put(element.getValue(), result.getResult().get(CLASS_VARIABLE_LABEL).getValue());
-            } else {
-                retValues.put(element.getValue(),element.getValue());
+            boolean blacklisted = false;
+            for (String lame : blacklist) {
+                if (lame.equals(element.getValue())) {
+                    blacklisted = true; 
+                    break;
+                }
+            }
+            if (!blacklisted) {
+
+                if (result.getResult().get(CLASS_VARIABLE_LABEL) != null) {
+                    retValues.put(element.getValue(), result.getResult().get(CLASS_VARIABLE_LABEL).getValue());
+                } else {
+                    retValues.put(element.getValue(),element.getValue());
+                }
             }
         }
         return retValues;
