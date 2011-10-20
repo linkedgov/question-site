@@ -184,7 +184,7 @@ public class Query {
         if (isURI) {
             object = "<"+object+">";
         //check if it is a 4store bnode identifier ....
-        } else if (object.startsWith("b") && object.length() == 16 && !object.contains(" ")) {
+        } else if (object.startsWith("b") && object.length() > 16 && !object.contains(" ")) {
             object = "<bnode:"+object+">";
         } else {
             object = "?obj . FILTER (?obj = \""+object+"\" || ?obj = \""+object+"\"@EN || ?obj = \""+object+"\"@en)";
