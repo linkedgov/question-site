@@ -56,4 +56,9 @@ public class QueryFilter {
         
         return false;
     }
+    
+    @Override
+    public String toString() {
+       return String.format("queryFilter(predicate=%s,object=%s)",predicate,object);
+    }
 }

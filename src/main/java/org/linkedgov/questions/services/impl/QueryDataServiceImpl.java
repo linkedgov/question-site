@@ -8,6 +8,7 @@ import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 import org.linkedgov.questions.services.SparqlDao;
+import org.slf4j.Logger;
 
 import uk.me.mmt.sprotocol.SelectResult;
 import uk.me.mmt.sprotocol.SelectResultSet;
@@ -27,8 +28,17 @@ public class QueryDataServiceImpl implements QueryDataService {
      */
     private final SparqlDao sparqlDao;
 
-    public QueryDataServiceImpl(SparqlDao sparqlDao){
+    /**
+     * To log stuff with.
+     */
+    private final Logger log;
+    
+    /**
+     * Automatically called by tapestry when instantiating the service, which is a singleton.
+     */
+    public QueryDataServiceImpl(SparqlDao sparqlDao, Logger log){
         this.sparqlDao = sparqlDao;
+        this.log = log;
     }
 
     /**
@@ -40,8 +50,11 @@ public class QueryDataServiceImpl implements QueryDataService {
     public List<Triple> executeQuery(Query query) { 
         final List<Triple> triples = new ArrayList<Triple>();
 
-        if (!query.isNull()) {            
-            final SelectResultSet results = sparqlDao.executeSelect(query.toSparqlString());
+        if (!query.isNull()) {          
+            final String sparqlString = query.toSparqlString();
+            log.info("SPARQL ASKED:{}", sparqlString);
+            log.info("QUESTION ASKED:{}", query.toString());
+            final SelectResultSet results = sparqlDao.executeSelect(sparqlString);
             for (SelectResult result : results.getResults()) {
                 final Triple triple = resultToTriple(results.getHead(), result);
                 triples.add(triple);

@@ -96,6 +96,21 @@ public class Query {
 
         return false;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("subject:[");
+        sb.append(subject);
+        sb.append("] predicate:[");
+        sb.append(predicate);
+        sb.append("firstFilter:[");
+        sb.append(firstFilter.toString());
+        sb.append("] secondFilter:[");
+        sb.append(secondFilter.toString());
+        sb.append("]");
+        return sb.toString();
+    }
 
     /**
      * This function is used to turn a given instance of 
