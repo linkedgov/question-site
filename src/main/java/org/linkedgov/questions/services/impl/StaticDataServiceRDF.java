@@ -76,18 +76,23 @@ public class StaticDataServiceRDF implements StaticDataService {
         
     private final SparqlDao sparqlDao;
     
+    private final HashSet<String> classBlacklist;
+    
     /**
      * TODO Mischa need to populate this configuration thingy
      * @param sparqlDao
-     * @param configuration
+     * @param configClassBlacklist
      */
-    public StaticDataServiceRDF (SparqlDao sparqlDao, Collection<String> configuration){
+    public StaticDataServiceRDF (SparqlDao sparqlDao, Collection<String> configClassBlacklist){
         this.sparqlDao = sparqlDao;
-        Collection<String> lame = new HashSet<String>(configuration);
+        this.classBlacklist = new HashSet<String>(configClassBlacklist);
         
-        System.err.println("THIS BLACKLIST HAS THIS MANY ITEMS in it: "+lame.size());
+        System.err.println("This is size "+classBlacklist.size());
     }
     
+    /**
+     * This is used to populate the initial list of predicates
+     */
     public Map<String,String> getPredicates() {
         return predicates.isEmpty() ? queryForGetPredicates() : predicates;
     }

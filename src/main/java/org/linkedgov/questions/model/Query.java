@@ -121,10 +121,7 @@ public class Query {
      * @return A Sparql Query String
      */
     public String toSparqlString() {
-        StringBuilder query = new StringBuilder();
-
-        System.err.println("LAME is the predicate "+predicate);
-        
+        StringBuilder query = new StringBuilder();        
         
         if (questionType.equals(QuestionType.COUNT)) {
             query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
