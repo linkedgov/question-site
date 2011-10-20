@@ -43,6 +43,8 @@ public class ExcelResults {
     	for (int rownum = 0; rownum < triples.size(); rownum++) {
     		addRow(triples.get(rownum), sh, rownum+1);
     	}
+    	
+        return new ExcelStreamResponse(getWorkbookBytes(wb));
     }
     /**
      * Create a row with the headers on it.
@@ -85,37 +87,6 @@ public class ExcelResults {
     	addCell(row, triple.getSubject(), 0);
     	addCell(row, triple.getPredicate(), 1);
     	addCell(row, triple.getObject(), 2);
-    }
-
-    /**
-     * Gets the bytes from the workbook
-     * 
-     * @param wb - the workbook whose bytes you want.
-     * @return
-     * @throws IOException
-     */
-    private byte[] getWorkbookBytes(final Workbook wb) throws IOException {
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        wb.write(bos);
-        byte[] bytes = bos.toByteArray();
-        bos.close();
-        bos.flush();
-        return bytes;
-    }
-
-    /**
-     * 
-     * Adds a row representing the passed triple to the sheet.
-     * 
-     * @param triples
-     * @param sh
-     * @param rownum
-     */
-    private void addRow(Triple triple, Sheet sh, int rownum) {
-        final Row row = sh.createRow(rownum);
-        addCell(row, triple.getSubject(), 0);
-        addCell(row, triple.getPredicate(), 1);
-        addCell(row, triple.getObject(), 2);
     }
 
     /**
