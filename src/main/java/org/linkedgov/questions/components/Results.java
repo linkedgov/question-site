@@ -14,6 +14,7 @@ import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.QuestionType;
 import org.linkedgov.questions.model.SelectResultDataSource;
 import org.linkedgov.questions.model.Triple;
+import org.linkedgov.questions.pages.CommaSeparatedResults;
 import org.linkedgov.questions.pages.ExcelResults;
 import org.linkedgov.questions.services.QueryDataService;
 
@@ -23,51 +24,57 @@ import org.linkedgov.questions.services.QueryDataService;
  * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
  */
 public class Results {
-    
+
     /**
      * The value of the query.
      */
-	@Property
+    @Property
     @Parameter
     private Query query;
-    
+
     /**
      * A row in the list of triples that come back as results.
      */
     @SuppressWarnings("unused")
     @Property
     private Triple triple;
-    
+
     /**
      * QueryDataService service, to actually do the query with.
      */
     @Inject
     private QueryDataService queryDataService;
-    
+
     /**
      * Block to show results table in.
      */
     @Inject
     private Block resultsTableBlock;
-    
+
     /**
      * Block to show empty results in.
      */
     @Inject
     private Block emptyResultsBlock;
-    
+
     /**
      * Block with no results yet.
      */
     @Inject
     private Block noResultsYetBlock;
-    
+
     /**
-     * Page to go to if somebody asks for CSV.
+     * Page to go to if somebody asks for .xls file.
      */
     @InjectPage
     private ExcelResults excelResults;
-    
+
+    /**
+     * Page to go to if somebody asks for .xls file.
+     */
+    @InjectPage
+    private CommaSeparatedResults csvResults;
+
     /**
      * Datasource to back the result table.
      */
@@ -82,7 +89,7 @@ public class Results {
     public void setupDataSource(){
         dataSource = new SelectResultDataSource(query, queryDataService);
     }
-    
+
     /**
      * @return - a block which contains the results or an error message if there aren't any.
      */
@@ -93,7 +100,7 @@ public class Results {
             return dataSource.getAvailableRows() > 0 ? resultsTableBlock : emptyResultsBlock;
         }
     }
-    
+
     /**
      * Returns a comma separated list of the grid columns.
      * 
@@ -106,14 +113,14 @@ public class Results {
             return "resultCount";
         }
     }
-    
+
     /**
      * Return the sparql query.
      */
     public String getSparql(){
-    	return query.toSparqlString();
+        return query.toSparqlString();
     }
-  
+
 
     /**
      * Handles clicks on the excel link
@@ -123,10 +130,23 @@ public class Results {
      * @throws IOException
      */
     @SuppressWarnings("unused")
-	@OnEvent("excelEvent")
-	private Object excel() throws IOException{
-    	excelResults.setTriples(dataSource.getResults());
-    	return excelResults;
-	}
+    @OnEvent("excelEvent")
+    private Object excel() throws IOException{
+        excelResults.setTriples(dataSource.getResults());
+        return excelResults;
+    }
 
+    /**
+     * Handles clicks on the excel link
+     * 
+     * @return the excel results page with the triples set.
+     * 
+     * @throws IOException
+     */
+    @SuppressWarnings("unused")
+    @OnEvent("csvEvent")
+    private Object csv() {
+        csvResults.setTriples(dataSource.getResults());
+        return csvResults;
+    }
 }

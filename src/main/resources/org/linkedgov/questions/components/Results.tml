@@ -6,7 +6,7 @@
 	<t:block id="resultsTableBlock">
 	    <div id="resultsOptions">
 	       <p><t:eventLink t:id="excelEvent">Download Excel</t:eventLink></p>
-	       <p><t:PageLink page="commaSeparatedResults" context="sparql">Download Comma Separated</t:PageLink></p>
+	       <p><t:eventLink t:id="csvEvent">Download Comma Separated</t:eventLink></p>
 	       <p><t:PageLink page="tabSeparatedResults" context="sparql">Download Tab Separated</t:PageLink></p>
 	    </div>
 		<t:grid inplace="true" source="dataSource" pagerPosition="both" row="triple" add="${gridColumns}">
