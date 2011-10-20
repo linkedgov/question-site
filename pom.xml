@@ -46,6 +46,13 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <version>0.9-SNAPSHOT</version>
         </dependency>
 
+	    <dependency>
+		   <groupId>org.mockito</groupId>
+		   <artifactId>mockito-all</artifactId>
+		   <version>1.9.0-rc1</version>
+		   <scope>test</scope>
+	    </dependency>
+	    
         <dependency>
             <groupId>org.apache.tapestry</groupId>
             <artifactId>tapestry-test</artifactId>
@@ -53,8 +60,7 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <scope>test</scope>
         </dependency>
 
-        <!-- Provided by the servlet container, but sometimes referenced in the application
-       code. -->
+        <!-- Provided by the servlet container, but sometimes referenced in the application code. -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>

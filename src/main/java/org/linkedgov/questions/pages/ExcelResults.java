@@ -25,24 +25,66 @@ public class ExcelResults {
      */
     @Persist
     private List<Triple> triples;
-
+    
     /**
      * Called when the page is activated, returns an excel file containing the triples in query.
      * @return
      * @throws IOException
      */
-
+    
     @SuppressWarnings("unused")
     public StreamResponse onActivate() throws IOException{
+    	
+    	final StreamResponse streamResponse;
+    	final Workbook wb = new HSSFWorkbook();
+    	final Sheet sh = wb.createSheet();
+    	createHeaderRow(sh);
+    	
+    	for (int rownum = 0; rownum < triples.size(); rownum++) {
+    		addRow(triples.get(rownum), sh, rownum+1);
+    	}
+    }
+    /**
+     * Create a row with the headers on it.
+     * 
+     * @param sh
+     */
+    private void createHeaderRow(final Sheet sh) {
+        final Row row = sh.createRow(0);
+    	row.createCell(0).setCellValue("Subject");
+    	row.createCell(1).setCellValue("Predicate");;
+    	row.createCell(2).setCellValue("Object");;
+    }
 
-        final StreamResponse streamResponse;
-        final Workbook wb = new HSSFWorkbook();
-        final Sheet sh = wb.createSheet();
-        for (int rownum = 0; rownum < triples.size(); rownum++) {
-            addRow(triples.get(rownum), sh, rownum);
-        }
-
-        return new ExcelStreamResponse(getWorkbookBytes(wb));
+    /**
+     * Gets the bytes from the workbook
+     * 
+     * @param wb - the workbook whose bytes you want.
+     * @return
+     * @throws IOException
+     */
+    private byte[] getWorkbookBytes(final Workbook wb) throws IOException {
+    	final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    	wb.write(bos);
+    	byte[] bytes = bos.toByteArray();
+    	bos.close();
+    	bos.flush();
+    	return bytes;
+    }
+    
+    /**
+     * 
+     * Adds a row representing the passed triple to the sheet.
+     * 
+     * @param triples
+     * @param sh
+     * @param rownum
+     */
+    private void addRow(Triple triple, Sheet sh, int rownum) {
+    	final Row row = sh.createRow(rownum);
+    	addCell(row, triple.getSubject(), 0);
+    	addCell(row, triple.getPredicate(), 1);
+    	addCell(row, triple.getObject(), 2);
     }
 
     /**
