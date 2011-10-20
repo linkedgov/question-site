@@ -416,3 +416,7 @@ a:hover {
 #resultsOptions {
 	float:right;
 }
+label {
+    width:120px;
+    display:inline-block;	
+}

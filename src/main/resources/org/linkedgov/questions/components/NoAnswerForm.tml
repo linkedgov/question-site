@@ -1,0 +1,24 @@
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<t:zone id="noAnswerZone">
+		<t:delegate to="noAnswerBlock"/>
+	</t:zone>
+	
+	<t:block id="formBlock">
+	   <p>Sorry, your question returned no answers, what were you looking for?</p>
+        <t:form id="noAnswerForm" zone="noAnswerZone">
+           <t:label for="email">Email:</t:label>
+           <t:TextField t:id="email" t:validate="required" value="email"/>
+           <br/>
+           <t:label for="email">I was looking for:</t:label>
+           <t:TextArea t:id="freeText" value="freeText"/>
+           <br/>
+           <br/>
+           <t:submit t:id="submit" value="Submit"/>
+        </t:form>
+	</t:block>
+	
+    <t:block id="thanksBlock">
+       Thanks for your details.
+    </t:block>
+	
+</t:container>

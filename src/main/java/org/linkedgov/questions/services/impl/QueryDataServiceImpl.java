@@ -50,17 +50,18 @@ public class QueryDataServiceImpl implements QueryDataService {
     public List<Triple> executeQuery(Query query) { 
         final List<Triple> triples = new ArrayList<Triple>();
 
-        if (!query.isNull()) {          
-            final String sparqlString = query.toSparqlString();
-            log.info("SPARQL ASKED:{}", sparqlString);
-            log.info("QUESTION ASKED:{}", query.toString());
-            final SelectResultSet results = sparqlDao.executeSelect(sparqlString);
-            for (SelectResult result : results.getResults()) {
-                final Triple triple = resultToTriple(results.getHead(), result);
-                triples.add(triple);
-            }
-        }
         return triples;
+//        if (!query.isNull()) {          
+//            final String sparqlString = query.toSparqlString();
+//            log.info("SPARQL ASKED:{}", sparqlString);
+//            log.info("QUESTION ASKED:{}", query.toString());
+//            final SelectResultSet results = sparqlDao.executeSelect(sparqlString);
+//            for (SelectResult result : results.getResults()) {
+//                final Triple triple = resultToTriple(results.getHead(), result);
+//                triples.add(triple);
+//            }
+//        }
+//        return triples;
     }
 
     /**
