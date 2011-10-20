@@ -59,7 +59,7 @@ public class AppModule
         // The factory default is true but during the early stages of an application
         // overriding to false is a good idea. In addition, this is often overridden
         // on the command line as -Dtapestry.production-mode=false
-        configuration.add(SymbolConstants.PRODUCTION_MODE, "false");
+        configuration.add(SymbolConstants.PRODUCTION_MODE, "true");
 
         // The application version number is incorprated into URLs for some
         // assets. Web browsers will cache assets because of the far future expires
