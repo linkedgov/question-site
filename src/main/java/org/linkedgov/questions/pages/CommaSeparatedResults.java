@@ -36,7 +36,7 @@ public class CommaSeparatedResults {
     @SuppressWarnings("unused")
     private StreamResponse onActivate(){
         final StreamResponse streamResponse;
-        //TODO: stream this response.
+        //TODO: Ongoing. Stream this response.
         final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);
 
         StringBuilder csv = new StringBuilder();

@@ -36,8 +36,8 @@ public class TabSeparatedResults {
     @SuppressWarnings("unused")
     private StreamResponse onActivate(){
         final StreamResponse streamResponse;
-        //TODO: stream this response.
-        //TODO: stream this response.
+        //TODO: Ongoing. stream this response.
+        //TODO: Ongoing. stream this response.
         final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);
 
         StringBuilder tsv = new StringBuilder();

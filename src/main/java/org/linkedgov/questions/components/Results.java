@@ -186,7 +186,7 @@ public class Results {
      * @return
      */
     public Map<String,String> getDataSets() {
-        //TODO: implement this, make sure only to query once
+        //TODO: Luke/Mischa, implement this, make sure only to query once.
         final Map<String,String> dataSets = new HashMap<String,String>();
         
         dataSets.put("http://viscri.co.uk/something", "Something");
@@ -208,7 +208,7 @@ public class Results {
      * @throws IOException
      */
     public int getReliability() {
-        //TODO: implement this.
+        //TODO: Luke/Mischa implement this.
         return 5;
     }
     

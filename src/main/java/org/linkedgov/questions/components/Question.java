@@ -274,7 +274,7 @@ public class Question {
 	private void populateEditorPropertyInJson(String predicate,
 			HashMap<String,String> objects, final JSONObject data) {
 		
-		//TODO: make this smarter and perhaps put it into a service or something.
+		//TODO, Ongoing. Make this smarter and perhaps put it into a service or something.
 		if (predicate.contains("postcode")) {
 			data.put(EDITOR_CLASS, "locationObjectEditor");
 		} else if(objects.size() < 100) {
@@ -305,7 +305,6 @@ public class Question {
         for (String itemString : itemMap.keySet()) {
             final JSONObject item = new JSONObject();
             item.put("value", itemString);
-            //TODO: this will need to be sorted out to use the rdfs:label once we have that data.
             item.put("label", itemMap.get(itemString));
             items.put(item);
         }

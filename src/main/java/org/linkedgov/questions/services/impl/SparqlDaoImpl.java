@@ -42,7 +42,6 @@ public class SparqlDaoImpl implements SparqlDao {
     public SelectResultSet executeQuery(String query)  {
         System.err.println("The is query being fired "+query);
     	try {
-            //TODO Mischa remove this debug
             return client.executeSelect(query);
         } catch (SprotocolException e) {
             System.err.println("Error making SPARQL protocol call"+e.getMessage());
@@ -55,30 +54,20 @@ public class SparqlDaoImpl implements SparqlDao {
      * 
      * @param query
      * @return
+     * @throws SprotocolException 
      */
-    public String getTsv(String query) {
-        try {
-			return client.sparqlQueryRawAccept(query, "text/tab-separated-values");
-		} catch (SprotocolException e) {
-			//TODO remove this debug
-			System.err.println("Error making SPARQL protocol call"+e.getMessage());
-		}
-		return null;
+    public String getTsv(String query) throws SprotocolException {
+        return client.sparqlQueryRawAccept(query, "text/tab-separated-values");
     }
     
     /**
      *  
      * @param query
      * @return
+     * @throws SprotocolException 
      */
-    public String getCsv(String query) {
-        try {
-			return client.sparqlQueryRawAccept(query,"text/csv");
-		} catch (SprotocolException e) {
-			//TODO remove this debug
-			System.err.println("Error making SPARQL protocol call"+e.getMessage());
-		}
-		return null;
+    public String getCsv(String query) throws SprotocolException {
+		return client.sparqlQueryRawAccept(query,"text/csv");
     }
     
     /**

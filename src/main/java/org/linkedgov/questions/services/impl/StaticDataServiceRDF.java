@@ -16,7 +16,6 @@ import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlResource;
 
 /**
- * TODO: decide on what stuff to cache and what not to cache here.
  * 
  * This Class is used to populate the various drop downs in the Question Answering Site
  * by creating SPARQL queries based on the user input

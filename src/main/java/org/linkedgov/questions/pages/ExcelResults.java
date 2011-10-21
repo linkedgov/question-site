@@ -40,7 +40,7 @@ public class ExcelResults {
     
     @SuppressWarnings("unused")
     public StreamResponse onActivate() throws IOException{   	
-        //TODO: stream this response.
+        //TODO: Ongoing. stream this response.
         final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);
         
     	final StreamResponse streamResponse;

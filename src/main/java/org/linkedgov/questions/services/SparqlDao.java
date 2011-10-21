@@ -1,6 +1,7 @@
 package org.linkedgov.questions.services;
 
 import uk.me.mmt.sprotocol.SelectResultSet;
+import uk.me.mmt.sprotocol.SprotocolException;
 
 /**
  * 
@@ -16,7 +17,7 @@ public interface SparqlDao {
 
     public SelectResultSet executeQuery(String query, Integer offset, Integer limit, String orderBy);
 
-	public String getCsv(String query);
+	public String getCsv(String query) throws SprotocolException;
 	
-	public String getTsv(String query);
+	public String getTsv(String query) throws SprotocolException;
 }
