@@ -1,6 +1,8 @@
 package org.linkedgov.questions.components;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.InjectPage;
@@ -33,7 +35,13 @@ public class Results {
     @Property
     @Parameter
     private Query query;
-
+    
+    /**
+     * Dataset value; 
+     */
+    @Property
+    private String datasetKey;
+    
     /**
      * A row in the list of triples that come back as results.
      */
@@ -177,9 +185,19 @@ public class Results {
      * 
      * @return
      */
-//    public List<String> getDataSets() {
-//        
-//    }
+    public Map<String,String> getDataSets() {
+        //TODO: implement this, make sure only to query once
+        final Map<String,String> dataSets = new HashMap<String,String>();
+        
+        dataSets.put("http://viscri.co.uk/something", "Something");
+        dataSets.put("http://viscri.co.uk/eggs", "Hats");
+        dataSets.put("http://viscri.co.uk/eggbanjos","http://viscri.co.uk/eggbanjos");
+        return dataSets;
+    }
+    
+    public String getDataSetValue() {
+        return getDataSets().get(datasetKey);
+    }
     
     /**
      *
