@@ -20,13 +20,28 @@ public class SelectResultDataSource implements GridDataSource {
     /**
      * The results of the query.
      */
-    private final List<Triple> results;
+    private List<Triple> currentPage;
+    
+    /**
+     * The query.
+     */
+    private final Query query;
+    
+    /**
+     * QueryDataService.
+     */
+    private final QueryDataService queryDataService;
     
     /**
      * The start index.
      */
-    @SuppressWarnings("unused")
     private int startIndex = 0;
+    
+    /**
+     * The end index.
+     */
+    @SuppressWarnings("unused")
+    private int endIndex = 0;
     
     /**
      * Constructs a new SelectResultDataSource.
@@ -35,20 +50,23 @@ public class SelectResultDataSource implements GridDataSource {
      * @param queryService - the service to send the query to to get the data.
      */
     public SelectResultDataSource(Query query, QueryDataService queryDataService) {
-        this.results = queryDataService.executeQuery(query);
+        this.queryDataService = queryDataService;
+        this.query = query;
     }
     
     public void prepare(int startIndex, int endIndex,
             List<SortConstraint> sortConstraints) {
+        this.endIndex = endIndex;
         this.startIndex = startIndex;
+        currentPage = queryDataService.executeQuery(query, endIndex-startIndex, startIndex, null);
     }
 
-    public int getAvailableRows() {
-        return results == null ? 0 : results.size();
+    public int getAvailableRows() { 
+        return queryDataService.executeCountForQuery(query);
     }
     
     public Object getRowValue(int index) {
-        return results.get(index);
+        return currentPage.get(index - startIndex -1);
     } 
 
     public Class<?> getRowType() {
@@ -56,7 +74,8 @@ public class SelectResultDataSource implements GridDataSource {
     }
     
     public List<Triple> getResults() {
-        return results;    
+        //TODO: this breaks stuff
+        return null;    
     }
 
 }
