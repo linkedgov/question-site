@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.linkedgov.questions.model.QueryFilter;
 import org.linkedgov.questions.services.SparqlDao;
 import org.linkedgov.questions.services.StaticDataService;
@@ -222,26 +223,18 @@ public class StaticDataServiceRDF implements StaticDataService {
     /**
      * This function will get a list of all the classes in the KB
      * if no label then return a Map of URI,URI
-     * @return A List of Strings for the first drop-down
+     * @return A Map of Strings (value to label) for the first drop-down
      */
-    public Map<String,String> getClasses() {    
-        final SelectResultSet results = sparqlDao.executeQuery(GET_CLASSES_QUERY);  
-        Map<String,String> retValues = new HashMap<String,String>();
-        for (SelectResult result : results.getResults()) {
-            final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
-            if (!isBlacklisted(element.getValue())) {
-                if (result.getResult().get(CLASS_VARIABLE_LABEL) != null) {
-                    retValues.put(element.getValue(), result.getResult().get(CLASS_VARIABLE_LABEL).getValue());
-                } else {
-                    retValues.put(element.getValue(),element.getValue());
-                }
-            }
-        }
-        return retValues;
+    public Map<String,String> getClasses() {            
+        return getClasses(null);
     }
     
+    /**
+     * This function will get a list of all the classes in the KB for the given predicate.
+     * @return
+     */
     public Map<String,String> getClasses(String predicate) {
-        String query = String.format(GET_CLASSES_WITHPRED_QUERY, predicate);
+        final String query = StringUtils.isBlank(predicate) ? GET_CLASSES_QUERY : String.format(GET_CLASSES_WITHPRED_QUERY, predicate);
         final SelectResultSet results = sparqlDao.executeQuery(query);  
         Map<String,String> retValues = new HashMap<String,String>();
         for (SelectResult result : results.getResults()) {

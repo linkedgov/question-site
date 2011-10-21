@@ -160,7 +160,7 @@ public class Question {
      * Does stuff for the new dropdown.
      */
     @OnEvent("startingPredicateChange")
-    public Object handleStartingPredicateChange(@RequestParameter("startingPredicate") String startingPredicate) { 
+    public Object handleStartingPredicateChange(@RequestParameter(value="startingPredicate",allowBlank=true) String startingPredicate) { 
         final Map<String,String> predicates = staticDataService.getClasses(startingPredicate);
         return generateSelectOptionsJson((HashMap<String, String>) predicates, SUBJECTS);
     }
