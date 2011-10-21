@@ -104,7 +104,7 @@ public class Query {
         sb.append(subject);
         sb.append("] predicate:[");
         sb.append(predicate);
-        sb.append("firstFilter:[");
+        sb.append("] firstFilter:[");
         sb.append(firstFilter.toString());
         sb.append("] secondFilter:[");
         sb.append(secondFilter.toString());
