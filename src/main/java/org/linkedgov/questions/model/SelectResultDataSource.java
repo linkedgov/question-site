@@ -7,7 +7,6 @@ import org.apache.tapestry5.grid.SortConstraint;
 import org.linkedgov.questions.services.QueryDataService;
 
 /**
- * TODO: improve with pagination that goes all the way back to 4store.
  * 
  * Basic implementation of {@Link GridDataSource} for a Sparql query.
  * 
@@ -71,11 +70,6 @@ public class SelectResultDataSource implements GridDataSource {
 
     public Class<?> getRowType() {
         return Triple.class;
-    }
-    
-    public List<Triple> getResults() {
-        //TODO: this breaks stuff
-        return null;    
     }
 
 }
