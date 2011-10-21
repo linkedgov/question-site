@@ -192,28 +192,73 @@ public class Query {
         bgp.append("?sub <");
         bgp.append(filter.getPredicate());
         bgp.append("> ");
-
-        boolean isURI = false;
+        
         String object = filter.getObject();
-        for (String prefix : URI_PREFIXES) {
-            if (object.startsWith(prefix)) {
-                isURI = true;
-                break;
-            }
-        }
-        if (isURI) {
+
+        if (isURI(object)) {
             object = "<"+object+">";
-        //check if it is a 4store bnode identifier ....
+        /**
+         * 4store specific hack, and the only one in the code
+         * This is where we skolemise the 4store styled bnode identifier       
+         */
         } else if (object.startsWith("b") && object.length() > 16 && !object.contains(" ")) {
             object = "<bnode:"+object+">";
         } else {
-            object = "?obj . FILTER (?obj = \""+object+"\" || ?obj = \""+object+"\"@EN || ?obj = \""+object+"\"@en)";
+            if (isInteger(object)) {
+                object = "?obj . FILTER (?obj = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#int> || ?obj = \""+object+"\")";
+            } else if (isFloat(object)) {
+                object = "?obj . FILTER (?obj = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#float> || ?obj = \""+object+"\")";
+            } else {
+                object = "?obj . FILTER (?obj = \""+object+"\" || ?obj = \""+object+"\"@EN || ?obj = \""+object+"\"@en)";        
+            }
         }
         bgp.append(object);
         bgp.append(" . ");
 
         return bgp.toString();
     }
+
+
+    public boolean  isURI (String input) {
+        boolean isURI = false;
+        for (String prefix : URI_PREFIXES) {
+            if (input.startsWith(prefix)) {
+                isURI = true;
+                break;
+            }
+        }
+        
+        return isURI;
+    }
+    
+    /**
+     * 
+     * @param input
+     * @return
+     */
+    public boolean isInteger(String input) {  
+       try {  
+          Integer.parseInt(input);  
+          return true;  
+       } catch(Exception e) {  
+          return false;  
+       }  
+    } 
+    
+    /**
+     * 
+     * @param input
+     * @return
+     */
+    public boolean isFloat (String input) {
+        try {
+            Float.parseFloat(input);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
 
     public void setPredicate(String predicate) {
         this.predicate = predicate;
