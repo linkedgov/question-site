@@ -1,7 +1,6 @@
 package org.linkedgov.questions.components;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.InjectPage;
@@ -178,9 +177,9 @@ public class Results {
      * 
      * @return
      */
-    public List<String> getDataSets() {
-        
-    }
+//    public List<String> getDataSets() {
+//        
+//    }
     
     /**
      *
