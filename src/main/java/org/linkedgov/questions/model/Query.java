@@ -218,8 +218,12 @@ public class Query {
         return bgp.toString();
     }
 
-
-    public boolean  isURI (String input) {
+    /**
+     * 
+     * @param input a literal value returned by 4store
+     * @return checks whether or not it is a URI
+     */
+    public boolean isURI (String input) {
         boolean isURI = false;
         for (String prefix : URI_PREFIXES) {
             if (input.startsWith(prefix)) {
@@ -227,14 +231,13 @@ public class Query {
                 break;
             }
         }
-        
         return isURI;
     }
     
     /**
      * 
-     * @param input
-     * @return
+     * @param input a literal 
+     * @return whether or not it is an Integer
      */
     public boolean isInteger(String input) {  
        try {  
@@ -247,8 +250,8 @@ public class Query {
     
     /**
      * 
-     * @param input
-     * @return
+     * @param input which is a literal value
+     * @return a boolean stating with it is a floating point number or not
      */
     public boolean isFloat (String input) {
         try {
