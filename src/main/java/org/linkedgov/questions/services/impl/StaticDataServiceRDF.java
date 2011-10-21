@@ -242,7 +242,7 @@ public class StaticDataServiceRDF implements StaticDataService {
     
     public Map<String,String> getClasses(String predicate) {
         String query = String.format(GET_CLASSES_WITHPRED_QUERY, predicate);
-        final SelectResultSet results = sparqlDao.executeSelect(query);  
+        final SelectResultSet results = sparqlDao.executeQuery(query);  
         Map<String,String> retValues = new HashMap<String,String>();
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
