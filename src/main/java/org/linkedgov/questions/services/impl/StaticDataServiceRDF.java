@@ -106,7 +106,7 @@ public class StaticDataServiceRDF implements StaticDataService {
     public Map<String,String> getObjects(String subject, String predicate) {
         String query = String.format(GET_FIRSTFILTER_OBJECTS_QUERY, subject, predicate);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSet results = sparqlDao.executeSelect(query);        
+        final SelectResultSet results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
             if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
@@ -129,7 +129,7 @@ public class StaticDataServiceRDF implements StaticDataService {
     public Map<String,String> getObjects(String subject, String predicate, QueryFilter filter) {
         String query = String.format(GET_SECONDFILTER_OBJECT_QUERY, subject, filter.getPredicate(), filter.getObject(), predicate);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSet results = sparqlDao.executeSelect(query);        
+        final SelectResultSet results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
             if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
@@ -152,7 +152,7 @@ public class StaticDataServiceRDF implements StaticDataService {
     public Map<String,String> getPredicates(String subject, QueryFilter filter) {
         String query = String.format(GET_SECONDFILTER_PREDICATE_QUERY, subject, filter.getPredicate(), filter.getObject());
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSet results = sparqlDao.executeSelect(query);        
+        final SelectResultSet results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
             if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
@@ -166,7 +166,7 @@ public class StaticDataServiceRDF implements StaticDataService {
     
     
     public Map<String,String> queryForGetPredicates() {
-        final SelectResultSet results = sparqlDao.executeSelect(GET_INITIALPREDICATE_QUERY);        
+        final SelectResultSet results = sparqlDao.executeQuery(GET_INITIALPREDICATE_QUERY);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
             if (!isBlacklisted(element.getValue())) {
@@ -204,7 +204,7 @@ public class StaticDataServiceRDF implements StaticDataService {
     public Map<String,String> getPredicates(String subject) {
         String query = String.format(GET_FIRSTFILTER_PREDICATE_QUERY, subject);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSet results = sparqlDao.executeSelect(query);        
+        final SelectResultSet results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
 
@@ -225,7 +225,7 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @return A List of Strings for the first drop-down
      */
     public Map<String,String> getClasses() {    
-        final SelectResultSet results = sparqlDao.executeSelect(GET_CLASSES_QUERY);  
+        final SelectResultSet results = sparqlDao.executeQuery(GET_CLASSES_QUERY);  
         Map<String,String> retValues = new HashMap<String,String>();
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
