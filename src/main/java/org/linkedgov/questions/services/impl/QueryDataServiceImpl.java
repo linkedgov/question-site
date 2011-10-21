@@ -116,7 +116,7 @@ public class QueryDataServiceImpl implements QueryDataService {
      */
     public int executeCountForQuery(Query query) {
         
-        if(QuestionType.COUNT.equals(query)){
+        if(QuestionType.COUNT.equals(query.getQuestionType())){
             return 1;
         }
         if(query.isNull()){
