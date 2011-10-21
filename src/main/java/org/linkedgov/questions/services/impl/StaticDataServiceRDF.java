@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.linkedgov.questions.model.QueryFilter;
+import org.linkedgov.questions.model.SparqlUtils;
 import org.linkedgov.questions.services.SparqlDao;
 import org.linkedgov.questions.services.StaticDataService;
 
@@ -51,17 +52,19 @@ public class StaticDataServiceRDF implements StaticDataService {
             "OPTIONAL {?object <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . " +
             "} ORDER BY ?object";
     
+    //LAME
     private static final String GET_SECONDFILTER_PREDICATE_QUERY = "SELECT DISTINCT ?pred ?plabel WHERE " +
-            "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
-            "<%s> <%s> ; " +
-            "?pred ?obj . " +
+            "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> . " +
+            "%s  " +
+            "?s ?pred ?obj . " +
             "OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . " +
             "} ORDER BY ?pred";
     
+    //LAME
     private static final String GET_SECONDFILTER_OBJECT_QUERY = "SELECT DISTINCT ?object ?olabel WHERE " +
             "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
-            "<%s> <%s> ; " +
-            "<%s> ?object . " +
+            "<%s> %s . " +
+            "?s <%s> ?object . " +
             "OPTIONAL {?object <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . " +
             "} ORDER BY ?object";
     
@@ -150,7 +153,25 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @return A List of Strings for the second list of predicates 
      */
     public Map<String,String> getPredicates(String subject, QueryFilter filter) {
-        String query = String.format(GET_SECONDFILTER_PREDICATE_QUERY, subject, filter.getPredicate(), filter.getObject());
+        String toPopulate = "";
+        String object = filter.getObject();
+        String predicate = filter.getPredicate();
+        
+        if (SparqlUtils.isBnode(object)) {
+            toPopulate = "?s <"+predicate+"> <bnode:"+object+"> . ";
+        } else if (SparqlUtils.isURI(object)) {
+            toPopulate = "?s <"+predicate+"> <"+object+"> . ";
+        } else  {
+            if (SparqlUtils.isInteger(object)) {        
+                toPopulate = "{ {?s <"+predicate+"> "+object+" } UNION {?s <"+predicate+"> \""+object+"\" } } . ";
+            } else if (SparqlUtils.isFloat(object)) {
+                toPopulate = "{ {?s <"+predicate+"> \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#float> } UNION {?s <"+predicate+"> \""+object+"\" } } . ";
+            } else {
+                toPopulate = "{ {?s <"+predicate+"> \""+object+"\"@EN } UNION {?s <"+predicate+"> \""+object+"\"@en } UNION {?s <"+predicate+"> \""+object+"\"} } . ";
+            }
+        }
+
+        String query = String.format(GET_SECONDFILTER_PREDICATE_QUERY, subject, toPopulate);
         Map<String,String> retValues = new HashMap<String,String>();
         final SelectResultSet results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {

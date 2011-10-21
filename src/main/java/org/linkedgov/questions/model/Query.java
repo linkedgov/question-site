@@ -1,9 +1,5 @@
 package org.linkedgov.questions.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -42,22 +38,6 @@ public class Query {
      */
     private QueryFilter firstFilter = new QueryFilter();
     private QueryFilter secondFilter = new QueryFilter();
-
-    /**
-     * This enumerates a list of well known URI prefixes
-     * 
-     */
-    public final static List<String> URI_PREFIXES;
-    static {
-        final ArrayList<String> lst = new ArrayList<String>();
-        lst.add("http:");
-        lst.add("ftp");
-        lst.add("tag");
-        lst.add("urn");
-        lst.add("mailto");
-        lst.add("tel");
-        URI_PREFIXES = Collections.unmodifiableList(lst);
-    };
 
     public void setSubject(String subject) {
         this.subject = subject;
@@ -238,18 +218,18 @@ public class Query {
 
         String object = filter.getObject();
 
-        if (object.startsWith("b") && object.length() > 16 && !object.contains(" ")) {
+        if (SparqlUtils.isBnode(object)) {
             bgp.append("?sub <");
             bgp.append(filter.getPredicate());
             bgp.append("> ");
             bgp.append("<bnode:"+object+"> . ");
-        } else if (isURI(object)) {
+        } else if (SparqlUtils.isURI(object)) {
             bgp.append("?sub <");
             bgp.append(filter.getPredicate());
             bgp.append("> ");
             bgp.append("<"+object+"> . ");
         } else  {
-            if (isInteger(object)) {
+            if (SparqlUtils.isInteger(object)) {
                 bgp.append("{ {?sub <");
                 bgp.append(filter.getPredicate());
                 bgp.append("> ");
@@ -258,7 +238,7 @@ public class Query {
                 bgp.append(filter.getPredicate());
                 bgp.append("> ");
                 bgp.append("\""+object+"\" . } } . ");
-            } else if (isFloat(object)) {
+            } else if (SparqlUtils.isFloat(object)) {
                 bgp.append("{ {?sub <");
                 bgp.append(filter.getPredicate());
                 bgp.append("> ");
@@ -284,54 +264,8 @@ public class Query {
             }
         }
 
-
         return bgp.toString();
     }
-
-    /**
-     * 
-     * @param input a literal value returned by 4store
-     * @return checks whether or not it is a URI
-     */
-    public boolean isURI (String input) {
-        boolean isURI = false;
-        for (String prefix : URI_PREFIXES) {
-            if (input.startsWith(prefix)) {
-                isURI = true;
-                break;
-            }
-        }
-        return isURI;
-    }
-
-    /**
-     * 
-     * @param input a literal 
-     * @return whether or not it is an Integer
-     */
-    public boolean isInteger(String input) {  
-        try {  
-            Integer.parseInt(input);  
-            return true;  
-        } catch(Exception e) {  
-            return false;  
-        }  
-    } 
-
-    /**
-     * 
-     * @param input which is a literal value
-     * @return a boolean stating with it is a floating point number or not
-     */
-    public boolean isFloat (String input) {
-        try {
-            Float.parseFloat(input);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
 
     public void setPredicate(String predicate) {
         this.predicate = predicate;
