@@ -39,7 +39,7 @@ public class SparqlDaoImpl implements SparqlDao {
      * @return a {@Link SelectResultSet} representing the results of the query.
      * @throws SprotocolException 
      */
-    public SelectResultSet executeSelect(String query)  {
+    public SelectResultSet executeQuery(String query)  {
         System.err.println("The is query being fired "+query);
     	try {
             //TODO Mischa remove this debug
@@ -88,7 +88,9 @@ public class SparqlDaoImpl implements SparqlDao {
      * @return a {@Link SelectResultSet} representing the results of the query.
      * @throws SprotocolException 
      */
-    public SelectResultSet executeSelect(String query, int offset, int limit) {
+    public SelectResultSet executeQuery(String query, Integer limit, Integer offset, String orderBy) {
+        
+        query = appendLimitOffsetOrderBy(query, limit, offset, orderBy);
         try {
             return client.executeSelect(query);
         } catch (SprotocolException e) {
@@ -98,13 +100,31 @@ public class SparqlDaoImpl implements SparqlDao {
     }
 
     /**
-     * Execute a count query.
+     * Appends to the end of the query if required.
      * 
-     * @param query - the sparql select query string, e.g. SELECT COUNT * WHERE ?x ?y ?z
-     * @return an integer containing the results of the count.
+     * @param query
+     * @param offset
+     * @param limit
+     * @param orderBy
+     * @return the new query
      */
-    public int executeCount(String query) {
-        return 100;
+    private String appendLimitOffsetOrderBy(String query, Integer limit,
+            Integer offset, String orderBy) {
+        final StringBuilder sb = new StringBuilder(query);
+        if(limit != null){
+            sb.append(" LIMIT ");
+            sb.append(limit);
+        }
+        if(offset != null){
+            sb.append(" OFFSET ");
+            sb.append(offset);
+        }
+        if(orderBy != null){
+            sb.append(" ORDER BY ");
+            sb.append(orderBy);
+        }
+        
+        return sb.toString();
     }
 
 }
