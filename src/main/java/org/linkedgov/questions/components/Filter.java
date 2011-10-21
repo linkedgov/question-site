@@ -11,7 +11,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.linkedgov.questions.model.QueryFilter;
 
 /**
- * TODO: move more JS from Question.js to here and hardcode fewer ids.
+ * TODO: move more JS from Question.js to here and hardcode fewer ids in the JS.
  * 
  * Component that represents a predicate/object pair that helps narrow down the question.
  * 
