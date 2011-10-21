@@ -130,7 +130,7 @@ public class Query {
         StringBuilder query = new StringBuilder();        
 
         if (QuestionType.COUNT.equals(thisQuestionType)) {
-            query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
+            query.append("SELECT DISTINCT (COUNT(*) AS ?cnt) ");
         } else {
             query.append("SELECT DISTINCT ?sub (<");
             query.append(predicate);
@@ -175,7 +175,7 @@ public class Query {
         StringBuilder query = new StringBuilder();        
 
         if (QuestionType.COUNT.equals(thisQuestionType)) {
-            query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
+            query.append("SELECT DISTINCT (COUNT(*) AS ?cnt) ");
         } else {
             query.append("SELECT DISTINCT ?sub ?pred ?obj ?slabel ?plabel ?olabel ");
         }
@@ -186,9 +186,7 @@ public class Query {
         query.append(subject);
         query.append("> . ");
 
-        if (QuestionType.SELECT.equals(thisQuestionType)) {
-            query.append("?sub ?pred ?obj . ");
-        }
+        query.append("?sub ?pred ?obj . ");
 
         if (!firstFilter.isComplete()) {
             query.append(filterToSparqlBGP(firstFilter, "?obj2"));
