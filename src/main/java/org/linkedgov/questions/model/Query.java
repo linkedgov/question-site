@@ -111,7 +111,19 @@ public class Query {
         sb.append("]");
         return sb.toString();
     }
-
+ 
+    /**
+     * This function is used to turn a given instance of 
+     * a Query class into a SPARQL query, allowing the caller to override the question type of the query.
+     * 
+     * @param overridenQuestionType - the questionType to override when building the query.
+     * 
+     * @return A Sparql Query String
+     */
+    public String toSparqlString(QuestionType overridenQuestionType) {
+        return buildSparqlString(overridenQuestionType);
+    }
+    
     /**
      * This function is used to turn a given instance of 
      * a Query class into a SPARQL query. 
@@ -121,9 +133,18 @@ public class Query {
      * @return A Sparql Query String
      */
     public String toSparqlString() {
+        return buildSparqlString(questionType);
+    }
+
+    /**
+     * 
+     * @param thisQuestionType the question type of the query.
+     * @return
+     */
+    private String buildSparqlString(QuestionType thisQuestionType) {
         StringBuilder query = new StringBuilder();        
         
-        if (questionType.equals(QuestionType.COUNT)) {
+        if (QuestionType.COUNT.equals(thisQuestionType)) {
             query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
         } else {
             query.append("SELECT DISTINCT ?sub ?pred ?obj ?slabel ?plabel ?olabel ");
@@ -157,7 +178,6 @@ public class Query {
         }
         
         query.append("} ");
-
         return query.toString();
     }
 
