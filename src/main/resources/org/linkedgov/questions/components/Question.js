@@ -22,7 +22,8 @@
 	                	url : specs.url,
 	                	success : handleStartingPredicateChange, 
 	                	data : 	{startingPredicate : $('#startingPredicate').val()},
-	                    type : "GET"
+	                    type : "GET",
+	                    error: $.question.utils.handleErrors
 	            };   
 	        	
 	        	$.ajax(ajaxRequest);
@@ -127,7 +128,8 @@
                     	url : specs.firstFilterUrl,
                     	success : handleAddFirstFilter, 
                     	data : 	{subject : $('#subject').val()},
-                        type : "GET"
+                        type : "GET",
+	                    error: $.question.utils.handleErrors
                 };   
             	
             	/**
@@ -141,7 +143,8 @@
                     				predicate : $('#firstFilter').find('.predicate').val(), 
                     				object : $('#firstFilter').find('.objectContainer:visible .object').val()
                     			},
-                        type : "GET"
+                        type : "GET",
+	                    error: $.question.utils.handleErrors
                 };   
             	
             	//choose a request depending on whether the firstFilter is visible or not.
@@ -218,7 +221,8 @@
                     				subject: $('#subject').val(),
                     				predicate: firstFilterPredicate.val()
                     			},
-                        type : "GET"
+                        type : "GET",
+	                    error: $.question.utils.handleErrors
                 };
         		
         		$.ajax(ajaxRequest);
@@ -243,7 +247,8 @@
                        				firstFilterPredicate : firstFilterPredicate,
             						firstFilterObject : firstFilterObject
                        			},
-                        type : "GET"
+                        type : "GET",
+	                    error: $.question.utils.handleErrors
                 };
             		
             	$.ajax(ajaxRequest);
@@ -394,6 +399,13 @@
 	        		element.find(':input').show();
 	        		element.css("display","inline-block");
         		});
+        	},
+         	
+         	/**
+        	 * Does the opposite of hide.
+        	 */
+        	handleErrors : function(){
+        		window.location = "error500";
         	}
            	
     	}	

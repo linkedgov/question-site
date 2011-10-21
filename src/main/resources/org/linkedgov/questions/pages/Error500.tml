@@ -1,0 +1,8 @@
+<html t:type="layout" title="${message:what_is_your_question}"
+      t:sidebarTitle="Some Other Info"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+
+    <h1>Sorry, there was an error. Please try again.</h1>
+
+</html>

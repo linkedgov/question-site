@@ -133,7 +133,6 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
     	</repository>
 	</repositories>
 
-
     <properties>
         <tapestry-release-version>5.2.6</tapestry-release-version>
     </properties>
