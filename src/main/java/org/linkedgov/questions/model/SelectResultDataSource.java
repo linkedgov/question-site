@@ -58,7 +58,7 @@ public class SelectResultDataSource implements GridDataSource {
             List<SortConstraint> sortConstraints) {
         this.endIndex = endIndex;
         this.startIndex = startIndex;
-        currentPage = queryDataService.executeQuery(query, endIndex-startIndex, startIndex, null);
+        currentPage = queryDataService.executeQuery(query, endIndex-startIndex+1, startIndex, null);
     }
 
     public int getAvailableRows() { 
@@ -66,7 +66,7 @@ public class SelectResultDataSource implements GridDataSource {
     }
     
     public Object getRowValue(int index) {
-        return currentPage.get(index - startIndex -1);
+        return currentPage.get(index - startIndex);
     } 
 
     public Class<?> getRowType() {
