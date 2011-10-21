@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.linkedgov.questions.model.Pair;
 import org.linkedgov.questions.model.Query;
+import org.linkedgov.questions.model.QuestionType;
 import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 import org.linkedgov.questions.services.SparqlDao;
@@ -47,20 +48,8 @@ public class QueryDataServiceImpl implements QueryDataService {
      * @param Query object representing a user's question.
      * @return a list of triples representing the answer to the question.
      */
-    public List<Triple> executeQuery(Query query) { 
-        final List<Triple> triples = new ArrayList<Triple>();
-
-        if (!query.isNull()) {          
-            final String sparqlString = query.toSparqlString();
-            log.info("SPARQL ASKED:{}", sparqlString);
-            log.info("QUESTION ASKED:{}", query.toString());
-            final SelectResultSet results = sparqlDao.executeSelect(sparqlString);
-            for (SelectResult result : results.getResults()) {
-                final Triple triple = resultToTriple(results.getHead(), result);
-                triples.add(triple);
-            }
-        }
-        return triples;
+    public List<Triple> executeQuery(Query query) {
+        return executeQuery(query, null, null, null);
     }
 
     /**
@@ -105,5 +94,52 @@ public class QueryDataServiceImpl implements QueryDataService {
 		}
 		return triple;
 	}
+
+    public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy) {
+        final List<Triple> triples = new ArrayList<Triple>();
+
+        if (!query.isNull()) {          
+            final String sparqlString = query.toSparqlString();
+            log.info("SPARQL ASKED:{}", sparqlString);
+            log.info("QUESTION ASKED:{}", query.toString());
+            final SelectResultSet results = sparqlDao.executeQuery(sparqlString, limit, offset, orderBy);
+            for (SelectResult result : results.getResults()) {
+                final Triple triple = resultToTriple(results.getHead(), result);
+                triples.add(triple);
+            }
+        }
+        return triples;
+    }
+
+    /**
+     * Executes a count for this query. If the query itself is a count, it returns 1.
+     */
+    public int executeCountForQuery(Query query) {
+        
+        if(QuestionType.COUNT.equals(query)){
+            return 1;
+        }
+        if(query.isNull()){
+            return 0;
+        }
+        
+        final String countSparqlString = query.toSparqlString(QuestionType.COUNT);
+        final SelectResultSet results = sparqlDao.executeQuery(countSparqlString);
+        
+        if(results.getResults().isEmpty()){
+            return 0;
+        }
+        
+        final String countLabel = results.getHead().get(0);
+        final SelectResult firstResult = results.getResults().get(0);
+        final String count = firstResult.getResult().get(countLabel).getValue();
+       
+        if(count == null){
+            return 0;
+        }
+        
+        return Integer.valueOf(count);
+     
+    }
 
 }

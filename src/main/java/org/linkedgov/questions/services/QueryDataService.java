@@ -15,5 +15,15 @@ import org.linkedgov.questions.model.Triple;
 public interface QueryDataService {
 
     public List<Triple> executeQuery(Query query);
+    
+    /**
+     * IF query is a count, returns 1. Otherwise, executes a query that is the equivalent to the query being executed with questionType={@Link QuestionType.COUNT}.
+     * 
+     * @param query the query.
+     * @return the number of rows that will result from this query
+     */
+    public int executeCountForQuery(Query query);
+      
+    public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy);
  
 }
