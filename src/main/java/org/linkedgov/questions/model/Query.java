@@ -147,10 +147,10 @@ public class Query {
         query.append("?sub <"+predicate+"> ?obj . ");
 
         if (!firstFilter.isComplete()) {
-            query.append(filterToSparqlBGP(firstFilter));
+            query.append(filterToSparqlBGP(firstFilter, "?obj2"));
         }
         if (!secondFilter.isComplete()) {
-            query.append(filterToSparqlBGP(secondFilter));
+            query.append(filterToSparqlBGP(secondFilter, "?obj3"));
         }
 
         if (QuestionType.SELECT.equals(thisQuestionType)) {
@@ -191,10 +191,10 @@ public class Query {
         }
 
         if (!firstFilter.isComplete()) {
-            query.append(filterToSparqlBGP(firstFilter));
+            query.append(filterToSparqlBGP(firstFilter, "?obj2"));
         }
         if (!secondFilter.isComplete()) {
-            query.append(filterToSparqlBGP(secondFilter));
+            query.append(filterToSparqlBGP(secondFilter, "?obj3"));
         }
 
         if (QuestionType.SELECT.equals(thisQuestionType)) {
@@ -213,11 +213,10 @@ public class Query {
      * @param filter
      * @return a fragment of a SPARQL query
      */
-    public String filterToSparqlBGP(QueryFilter filter) {
+    public String filterToSparqlBGP(QueryFilter filter, String variableName) {
         StringBuilder bgp = new StringBuilder();
 
         String object = filter.getObject();
-
         if (SparqlUtils.isBnode(object)) {
             bgp.append("?sub <");
             bgp.append(filter.getPredicate());
@@ -230,37 +229,40 @@ public class Query {
             bgp.append("<"+object+"> . ");
         } else  {
             if (SparqlUtils.isInteger(object)) {
-                bgp.append("{ {?sub <");
+                bgp.append("?sub <");
                 bgp.append(filter.getPredicate());
-                bgp.append("> ");
-                bgp.append("\""+object+"\"^^<http://www.w3.org/2001/XMLSchema#integer> . } ");
-                bgp.append("UNION {?sub <");
-                bgp.append(filter.getPredicate());
-                bgp.append("> ");
-                bgp.append("\""+object+"\" . } } . ");
+                bgp.append("> ");                
+                bgp.append(variableName);
+                bgp.append(" . ");
+                bgp.append("FILTER (");
+                bgp.append(variableName);
+                bgp.append(" = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#integer> || ");
+                bgp.append(variableName);
+                bgp.append(" = \""+object+"\") . ");
             } else if (SparqlUtils.isFloat(object)) {
-                bgp.append("{ {?sub <");
+                bgp.append("?sub <");
                 bgp.append(filter.getPredicate());
-                bgp.append("> ");
-                bgp.append("\""+object+"\"^^<http://www.w3.org/2001/XMLSchema#float> . } ");
-                bgp.append("UNION {?sub <");
-                bgp.append(filter.getPredicate());
-                bgp.append("> ");
-                bgp.append("\""+object+"\" . } } . ");
+                bgp.append("> ");                
+                bgp.append(variableName);
+                bgp.append(" . ");
+                bgp.append("FILTER (");
+                bgp.append(variableName);
+                bgp.append(" = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#float> || ");
+                bgp.append(variableName);
+                bgp.append(" = \""+object+"\") . ");
             } else {
-                bgp.append("{ {?sub <");
+                bgp.append("?sub <");
                 bgp.append(filter.getPredicate());
-                bgp.append("> ");
-                bgp.append("\""+object+"\"@EN . } ");
-                bgp.append("UNION {?sub <");
-                bgp.append(filter.getPredicate());
-                bgp.append("> ");
-                bgp.append("\""+object+"\"@en . } ");
-                bgp.append(" UNION {?sub <");
-                bgp.append(filter.getPredicate());
-                bgp.append("> ");
-                bgp.append("\""+object+"\" . } ");
-                bgp.append("} . ");
+                bgp.append("> ");                
+                bgp.append(variableName);
+                bgp.append(" . ");
+                bgp.append("FILTER (");
+                bgp.append(variableName);
+                bgp.append(" = \""+object+"\"@EN || ");
+                bgp.append(variableName);
+                bgp.append(" = \""+object+"\"@en || ");
+                bgp.append(variableName);
+                bgp.append(" = \""+object+"\") . ");
             }
         }
 
