@@ -20,7 +20,7 @@ public class Query {
      * Currently one of SELECT or SELECT COUNT 
      */
     private QuestionType questionType = QuestionType.SELECT;
-    
+
     /**
      * This is the predicate the user has chosen to filter on. 
      * 
@@ -58,7 +58,7 @@ public class Query {
         lst.add("tel");
         URI_PREFIXES = Collections.unmodifiableList(lst);
     };
-    
+
     public void setSubject(String subject) {
         this.subject = subject;
     }
@@ -98,7 +98,7 @@ public class Query {
 
         return false;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -113,7 +113,7 @@ public class Query {
         sb.append("]");
         return sb.toString();
     }
- 
+
     /**
      * This function is used to turn a given instance of 
      * a Query class into a SPARQL query, allowing the caller to override the question type of the query.
@@ -129,7 +129,7 @@ public class Query {
             return buildSparqlWithPredicate(overridenQuestionType);
         }    
     }
-    
+
     /**
      * This function is used to turn a given instance of 
      * a Query class into a SPARQL query. 
@@ -145,17 +145,17 @@ public class Query {
             return buildSparqlWithPredicate(questionType);
         }
     }
-    
+
     private String buildSparqlWithPredicate(QuestionType thisQuestionType) {
         StringBuilder query = new StringBuilder();        
-        
+
         if (QuestionType.COUNT.equals(thisQuestionType)) {
             query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
         } else {
             query.append("SELECT DISTINCT ?sub (<");
             query.append(predicate);
             query.append("> AS ?pred) ?obj ?slabel ?plabel ?olabel ");
-            		
+
         }
 
         query.append("WHERE { ");
@@ -164,26 +164,27 @@ public class Query {
         query.append(subject);
         query.append("> . ");
 
-        
+        query.append("?sub <"+predicate+"> ?obj . ");
+
         if (!firstFilter.isComplete()) {
-            query.append(filterToSparqlBGP(firstFilter, "obj2"));
+            query.append(filterToSparqlBGP(firstFilter));
         }
         if (!secondFilter.isComplete()) {
-            query.append(filterToSparqlBGP(secondFilter, "obj2"));
+            query.append(filterToSparqlBGP(secondFilter));
         }
 
-        if (questionType.equals(QuestionType.SELECT)) {
+        if (QuestionType.SELECT.equals(thisQuestionType)) {
             query.append("OPTIONAL {?sub <http://www.w3.org/2000/01/rdf-schema#label> ?slabel } . ");
             query.append("OPTIONAL {<");
             query.append(predicate);
             query.append("> <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . ");
             query.append("OPTIONAL {?obj <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . ");
         }
-        
+
         query.append("} ");
         return query.toString();
     }
-    
+
 
     /**
      * 
@@ -192,7 +193,7 @@ public class Query {
      */
     private String buildSparqlStringWithoutPredicate(QuestionType thisQuestionType) {
         StringBuilder query = new StringBuilder();        
-        
+
         if (QuestionType.COUNT.equals(thisQuestionType)) {
             query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
         } else {
@@ -205,27 +206,22 @@ public class Query {
         query.append(subject);
         query.append("> . ");
 
-        query.append("?sub ?pred ?obj . ");
+        if (QuestionType.SELECT.equals(thisQuestionType)) {
+            query.append("?sub ?pred ?obj . ");
+        }
 
         if (!firstFilter.isComplete()) {
-            query.append(filterToSparqlBGP(firstFilter, "obj"));
+            query.append(filterToSparqlBGP(firstFilter));
         }
         if (!secondFilter.isComplete()) {
-            query.append(filterToSparqlBGP(secondFilter, "obj"));
+            query.append(filterToSparqlBGP(secondFilter));
         }
 
-        if (questionType.equals(QuestionType.SELECT)) {
+        if (QuestionType.SELECT.equals(thisQuestionType)) {
             query.append("OPTIONAL {?sub <http://www.w3.org/2000/01/rdf-schema#label> ?slabel } . ");
             query.append("OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . ");
             query.append("OPTIONAL {?obj <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . ");
         }
-        
-        /*
-        if (predicate != null) {
-            query.append("FILTER (?pred = <");
-            query.append(predicate);
-            query.append(">) . ");
-        }*/
         
         query.append("} ");
         return query.toString();
@@ -237,37 +233,61 @@ public class Query {
      * @param filter
      * @return a fragment of a SPARQL query
      */
-    public String filterToSparqlBGP(QueryFilter filter, String variableName) {
+    public String filterToSparqlBGP(QueryFilter filter) {
         StringBuilder bgp = new StringBuilder();
-        bgp.append("?sub <");
-        bgp.append(filter.getPredicate());
-        bgp.append("> ");
-        
+
         String object = filter.getObject();
 
-        if (isURI(object)) {
-            object = "<"+object+">";
-        /**
-         * 4store specific hack, and the only one in the code
-         * This is where we skolemise the 4store styled bnode identifier       
-         */
-        } else if (object.startsWith("b") && object.length() > 16 && !object.contains(" ")) {
-            object = "<bnode:"+object+">";
-        } else {
+        if (object.startsWith("b") && object.length() > 16 && !object.contains(" ")) {
+            bgp.append("?sub <");
+            bgp.append(filter.getPredicate());
+            bgp.append("> ");
+            bgp.append("<bnode:"+object+"> . ");
+        } else if (isURI(object)) {
+            bgp.append("?sub <");
+            bgp.append(filter.getPredicate());
+            bgp.append("> ");
+            bgp.append("<"+object+"> . ");
+        } else  {
             if (isInteger(object)) {
-                object = "?"+variableName+" . FILTER (?"+variableName+" = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#integer> || ?"+variableName+" = \""+object+"\")";
+                bgp.append("{ {?sub <");
+                bgp.append(filter.getPredicate());
+                bgp.append("> ");
+                bgp.append("\""+object+"\"^^<http://www.w3.org/2001/XMLSchema#integer> . } ");
+                bgp.append("UNION {?sub <");
+                bgp.append(filter.getPredicate());
+                bgp.append("> ");
+                bgp.append("\""+object+"\" . } } . ");
             } else if (isFloat(object)) {
-                object = "?"+variableName+" . FILTER (?"+variableName+" = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#float> || ?"+variableName+" = \""+object+"\")";
+                bgp.append("{ {?sub <");
+                bgp.append(filter.getPredicate());
+                bgp.append("> ");
+                bgp.append("\""+object+"\"^^<http://www.w3.org/2001/XMLSchema#float> . } ");
+                bgp.append("UNION {?sub <");
+                bgp.append(filter.getPredicate());
+                bgp.append("> ");
+                bgp.append("\""+object+"\" . } } . ");
             } else {
-                object = "?"+variableName+" . FILTER (?"+variableName+" = \""+object+"\" || ?"+variableName+" = \""+object+"\"@EN || ?"+variableName+" = \""+object+"\"@en)";        
+                bgp.append("{ {?sub <");
+                bgp.append(filter.getPredicate());
+                bgp.append("> ");
+                bgp.append("\""+object+"\"@EN . } ");
+                bgp.append("UNION {?sub <");
+                bgp.append(filter.getPredicate());
+                bgp.append("> ");
+                bgp.append("\""+object+"\"@en . } ");
+                bgp.append(" UNION {?sub <");
+                bgp.append(filter.getPredicate());
+                bgp.append("> ");
+                bgp.append("\""+object+"\" . } ");
+                bgp.append("} . ");
             }
         }
-        bgp.append(object);
-        bgp.append(" . ");
+
 
         return bgp.toString();
     }
-    
+
     /**
      * 
      * @param input a literal value returned by 4store
@@ -283,21 +303,21 @@ public class Query {
         }
         return isURI;
     }
-    
+
     /**
      * 
      * @param input a literal 
      * @return whether or not it is an Integer
      */
     public boolean isInteger(String input) {  
-       try {  
-          Integer.parseInt(input);  
-          return true;  
-       } catch(Exception e) {  
-          return false;  
-       }  
+        try {  
+            Integer.parseInt(input);  
+            return true;  
+        } catch(Exception e) {  
+            return false;  
+        }  
     } 
-    
+
     /**
      * 
      * @param input which is a literal value
@@ -311,7 +331,7 @@ public class Query {
             return false;
         }
     }
-    
+
 
     public void setPredicate(String predicate) {
         this.predicate = predicate;
