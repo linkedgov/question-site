@@ -1,6 +1,7 @@
 package org.linkedgov.questions.components;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.InjectPage;
@@ -20,6 +21,7 @@ import org.linkedgov.questions.pages.TabSeparatedResults;
 import org.linkedgov.questions.services.QueryDataService;
 
 /**
+ * Component that represents results.
  * 
  * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
  * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
@@ -139,7 +141,7 @@ public class Results {
     @SuppressWarnings("unused")
     @OnEvent("excelEvent")
     private Object excel() throws IOException{
-        excelResults.setTriples(dataSource.getResults());
+        excelResults.setQuery(query);
         return excelResults;
     }
 
@@ -153,7 +155,7 @@ public class Results {
     @SuppressWarnings("unused")
     @OnEvent("csvEvent")
     private Object csv() {
-        csvResults.setTriples(dataSource.getResults());
+        csvResults.setQuery(query);
         return csvResults;
     }
     
@@ -167,7 +169,30 @@ public class Results {
     @SuppressWarnings("unused")
     @OnEvent("tsvEvent")
     private Object tsv() {
-        tsvResults.setTriples(dataSource.getResults());
+        tsvResults.setQuery(query);
         return tsvResults;
     }
+    
+    /**
+     * Return a list of datasets.
+     * 
+     * @return
+     */
+    public List<String> getDataSets() {
+        
+    }
+    
+    /**
+     *
+     * Return the reliability score
+     * 
+     * @return an int between 1 and 10
+     * 
+     * @throws IOException
+     */
+    public int getReliability() {
+        //TODO: implement this.
+        return 5;
+    }
+    
 }

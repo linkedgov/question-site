@@ -8,6 +8,13 @@
 	       <p><t:eventLink t:id="excelEvent">Download Excel</t:eventLink></p>
 	       <p><t:eventLink t:id="csvEvent">Download Comma Separated</t:eventLink></p>
 	       <p><t:eventLink t:id="tsvEvent">Download Tab Separated</t:eventLink></p>
+	       <strong>Datasets:</strong>
+	       <ul>
+		       <t:loop source="datasets" value="loopDataset">
+		          <li>${loopDataset}</li>
+		       </t:loop>
+		   </ul>
+	       <span><strong>Reliability: </strong>${reliability}</span>
 	    </div>
 		<t:grid inplace="true" source="dataSource" pagerPosition="both" row="triple" add="${gridColumns}">
 			<t:parameter name="resultSubjectCell">

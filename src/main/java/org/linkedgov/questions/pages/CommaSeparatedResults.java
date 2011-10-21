@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.Persist;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import org.linkedgov.questions.http.MultiformatStreamResponse;
+import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.Triple;
+import org.linkedgov.questions.services.QueryDataService;
 
 /**
  * Class that serves up comma separated results from the ResultsGrid in the UI
@@ -16,11 +19,14 @@ import org.linkedgov.questions.model.Triple;
  */
 public class CommaSeparatedResults {
 
+    @Inject
+    private QueryDataService queryDataService;
+    
     /**
      * A list of triples representing the results.
      */
     @Persist
-    private List<Triple> triples;
+    private Query query;
 
     /**
      * This is used to iterate through the triples used to generate the Grid component
@@ -30,6 +36,8 @@ public class CommaSeparatedResults {
     @SuppressWarnings("unused")
     private StreamResponse onActivate(){
         final StreamResponse streamResponse;
+        //TODO: stream this response.
+        final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);
 
         StringBuilder csv = new StringBuilder();
         String object = "";
@@ -52,12 +60,8 @@ public class CommaSeparatedResults {
         return new MultiformatStreamResponse("text/csv", csv.toString(),"csv");
     }
 
-    /**
-     * Set the triples to be outputted.
-     * 
-     * @param triples
-     */
-    public void setTriples(List<Triple> triples) {
-        this.triples = triples;
+    public void setQuery(Query query) {
+        this.query = query;
     }
+
 }

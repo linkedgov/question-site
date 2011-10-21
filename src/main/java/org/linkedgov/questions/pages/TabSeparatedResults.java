@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.Persist;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import org.linkedgov.questions.http.MultiformatStreamResponse;
+import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.Triple;
+import org.linkedgov.questions.services.QueryDataService;
 
 /**
  *  Class that serves up tab separated results based on the Grid component
@@ -16,11 +19,14 @@ import org.linkedgov.questions.model.Triple;
  */
 public class TabSeparatedResults {
 
+    @Inject
+    private QueryDataService queryDataService;
+    
     /**
      * A list of triples representing the results.
      */
     @Persist
-    private List<Triple> triples;
+    private Query query;
 
     /**
      * This is used to iterate through the triples used to generate the Grid component
@@ -30,6 +36,9 @@ public class TabSeparatedResults {
     @SuppressWarnings("unused")
     private StreamResponse onActivate(){
         final StreamResponse streamResponse;
+        //TODO: stream this response.
+        //TODO: stream this response.
+        final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);
 
         StringBuilder tsv = new StringBuilder();
         String object = "";
@@ -52,12 +61,7 @@ public class TabSeparatedResults {
         return new MultiformatStreamResponse("text/tab-separated-values", tsv.toString(),"tsv");
     }
 
-    /**
-     * Set the triples to be outputted.
-     * 
-     * @param triples
-     */
-    public void setTriples(List<Triple> triples) {
-        this.triples = triples;
+    public void setQuery(Query query) {
+        this.query = query;
     }
 }

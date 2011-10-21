@@ -12,19 +12,25 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.Persist;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import org.linkedgov.questions.http.ExcelStreamResponse;
 import org.linkedgov.questions.model.Pair;
+import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.Triple;
+import org.linkedgov.questions.services.QueryDataService;
 
 import uk.me.mmt.sprotocol.SparqlResource;
 
 public class ExcelResults {
 
+    @Inject
+    private QueryDataService queryDataService;
+    
     /**
      * A list of triples representing the results.
      */
     @Persist
-    private List<Triple> triples;
+    private Query query;
     
     /**
      * Called when the page is activated, returns an excel file containing the triples in query.
@@ -33,8 +39,10 @@ public class ExcelResults {
      */
     
     @SuppressWarnings("unused")
-    public StreamResponse onActivate() throws IOException{
-    	
+    public StreamResponse onActivate() throws IOException{   	
+        //TODO: stream this response.
+        final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);
+        
     	final StreamResponse streamResponse;
     	final Workbook wb = new HSSFWorkbook();
     	final Sheet sh = wb.createSheet();
@@ -104,11 +112,11 @@ public class ExcelResults {
     }
 
     /**
-     * Set the triples to be outputted.
+     * Set the query to be run.
      * 
-     * @param triples
+     * @param query
      */
-    public void setTriples(List<Triple> triples) {
-        this.triples = triples;
+    public void setQuery(Query query) {
+        this.query = query;
     }
 }
