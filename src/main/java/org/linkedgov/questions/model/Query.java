@@ -205,7 +205,7 @@ public class Query {
             object = "<bnode:"+object+">";
         } else {
             if (isInteger(object)) {
-                object = "?obj . FILTER (?obj = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#int> || ?obj = \""+object+"\")";
+                object = "?obj . FILTER (?obj = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#integer> || ?obj = \""+object+"\")";
             } else if (isFloat(object)) {
                 object = "?obj . FILTER (?obj = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#float> || ?obj = \""+object+"\")";
             } else {
