@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Pojo that represents a query, or question, built up by the user. 
  * This class has a function which turns the user input into a SPARQL query
@@ -121,7 +123,11 @@ public class Query {
      * @return A Sparql Query String
      */
     public String toSparqlString(QuestionType overridenQuestionType) {
-        return buildSparqlString(overridenQuestionType);
+        if (StringUtils.isBlank(predicate)) {
+            return buildSparqlStringWithoutPredicate(overridenQuestionType);
+        } else {
+            return buildSparqlWithPredicate(overridenQuestionType);
+        }    
     }
     
     /**
@@ -133,15 +139,58 @@ public class Query {
      * @return A Sparql Query String
      */
     public String toSparqlString() {
-        return buildSparqlString(questionType);
+        if (StringUtils.isBlank(predicate)) {
+            return buildSparqlStringWithoutPredicate(questionType);
+        } else {
+            return buildSparqlWithPredicate(questionType);
+        }
     }
+    
+    private String buildSparqlWithPredicate(QuestionType thisQuestionType) {
+        StringBuilder query = new StringBuilder();        
+        
+        if (QuestionType.COUNT.equals(thisQuestionType)) {
+            query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
+        } else {
+            query.append("SELECT DISTINCT ?sub (<");
+            query.append(predicate);
+            query.append("> AS ?pred) ?obj ?slabel ?plabel ?olabel ");
+            		
+        }
+
+        query.append("WHERE { ");
+
+        query.append("?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <");
+        query.append(subject);
+        query.append("> . ");
+
+        
+        if (!firstFilter.isComplete()) {
+            query.append(filterToSparqlBGP(firstFilter, "obj2"));
+        }
+        if (!secondFilter.isComplete()) {
+            query.append(filterToSparqlBGP(secondFilter, "obj2"));
+        }
+
+        if (questionType.equals(QuestionType.SELECT)) {
+            query.append("OPTIONAL {?sub <http://www.w3.org/2000/01/rdf-schema#label> ?slabel } . ");
+            query.append("OPTIONAL {<");
+            query.append(predicate);
+            query.append("> <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . ");
+            query.append("OPTIONAL {?obj <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . ");
+        }
+        
+        query.append("} ");
+        return query.toString();
+    }
+    
 
     /**
      * 
      * @param thisQuestionType the question type of the query.
      * @return
      */
-    private String buildSparqlString(QuestionType thisQuestionType) {
+    private String buildSparqlStringWithoutPredicate(QuestionType thisQuestionType) {
         StringBuilder query = new StringBuilder();        
         
         if (QuestionType.COUNT.equals(thisQuestionType)) {
@@ -159,10 +208,10 @@ public class Query {
         query.append("?sub ?pred ?obj . ");
 
         if (!firstFilter.isComplete()) {
-            query.append(filterToSparqlBGP(firstFilter));
+            query.append(filterToSparqlBGP(firstFilter, "obj"));
         }
         if (!secondFilter.isComplete()) {
-            query.append(filterToSparqlBGP(secondFilter));
+            query.append(filterToSparqlBGP(secondFilter, "obj"));
         }
 
         if (questionType.equals(QuestionType.SELECT)) {
@@ -170,12 +219,13 @@ public class Query {
             query.append("OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . ");
             query.append("OPTIONAL {?obj <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . ");
         }
-         
+        
+        /*
         if (predicate != null) {
             query.append("FILTER (?pred = <");
             query.append(predicate);
             query.append(">) . ");
-        }
+        }*/
         
         query.append("} ");
         return query.toString();
@@ -187,7 +237,7 @@ public class Query {
      * @param filter
      * @return a fragment of a SPARQL query
      */
-    public String filterToSparqlBGP(QueryFilter filter) {
+    public String filterToSparqlBGP(QueryFilter filter, String variableName) {
         StringBuilder bgp = new StringBuilder();
         bgp.append("?sub <");
         bgp.append(filter.getPredicate());
@@ -205,11 +255,11 @@ public class Query {
             object = "<bnode:"+object+">";
         } else {
             if (isInteger(object)) {
-                object = "?obj . FILTER (?obj = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#integer> || ?obj = \""+object+"\")";
+                object = "?"+variableName+" . FILTER (?"+variableName+" = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#integer> || ?"+variableName+" = \""+object+"\")";
             } else if (isFloat(object)) {
-                object = "?obj . FILTER (?obj = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#float> || ?obj = \""+object+"\")";
+                object = "?"+variableName+" . FILTER (?"+variableName+" = \""+object+"\"^^<http://www.w3.org/2001/XMLSchema#float> || ?"+variableName+" = \""+object+"\")";
             } else {
-                object = "?obj . FILTER (?obj = \""+object+"\" || ?obj = \""+object+"\"@EN || ?obj = \""+object+"\"@en)";        
+                object = "?"+variableName+" . FILTER (?"+variableName+" = \""+object+"\" || ?"+variableName+" = \""+object+"\"@EN || ?"+variableName+" = \""+object+"\"@en)";        
             }
         }
         bgp.append(object);
@@ -217,7 +267,7 @@ public class Query {
 
         return bgp.toString();
     }
-
+    
     /**
      * 
      * @param input a literal value returned by 4store
