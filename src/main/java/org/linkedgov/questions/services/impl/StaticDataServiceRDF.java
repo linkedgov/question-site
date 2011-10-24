@@ -52,7 +52,6 @@ public class StaticDataServiceRDF implements StaticDataService {
             "OPTIONAL {?object <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . " +
             "} ORDER BY ?object";
     
-    //LAME
     private static final String GET_SECONDFILTER_PREDICATE_QUERY = "SELECT DISTINCT ?pred ?plabel WHERE " +
             "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> . " +
             "%s  " +
@@ -60,10 +59,10 @@ public class StaticDataServiceRDF implements StaticDataService {
             "OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . " +
             "} ORDER BY ?pred";
     
-    //LAME
     private static final String GET_SECONDFILTER_OBJECT_QUERY = "SELECT DISTINCT ?object ?olabel WHERE " +
-            "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> ; " +
-            "<%s> %s . " +
+            "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> . " +
+            "%s  " +
+            //"<%s> %s . " +
             "?s <%s> ?object . " +
             "OPTIONAL {?object <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . " +
             "} ORDER BY ?object";
@@ -82,14 +81,12 @@ public class StaticDataServiceRDF implements StaticDataService {
     private final ArrayList<String> blacklist;
         
     /**
-     * TODO Mischa need to populate this configuration thingy
      * @param sparqlDao
      * @param configClassBlacklist
      */
     public StaticDataServiceRDF (SparqlDao sparqlDao, Collection<String> configBlacklist) {
         this.sparqlDao = sparqlDao;
         this.blacklist = new ArrayList<String>(configBlacklist);
-        System.err.println("This is size of the predicate blacklist "+blacklist.size());
     }
     
     /**
@@ -130,7 +127,31 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @return A List of Strings for the second list of predicates 
      */
     public Map<String,String> getObjects(String subject, String predicate, QueryFilter filter) {
-        String query = String.format(GET_SECONDFILTER_OBJECT_QUERY, subject, filter.getPredicate(), filter.getObject(), predicate);
+       // private static final String GET_SECONDFILTER_OBJECT_QUERY = "SELECT DISTINCT ?object ?olabel WHERE " +
+       // "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> . " +
+       // "%s  " +
+       // "?s <%s> ?object . " +
+      //"OPTIONAL {?object <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . " +
+      //  "} ORDER BY ?object";
+        String toPopulate = "";
+        String filterObject = filter.getObject();
+        String filterPredicate = filter.getPredicate();
+
+        if (SparqlUtils.isBnode(filterObject)) {
+            toPopulate = "?s <"+filterPredicate+"> <bnode:"+filterObject+"> . ";
+        } else if (SparqlUtils.isURI(filterObject)) {
+            toPopulate = "?s <"+filterPredicate+"> <"+filterObject+"> . ";
+        } else  {
+            if (SparqlUtils.isInteger(filterObject)) {        
+                toPopulate = "{ {?s <"+filterPredicate+"> "+filterObject+" } UNION {?s <"+filterPredicate+"> \""+filterObject+"\" } } . ";
+            } else if (SparqlUtils.isFloat(filterObject)) {
+                toPopulate = "{ {?s <"+filterPredicate+"> \""+filterObject+"\"^^<http://www.w3.org/2001/XMLSchema#float> } UNION {?s <"+filterPredicate+"> \""+filterObject+"\" } } . ";
+            } else {
+                toPopulate = "{ {?s <"+filterPredicate+"> \""+filterObject+"\"@EN } UNION {?s <"+filterPredicate+"> \""+filterObject+"\"@en } UNION {?s <"+filterPredicate+"> \""+filterObject+"\"} } . ";
+            }
+        }
+        
+        String query = String.format(GET_SECONDFILTER_OBJECT_QUERY, subject, toPopulate, predicate);
         Map<String,String> retValues = new HashMap<String,String>();
         final SelectResultSet results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
