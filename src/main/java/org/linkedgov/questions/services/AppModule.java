@@ -28,34 +28,58 @@ import org.slf4j.Logger;
  */
 public class AppModule
 {
-    public static void bind(ServiceBinder binder)
-    {
+    public static void bind(ServiceBinder binder) {
         binder.bind(SparqlDao.class, SparqlDaoImpl.class); 
         binder.bind(StaticDataService.class, StaticDataServiceRDF.class);
         binder.bind(QueryDataService.class, QueryDataServiceImpl.class);
     }
-    
+
     /**
      * This is where we are going to add in a blacklist of Predicate URIs
      * 
      * @param configClassBlacklist
      */
     public static void contributeStaticDataService (Configuration<String> configuration) {
-        configuration.add("http://www.w3.org/2002/07/owl#ObjectProperty");
-        configuration.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-        configuration.add("http://www.w3.org/2000/01/rdf-schema#comment");
+        
+        //OWL namespace blacklist
         configuration.add("http://www.w3.org/2002/07/owl#Class");
+        configuration.add("http://www.w3.org/2002/07/owl#Restriction");
+        configuration.add("http://www.w3.org/2002/07/owl#DatatypeProperty");
+        configuration.add("http://www.w3.org/2002/07/owl#ObjectProperty");
+
+        //RDF namespace blacklist
+        configuration.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+        configuration.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property");
+
+        //RDFS namespace blacklist
+        configuration.add("http://www.w3.org/2000/01/rdf-schema#comment");
+
+        //CC namespace blacklist
+        configuration.add("http://creativecommons.org/ns#Requirement");
+        configuration.add("http://creativecommons.org/ns#Permission");
+        
+        /*
+        configuration.add("http://creativecommons.org/ns#Permission");
+        configuration.add("http://creativecommons.org/ns#Permission");
+        configuration.add("http://creativecommons.org/ns#Permission");
+        configuration.add("http://creativecommons.org/ns#Permission");
+        configuration.add("http://creativecommons.org/ns#Permission");
+        configuration.add("http://creativecommons.org/ns#Permission");
+        configuration.add("http://creativecommons.org/ns#Permission");
+        configuration.add("http://creativecommons.org/ns#Permission");
+        configuration.add("http://creativecommons.org/ns#Permission");
+        */
+        
     }
-    
+
     public static void contributeApplicationDefaults(
-            MappedConfiguration<String, String> configuration)
-    {
+            MappedConfiguration<String, String> configuration) {
         // Contributions to ApplicationDefaults will override any contributions to
         // FactoryDefaults (with the same key). Here we're restricting the supported
         // locales to just "en" (English). As you add localised message catalogs and other assets,
         // you can extend this list of locales (it's a comma separated series of locale names;
         // the first locale name is the default when there's no reasonable match).
-        
+
         configuration.add(SymbolConstants.SUPPORTED_LOCALES, "en");
 
         // The factory default is true but during the early stages of an application
@@ -68,11 +92,11 @@ public class AppModule
         // header. If existing assets are changed, the version number should also
         // change, to force the browser to download new versions.
         configuration.add(SymbolConstants.APPLICATION_VERSION, "1.0-SNAPSHOT");
-        
+
         //Configuration for where the SPARQL endpoint lives
         configuration.add(QuestionsSymbolConstants.SPARQL_ENDPOINT_URL, "http://localhost:8081/sparql/");
     }
-    
+
     /**
      * This is a service definition, the service will be named "TimingFilter". The interface,
      * RequestFilter, is used within the RequestHandler service pipeline, which is built from the
@@ -91,27 +115,20 @@ public class AppModule
      * a service named "RequestFilter" we use an explicit service id that we can reference
      * inside the contribution method.
      */    
-    public RequestFilter buildTimingFilter(final Logger log)
-    {
-        return new RequestFilter()
-        {
+    public RequestFilter buildTimingFilter(final Logger log) {
+        return new RequestFilter() {
             public boolean service(Request request, Response response, RequestHandler handler)
-                    throws IOException
-            {
+            throws IOException {
                 long startTime = System.currentTimeMillis();
 
-                try
-                {
+                try {
                     // The responsibility of a filter is to invoke the corresponding method
                     // in the handler. When you chain multiple filters together, each filter
                     // received a handler that is a bridge to the next filter.
-                    
-                    return handler.service(request, response);
-                }
-                finally
-                {
-                    long elapsed = System.currentTimeMillis() - startTime;
 
+                    return handler.service(request, response);
+                } finally {
+                    long elapsed = System.currentTimeMillis() - startTime;
                     log.info(String.format("Request time: %d ms", elapsed));
                 }
             }
@@ -127,12 +144,11 @@ public class AppModule
      */
     public void contributeRequestHandler(OrderedConfiguration<RequestFilter> configuration,
             @Local
-            RequestFilter filter)
-    {
+            RequestFilter filter) {
         // Each contribution to an ordered configuration has a name, When necessary, you may
         // set constraints to precisely control the invocation order of the contributed filter
         // within the pipeline.
-        
+
         configuration.add("Timing", filter);
     }
 }

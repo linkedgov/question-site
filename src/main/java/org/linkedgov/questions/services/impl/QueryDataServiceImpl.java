@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.WordUtils;
 import org.linkedgov.questions.model.Pair;
 import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.QuestionType;
@@ -97,6 +98,7 @@ public class QueryDataServiceImpl implements QueryDataService {
                 sub.setFirst(resource);
                 triple.setSubject(sub);
             } else if (variable.equals("plabel") && resource != null) {
+                resource.setValue(WordUtils.capitalize(resource.getValue()));
                 pred.setFirst(resource);
                 triple.setPredicate(pred);
             } else if (variable.equals("olabel") && resource != null) {

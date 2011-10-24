@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.linkedgov.questions.model.QueryFilter;
 import org.linkedgov.questions.model.SparqlUtils;
 import org.linkedgov.questions.services.SparqlDao;
@@ -109,9 +110,9 @@ public class StaticDataServiceRDF implements StaticDataService {
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
             if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
-                retValues.put(element.getValue(), result.getResult().get(OBJECT_VARIABLE_LABEL).getValue());
+                retValues.put(element.getValue(), WordUtils.capitalize(result.getResult().get(OBJECT_VARIABLE_LABEL).getValue()));
             } else {
-                retValues.put(element.getValue(),element.getValue());
+                retValues.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
             }
         }
         return retValues;
@@ -150,9 +151,9 @@ public class StaticDataServiceRDF implements StaticDataService {
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
             if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
-                retValues.put(element.getValue(), result.getResult().get(OBJECT_VARIABLE_LABEL).getValue());
+                retValues.put(element.getValue(), WordUtils.capitalize(result.getResult().get(OBJECT_VARIABLE_LABEL).getValue()));
             } else {
-                retValues.put(element.getValue(),element.getValue());
+                retValues.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
             }            
         }
         return retValues;        
@@ -191,9 +192,9 @@ public class StaticDataServiceRDF implements StaticDataService {
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
             if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
-                retValues.put(element.getValue(), result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue());
+                retValues.put(element.getValue(), WordUtils.capitalize(result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue()));
             } else {
-                retValues.put(element.getValue(),element.getValue());
+                retValues.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
             }
         }
         return retValues;
@@ -206,9 +207,9 @@ public class StaticDataServiceRDF implements StaticDataService {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
             if (!isBlacklisted(element.getValue())) {
                 if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
-                    predicates.put(element.getValue(), result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue());
+                    predicates.put(element.getValue(), WordUtils.capitalize(result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue()));
                 } else {
-                    predicates.put(element.getValue(),element.getValue());
+                    predicates.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
                 }
             }
         }
@@ -245,9 +246,9 @@ public class StaticDataServiceRDF implements StaticDataService {
 
             if (!isBlacklisted(element.getValue())) {
                 if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
-                    retValues.put(element.getValue(), result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue());
+                    retValues.put(element.getValue(), WordUtils.capitalize(result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue()));
                 } else {
-                    retValues.put(element.getValue(),element.getValue());
+                    retValues.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
                 }
             }
         }
@@ -275,13 +276,29 @@ public class StaticDataServiceRDF implements StaticDataService {
             final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
             if (!isBlacklisted(element.getValue())) {
                 if (result.getResult().get(CLASS_VARIABLE_LABEL) != null) {
-                    retValues.put(element.getValue(), result.getResult().get(CLASS_VARIABLE_LABEL).getValue());
+                    retValues.put(element.getValue(), WordUtils.capitalize(result.getResult().get(CLASS_VARIABLE_LABEL).getValue()));
                 } else {
-                    retValues.put(element.getValue(),element.getValue());
+                    retValues.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
                 }
             }
         }
         return retValues;
+    }
+    
+    /**
+     * Create a pretty label for an object or a predicate name
+     * @param iri
+     * @return
+     */
+    private String createLabel(String iri) {
+        String label = iri;
+        if (iri.lastIndexOf("#") != -1) {
+            label = iri.substring(iri.lastIndexOf("#")+1);
+        } else if (iri.lastIndexOf("/") != -1) {
+            label = iri.substring(iri.lastIndexOf("/")+1);
+        }
+        
+        return label;
     }
 
 }
