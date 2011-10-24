@@ -185,7 +185,6 @@ public class Results {
      * @return
      */
     public Map<String,String> getDataSets() {
-        
         return queryDataService.executeGetAllGraphNames(query);
     }
     
