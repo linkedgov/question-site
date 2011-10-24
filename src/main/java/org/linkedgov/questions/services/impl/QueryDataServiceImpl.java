@@ -33,7 +33,7 @@ public class QueryDataServiceImpl implements QueryDataService {
      * To log stuff with.
      */
     private final Logger log;
-    
+
     /**
      * Automatically called by tapestry when instantiating the service, which is a singleton.
      */
@@ -59,41 +59,41 @@ public class QueryDataServiceImpl implements QueryDataService {
      * @param result the result to convert.
      * @return the triple that represents the result. 
      */
-	private Triple resultToTriple(List<String> head, SelectResult result) {
-		final Triple triple = new Triple();    
+    private Triple resultToTriple(List<String> head, SelectResult result) {
+        final Triple triple = new Triple();    
 
-		for (String variable : head) {
-		    final SparqlResource resource =  result.getResult().get(variable);
-		    
-		    final Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
-		    final Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
-		    final Pair<SparqlResource,String> obj = new Pair<SparqlResource,String>();
-		    
-		    if (variable.equals("sub")) {
-		        sub.setFirst(resource);
-		        triple.setSubject(sub);
-		    } else if (variable.equals("pred")) {
-		        pred.setFirst(resource);
-		        triple.setPredicate(pred);
-		    } else if (variable.equals("obj")) {
-		        obj.setFirst(resource);
-		        triple.setObject(obj);
-		    } else if (variable.equals("cnt")) {
-		        sub.setFirst(resource);
-		        triple.setSubject(sub);
-		    } else if (variable.equals("slabel") && resource != null) {
-		        sub.setFirst(resource);
-		        triple.setSubject(sub);
-		    } else if (variable.equals("plabel") && resource != null) {
-		        pred.setFirst(resource);
-		        triple.setPredicate(pred);
-		    } else if (variable.equals("olabel") && resource != null) {
-		        obj.setFirst(resource);
-		        triple.setObject(obj);
-		    }
-		}
-		return triple;
-	}
+        for (String variable : head) {
+            final SparqlResource resource =  result.getResult().get(variable);
+
+            final Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
+            final Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
+            final Pair<SparqlResource,String> obj = new Pair<SparqlResource,String>();
+
+            if (variable.equals("sub")) {
+                sub.setFirst(resource);
+                triple.setSubject(sub);
+            } else if (variable.equals("pred")) {
+                pred.setFirst(resource);
+                triple.setPredicate(pred);
+            } else if (variable.equals("obj")) {
+                obj.setFirst(resource);
+                triple.setObject(obj);
+            } else if (variable.equals("cnt")) {
+                sub.setFirst(resource);
+                triple.setSubject(sub);
+            } else if (variable.equals("slabel") && resource != null) {
+                sub.setFirst(resource);
+                triple.setSubject(sub);
+            } else if (variable.equals("plabel") && resource != null) {
+                pred.setFirst(resource);
+                triple.setPredicate(pred);
+            } else if (variable.equals("olabel") && resource != null) {
+                obj.setFirst(resource);
+                triple.setObject(obj);
+            }
+        }
+        return triple;
+    }
 
     public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy) {
         final List<Triple> triples = new ArrayList<Triple>();
@@ -115,7 +115,7 @@ public class QueryDataServiceImpl implements QueryDataService {
      * Executes a count for this query. If the query itself is a count, it returns 1.
      */
     public int executeCountForQuery(Query query, boolean forPagination) {
-        
+
         System.err.println("THis is a count ...."+query);
         if(QuestionType.COUNT.equals(query.getQuestionType())){
             return 1;
@@ -123,24 +123,24 @@ public class QueryDataServiceImpl implements QueryDataService {
         if(query.isNull()){
             return 0;
         }
-        
+
         final String countSparqlString = query.toSparqlString(QuestionType.COUNT, forPagination);
         final SelectResultSet results = sparqlDao.executeQuery(countSparqlString);
-        
+
         if(results.getResults().isEmpty()){
             return 0;
         }
-        
+
         final String countLabel = results.getHead().get(0);
         final SelectResult firstResult = results.getResults().get(0);
         final String count = firstResult.getResult().get(countLabel).getValue();
-       
+
         if(count == null){
             return 0;
         }
-        
+
         return Integer.valueOf(count);
-     
+
     }
 
 }
