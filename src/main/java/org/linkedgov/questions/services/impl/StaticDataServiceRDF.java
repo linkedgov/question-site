@@ -127,12 +127,6 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @return A List of Strings for the second list of predicates 
      */
     public Map<String,String> getObjects(String subject, String predicate, QueryFilter filter) {
-       // private static final String GET_SECONDFILTER_OBJECT_QUERY = "SELECT DISTINCT ?object ?olabel WHERE " +
-       // "{?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <%s> . " +
-       // "%s  " +
-       // "?s <%s> ?object . " +
-      //"OPTIONAL {?object <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . " +
-      //  "} ORDER BY ?object";
         String toPopulate = "";
         String filterObject = filter.getObject();
         String filterPredicate = filter.getPredicate();

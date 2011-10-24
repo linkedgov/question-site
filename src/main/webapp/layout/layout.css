@@ -9,7 +9,7 @@ body {
     padding: 0;
     background: #FFFFFF url( images/img01.jpg ) repeat-x;
     text-align: left;
-    font: 15px Arial, Helvetica, sans-serif;
+    font: 12px Arial, Helvetica, sans-serif;
     color: #626262;
 }
 
@@ -140,7 +140,7 @@ a:hover {
 /* Page */
 
 #page {
-    padding: 40px 40px 0 40px;
+    padding-left: 40px;
 }
 
 /* Content */
