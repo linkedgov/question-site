@@ -3,6 +3,7 @@ package org.linkedgov.questions.services.impl;
 import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.linkedgov.questions.services.QuestionsSymbolConstants;
 import org.linkedgov.questions.services.SparqlDao;
+import org.slf4j.Logger;
 
 import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlProtocolClient;
@@ -18,6 +19,11 @@ import uk.me.mmt.sprotocol.SprotocolException;
 public class SparqlDaoImpl implements SparqlDao {
 
     /**
+     * To log stuff with.
+     */
+    private final Logger log;
+    
+    /**
      * The client that does the actual querying.
      */
     private final SparqlProtocolClient client;
@@ -28,8 +34,9 @@ public class SparqlDaoImpl implements SparqlDao {
      * @param endpoint - given by the system property with name {@Link QuestionsSymbolConstants.SPARQL_ENDPOINT_URL}. 
      * The default is in {@Link AppModule}
      */
-    public SparqlDaoImpl(@Symbol(QuestionsSymbolConstants.SPARQL_ENDPOINT_URL) String endpoint) {
-        client = new SparqlProtocolClient(endpoint);
+    public SparqlDaoImpl(@Symbol(QuestionsSymbolConstants.SPARQL_ENDPOINT_URL) String endpoint, Logger log) {
+        this.client = new SparqlProtocolClient(endpoint);
+        this.log = log;
     } 
     
     /**
@@ -40,11 +47,11 @@ public class SparqlDaoImpl implements SparqlDao {
      * @throws SprotocolException 
      */
     public SelectResultSet executeQuery(String query)  {
-        System.err.println("The is query being fired "+query);
+        log.info("The is query being fired "+query);
     	try {
             return client.executeSelect(query);
         } catch (SprotocolException e) {
-            System.err.println("Error making SPARQL protocol call"+e.getMessage());
+            log.error("Error making SPARQL protocol call"+e.getMessage());
         }
         return new SelectResultSet();
     }
@@ -83,7 +90,7 @@ public class SparqlDaoImpl implements SparqlDao {
         try {
             return client.executeSelect(query);
         } catch (SprotocolException e) {
-            System.err.println("Error making SPARQL protocol call"+e.getMessage());
+            log.error("Error making SPARQL protocol call"+e.getMessage());
         }
         return new SelectResultSet();
     }
