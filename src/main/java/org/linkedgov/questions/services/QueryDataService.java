@@ -1,6 +1,7 @@
 package org.linkedgov.questions.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.Triple;
@@ -25,5 +26,7 @@ public interface QueryDataService {
     public int executeCountForQuery(Query query, boolean forPagination);
       
     public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy);
+    
+    public Map<String,String> executeGetAllGraphNames(Query query);
  
 }

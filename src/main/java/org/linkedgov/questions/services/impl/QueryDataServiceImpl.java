@@ -1,7 +1,9 @@
 package org.linkedgov.questions.services.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.linkedgov.questions.model.Pair;
 import org.linkedgov.questions.model.Query;
@@ -116,18 +118,17 @@ public class QueryDataServiceImpl implements QueryDataService {
      */
     public int executeCountForQuery(Query query, boolean forPagination) {
 
-        System.err.println("THis is a count ...."+query);
-        if(QuestionType.COUNT.equals(query.getQuestionType())){
+        if (QuestionType.COUNT.equals(query.getQuestionType())) {
             return 1;
         }
-        if(query.isNull()){
+        if (query.isNull()) {
             return 0;
         }
 
-        final String countSparqlString = query.toSparqlString(QuestionType.COUNT, forPagination);
+        final String countSparqlString = query.toSparqlString(QuestionType.COUNT, forPagination, false);
         final SelectResultSet results = sparqlDao.executeQuery(countSparqlString);
 
-        if(results.getResults().isEmpty()){
+        if (results.getResults().isEmpty()) {
             return 0;
         }
 
@@ -141,6 +142,23 @@ public class QueryDataServiceImpl implements QueryDataService {
 
         return Integer.valueOf(count);
 
+    }
+    
+    public Map<String,String> executeGetAllGraphNames(Query query) {
+        final String queryGraphs = query.toSparqlString(QuestionType.SELECT, false, true);
+        final SelectResultSet graphs = sparqlDao.executeQuery(queryGraphs);
+        
+        Map<String,String> retValues = new HashMap<String,String>();
+
+        for (SelectResult result : graphs.getResults()) {
+            final SparqlResource element = result.getResult().get("g");
+            if (result.getResult().get("glabel") != null) {
+                retValues.put(element.getValue(),result.getResult().get("glabel").getValue());
+            } else {
+                retValues.put(element.getValue(),element.getValue());
+            }            
+        }
+        return retValues;             
     }
 
 }

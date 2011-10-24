@@ -102,11 +102,11 @@ public class Query {
      * 
      * @return A Sparql Query String
      */
-    public String toSparqlString(QuestionType overridenQuestionType, boolean forPagination) {
+    public String toSparqlString(QuestionType overridenQuestionType, boolean forPagination, boolean returnGraph) {
         if (StringUtils.isBlank(predicate)) {
-            return buildSparqlStringWithoutPredicate(overridenQuestionType, forPagination);
+            return buildSparqlStringWithoutPredicate(overridenQuestionType, forPagination, returnGraph);
         } else {
-            return buildSparqlWithPredicate(overridenQuestionType, forPagination);
+            return buildSparqlWithPredicate(overridenQuestionType, forPagination, returnGraph);
         }    
     }
 
@@ -120,13 +120,13 @@ public class Query {
      */
     public String toSparqlString() {
         if (StringUtils.isBlank(predicate)) {
-            return buildSparqlStringWithoutPredicate(questionType, false);
+            return buildSparqlStringWithoutPredicate(questionType, false, false);
         } else {
-            return buildSparqlWithPredicate(questionType, false);
+            return buildSparqlWithPredicate(questionType, false, false);
         }
     }
 
-    private String buildSparqlWithPredicate(QuestionType thisQuestionType, boolean forPagination) {
+    private String buildSparqlWithPredicate(QuestionType thisQuestionType, boolean forPagination, boolean returnGraph) {
         StringBuilder query = new StringBuilder();        
         if (QuestionType.COUNT.equals(thisQuestionType)) {
             if (forPagination) {
@@ -134,15 +134,18 @@ public class Query {
             } else {
                 query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
             }
+        } else if (returnGraph) {
+            query.append("SELECT DISTINCT ?g ?glabel ");
         } else {
             query.append("SELECT DISTINCT ?sub (<");
             query.append(predicate);
             query.append("> AS ?pred) ?obj ?slabel ?plabel ?olabel ");
-
         }
 
         query.append("WHERE { ");
-
+        if (returnGraph) {
+            query.append("GRAPH ?g { ");
+        }
         query.append("?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <");
         query.append(subject);
         query.append("> . ");
@@ -156,7 +159,9 @@ public class Query {
             query.append(filterToSparqlBGP(secondFilter, "?obj3"));
         }
 
-        if (QuestionType.SELECT.equals(thisQuestionType)) {
+        if (returnGraph) {
+            query.append("OPTIONAL {?g <http://purl.org/dc/terms/title> ?glabel } . ");
+        } else if (QuestionType.SELECT.equals(thisQuestionType)) {
             query.append("OPTIONAL {?sub <http://www.w3.org/2000/01/rdf-schema#label> ?slabel } . ");
             query.append("OPTIONAL {<");
             query.append(predicate);
@@ -165,6 +170,9 @@ public class Query {
         }
 
         query.append("} ");
+        if (returnGraph) {
+            query.append("} ");
+        }
         return query.toString();
     }
 
@@ -174,7 +182,7 @@ public class Query {
      * @param thisQuestionType the question type of the query.
      * @return
      */
-    private String buildSparqlStringWithoutPredicate(QuestionType thisQuestionType, boolean forPagination) {
+    private String buildSparqlStringWithoutPredicate(QuestionType thisQuestionType, boolean forPagination, boolean returnGraph) {
         StringBuilder query = new StringBuilder();        
 
         if (QuestionType.COUNT.equals(thisQuestionType)) {
@@ -183,11 +191,16 @@ public class Query {
             } else {
                 query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
             }
+        } else if (returnGraph) {
+            query.append("SELECT DISTINCT ?g ?glabel ");
         } else {
             query.append("SELECT DISTINCT ?sub ?pred ?obj ?slabel ?plabel ?olabel ");
         }
 
         query.append("WHERE { ");
+        if (returnGraph) {
+            query.append("GRAPH ?g { ");
+        }
 
         query.append("?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <");
         query.append(subject);
@@ -202,13 +215,18 @@ public class Query {
             query.append(filterToSparqlBGP(secondFilter, "?obj3"));
         }
 
-        if (QuestionType.SELECT.equals(thisQuestionType)) {
+        if (returnGraph) {
+            query.append("OPTIONAL {?g <http://purl.org/dc/terms/title> ?glabel } . ");
+        } else if (QuestionType.SELECT.equals(thisQuestionType)) {
             query.append("OPTIONAL {?sub <http://www.w3.org/2000/01/rdf-schema#label> ?slabel } . ");
             query.append("OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . ");
             query.append("OPTIONAL {?obj <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . ");
         }
         
         query.append("} ");
+        if (returnGraph) {
+            query.append("} ");
+        }
         return query.toString();
     }
 

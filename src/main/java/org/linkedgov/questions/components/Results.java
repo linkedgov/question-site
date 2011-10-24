@@ -1,7 +1,6 @@
 package org.linkedgov.questions.components;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.tapestry5.Block;
@@ -186,13 +185,8 @@ public class Results {
      * @return
      */
     public Map<String,String> getDataSets() {
-        //TODO: Luke/Mischa, implement this, make sure only to query once.
-        final Map<String,String> dataSets = new HashMap<String,String>();
         
-        dataSets.put("http://viscri.co.uk/something", "Something");
-        dataSets.put("http://viscri.co.uk/eggs", "Hats");
-        dataSets.put("http://viscri.co.uk/eggbanjos","http://viscri.co.uk/eggbanjos");
-        return dataSets;
+        return queryDataService.executeGetAllGraphNames(query);
     }
     
     public String getDataSetValue() {
@@ -208,7 +202,8 @@ public class Results {
      * @throws IOException
      */
     public int getReliability() {
-        //TODO: Luke/Mischa implement this.
+        //TODO: Ongoing implement this.
+        //This is the namespace : http://data.linkedgov.org/ns#reliability
         return 5;
     }
     
