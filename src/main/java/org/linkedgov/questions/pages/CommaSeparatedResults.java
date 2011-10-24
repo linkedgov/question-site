@@ -41,6 +41,7 @@ public class CommaSeparatedResults {
 
         StringBuilder csv = new StringBuilder();
         String object = "";
+        csv.append("Result Subject,Result Predicate,Result Object\n");
         for (Triple row : triples) {
             csv.append(row.getSubject().getFirst().getValue());
             csv.append(",");

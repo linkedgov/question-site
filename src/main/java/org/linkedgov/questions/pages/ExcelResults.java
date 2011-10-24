@@ -61,9 +61,9 @@ public class ExcelResults {
      */
     private void createHeaderRow(final Sheet sh) {
         final Row row = sh.createRow(0);
-    	row.createCell(0).setCellValue("Subject");
-    	row.createCell(1).setCellValue("Predicate");;
-    	row.createCell(2).setCellValue("Object");;
+    	row.createCell(0).setCellValue("Result Subject");
+    	row.createCell(1).setCellValue("Result Predicate");;
+    	row.createCell(2).setCellValue("Result Object");;
     }
 
     /**

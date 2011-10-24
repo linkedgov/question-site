@@ -42,6 +42,7 @@ public class TabSeparatedResults {
 
         StringBuilder tsv = new StringBuilder();
         String object = "";
+        tsv.append("Result Subject\tResult Predicate\tResult Object\n");
         for (Triple row : triples) {
             tsv.append(row.getSubject().getFirst().getValue());
             tsv.append("\t");
