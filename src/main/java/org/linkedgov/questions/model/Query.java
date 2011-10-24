@@ -128,9 +128,12 @@ public class Query {
 
     private String buildSparqlWithPredicate(QuestionType thisQuestionType, boolean forPagination) {
         StringBuilder query = new StringBuilder();        
-
         if (QuestionType.COUNT.equals(thisQuestionType)) {
-            query.append("SELECT DISTINCT (COUNT(*) AS ?cnt) ");
+            if (forPagination) {
+                query.append("SELECT DISTINCT (COUNT(*) AS ?cnt) ");
+            } else {
+                query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
+            }
         } else {
             query.append("SELECT DISTINCT ?sub (<");
             query.append(predicate);
