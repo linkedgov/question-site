@@ -27,7 +27,7 @@ public class QueryTest extends TestCase {
         qtwo.setSubject("http://xmlns.com/foaf/0.1/Person");
         qtwo.setFirstFilter(first);                
 
-        assertEquals(qtwo.toSparqlString(), "SELECT DISTINCT (COUNT(*) AS ?cnt) WHERE { ?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . ?sub ?pred ?obj . ?sub <http://xmlns.com/foaf/0.1/interest> <http://dbpedia.org/page/Beer> . } ");
+        assertEquals(qtwo.toSparqlString(), "SELECT DISTINCT (COUNT(?sub) AS ?cnt) WHERE { ?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . ?sub ?pred ?obj . ?sub <http://xmlns.com/foaf/0.1/interest> <http://dbpedia.org/page/Beer> . } ");
 
     }
 
