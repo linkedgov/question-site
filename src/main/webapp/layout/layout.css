@@ -79,7 +79,7 @@ a:hover {
 }
 
 #logo h1 {
-    padding: 0px 0 0 40px;
+    padding: 0px 0 0 2px;
 }
 
 #logo p {
@@ -140,7 +140,7 @@ a:hover {
 /* Page */
 
 #page {
-    padding-left: 40px;
+    padding-left: 2px;
 }
 
 /* Content */
