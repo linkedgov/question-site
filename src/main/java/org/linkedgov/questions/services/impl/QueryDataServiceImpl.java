@@ -114,8 +114,9 @@ public class QueryDataServiceImpl implements QueryDataService {
     /**
      * Executes a count for this query. If the query itself is a count, it returns 1.
      */
-    public int executeCountForQuery(Query query) {
+    public int executeCountForQuery(Query query, boolean forPagination) {
         
+        System.err.println("THis is a count ...."+query);
         if(QuestionType.COUNT.equals(query.getQuestionType())){
             return 1;
         }
@@ -123,7 +124,7 @@ public class QueryDataServiceImpl implements QueryDataService {
             return 0;
         }
         
-        final String countSparqlString = query.toSparqlString(QuestionType.COUNT);
+        final String countSparqlString = query.toSparqlString(QuestionType.COUNT, forPagination);
         final SelectResultSet results = sparqlDao.executeQuery(countSparqlString);
         
         if(results.getResults().isEmpty()){

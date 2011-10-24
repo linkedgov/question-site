@@ -22,7 +22,7 @@ public interface QueryDataService {
      * @param query the query.
      * @return the number of rows that will result from this query
      */
-    public int executeCountForQuery(Query query);
+    public int executeCountForQuery(Query query, boolean forPagination);
       
     public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy);
  

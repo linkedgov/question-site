@@ -61,7 +61,7 @@ public class SelectResultDataSource implements GridDataSource {
     }
 
     public int getAvailableRows() { 
-        return queryDataService.executeCountForQuery(query);
+        return queryDataService.executeCountForQuery(query, true);
     }
     
     public Object getRowValue(int index) {

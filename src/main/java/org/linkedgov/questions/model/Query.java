@@ -102,11 +102,11 @@ public class Query {
      * 
      * @return A Sparql Query String
      */
-    public String toSparqlString(QuestionType overridenQuestionType) {
+    public String toSparqlString(QuestionType overridenQuestionType, boolean forPagination) {
         if (StringUtils.isBlank(predicate)) {
-            return buildSparqlStringWithoutPredicate(overridenQuestionType);
+            return buildSparqlStringWithoutPredicate(overridenQuestionType, forPagination);
         } else {
-            return buildSparqlWithPredicate(overridenQuestionType);
+            return buildSparqlWithPredicate(overridenQuestionType, forPagination);
         }    
     }
 
@@ -120,13 +120,13 @@ public class Query {
      */
     public String toSparqlString() {
         if (StringUtils.isBlank(predicate)) {
-            return buildSparqlStringWithoutPredicate(questionType);
+            return buildSparqlStringWithoutPredicate(questionType, false);
         } else {
-            return buildSparqlWithPredicate(questionType);
+            return buildSparqlWithPredicate(questionType, false);
         }
     }
 
-    private String buildSparqlWithPredicate(QuestionType thisQuestionType) {
+    private String buildSparqlWithPredicate(QuestionType thisQuestionType, boolean forPagination) {
         StringBuilder query = new StringBuilder();        
 
         if (QuestionType.COUNT.equals(thisQuestionType)) {
@@ -171,11 +171,15 @@ public class Query {
      * @param thisQuestionType the question type of the query.
      * @return
      */
-    private String buildSparqlStringWithoutPredicate(QuestionType thisQuestionType) {
+    private String buildSparqlStringWithoutPredicate(QuestionType thisQuestionType, boolean forPagination) {
         StringBuilder query = new StringBuilder();        
 
         if (QuestionType.COUNT.equals(thisQuestionType)) {
-            query.append("SELECT DISTINCT (COUNT(*) AS ?cnt) ");
+            if (forPagination) {
+                query.append("SELECT DISTINCT (COUNT(*) AS ?cnt) ");
+            } else {
+                query.append("SELECT DISTINCT (COUNT(?sub) AS ?cnt) ");
+            }
         } else {
             query.append("SELECT DISTINCT ?sub ?pred ?obj ?slabel ?plabel ?olabel ");
         }

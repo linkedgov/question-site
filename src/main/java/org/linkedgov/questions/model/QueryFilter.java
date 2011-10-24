@@ -36,7 +36,6 @@ public class QueryFilter {
     }
 
     public void setObject(String object) {
-        System.err.println("This is lame and we are just setting the following value "+object);
         if (null != object) {
             object = StringUtils.strip(object);
             object = StringUtils.chomp(object);
