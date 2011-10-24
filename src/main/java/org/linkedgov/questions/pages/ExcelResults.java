@@ -25,33 +25,33 @@ public class ExcelResults {
 
     @Inject
     private QueryDataService queryDataService;
-    
+
     /**
      * A list of triples representing the results.
      */
     @Persist
     private Query query;
-    
+
     /**
      * Called when the page is activated, returns an excel file containing the triples in query.
      * @return
      * @throws IOException
      */
-    
+
     @SuppressWarnings("unused")
     public StreamResponse onActivate() throws IOException{   	
         //TODO: Ongoing. stream this response.
         final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);
-        
-    	final StreamResponse streamResponse;
-    	final Workbook wb = new HSSFWorkbook();
-    	final Sheet sh = wb.createSheet();
-    	createHeaderRow(sh);
-    	
-    	for (int rownum = 0; rownum < triples.size(); rownum++) {
-    		addRow(triples.get(rownum), sh, rownum+1);
-    	}
-    	
+
+        final StreamResponse streamResponse;
+        final Workbook wb = new HSSFWorkbook();
+        final Sheet sh = wb.createSheet();
+        createHeaderRow(sh);
+
+        for (int rownum = 0; rownum < triples.size(); rownum++) {
+            addRow(triples.get(rownum), sh, rownum+1);
+        }
+
         return new ExcelStreamResponse(getWorkbookBytes(wb));
     }
     /**
@@ -61,9 +61,9 @@ public class ExcelResults {
      */
     private void createHeaderRow(final Sheet sh) {
         final Row row = sh.createRow(0);
-    	row.createCell(0).setCellValue("Result Subject");
-    	row.createCell(1).setCellValue("Result Predicate");;
-    	row.createCell(2).setCellValue("Result Object");;
+        row.createCell(0).setCellValue("Result Subject");
+        row.createCell(1).setCellValue("Result Predicate");;
+        row.createCell(2).setCellValue("Result Object");;
     }
 
     /**
@@ -74,14 +74,14 @@ public class ExcelResults {
      * @throws IOException
      */
     private byte[] getWorkbookBytes(final Workbook wb) throws IOException {
-    	final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    	wb.write(bos);
-    	byte[] bytes = bos.toByteArray();
-    	bos.close();
-    	bos.flush();
-    	return bytes;
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        wb.write(bos);
+        byte[] bytes = bos.toByteArray();
+        bos.close();
+        bos.flush();
+        return bytes;
     }
-    
+
     /**
      * 
      * Adds a row representing the passed triple to the sheet.
@@ -91,10 +91,10 @@ public class ExcelResults {
      * @param rownum
      */
     private void addRow(Triple triple, Sheet sh, int rownum) {
-    	final Row row = sh.createRow(rownum);
-    	addCell(row, triple.getSubject(), 0);
-    	addCell(row, triple.getPredicate(), 1);
-    	addCell(row, triple.getObject(), 2);
+        final Row row = sh.createRow(rownum);
+        addCell(row, triple.getSubject(), 0);
+        addCell(row, triple.getPredicate(), 1);
+        addCell(row, triple.getObject(), 2);
     }
 
     /**

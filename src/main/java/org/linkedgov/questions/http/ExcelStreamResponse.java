@@ -15,31 +15,31 @@ import org.apache.tapestry5.services.Response;
  */
 public class ExcelStreamResponse implements StreamResponse {
 
-	private final byte[] bytes;
-	
-	public ExcelStreamResponse(byte[] bytes){
-		this.bytes = bytes;
-	}
-	
-	public String getContentType() {
-		return "application/vnd.ms-excel";
-	}
+    private final byte[] bytes;
 
-	public InputStream getStream() throws IOException {
-		return new ByteArrayInputStream(bytes);
-	}
+    public ExcelStreamResponse(byte[] bytes){
+        this.bytes = bytes;
+    }
 
-	public void prepareResponse(Response response) {
-		response.setHeader("Content-Type", getContentType());
-		response.setHeader("Content-Disposition", "attachment;filename=answer.xls");
-		response.setHeader("Expires", "0");
-		response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
-		response.setHeader("Pragma", "public");
-		response.setHeader("Content-Disposition", "attachment;filename=answer.xls");
-		response.setHeader("Expires", "0");
-		response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
-		response.setHeader("Pragma", "public");
-	}
+    public String getContentType() {
+        return "application/vnd.ms-excel";
+    }
 
-	
+    public InputStream getStream() throws IOException {
+        return new ByteArrayInputStream(bytes);
+    }
+
+    public void prepareResponse(Response response) {
+        response.setHeader("Content-Type", getContentType());
+        response.setHeader("Content-Disposition", "attachment;filename=answer.xls");
+        response.setHeader("Expires", "0");
+        response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
+        response.setHeader("Pragma", "public");
+        response.setHeader("Content-Disposition", "attachment;filename=answer.xls");
+        response.setHeader("Expires", "0");
+        response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
+        response.setHeader("Pragma", "public");
+    }
+
+
 }

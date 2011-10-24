@@ -21,7 +21,7 @@ public class TabSeparatedResults {
 
     @Inject
     private QueryDataService queryDataService;
-    
+
     /**
      * A list of triples representing the results.
      */
