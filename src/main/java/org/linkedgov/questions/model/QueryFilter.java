@@ -1,5 +1,7 @@
 package org.linkedgov.questions.model;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * Pojo that represents a predicate object pair which is used to narrow a result.
@@ -34,6 +36,11 @@ public class QueryFilter {
     }
 
     public void setObject(String object) {
+        System.err.println("This is lame and we are just setting the following value "+object);
+        if (null != object) {
+            object = StringUtils.strip(object);
+            object = StringUtils.chomp(object);
+        }
         this.object = object;
     }
 
@@ -53,7 +60,6 @@ public class QueryFilter {
         if (predicate == null || object == null) {
             return true;
         }
-        
         return false;
     }
     
