@@ -217,20 +217,6 @@ public class StaticDataServiceRDF implements StaticDataService {
     }
     
     /**
-     * Checks if a value is in the blacklist returns a boolean accordingly
-     */
-    public boolean isBlacklisted (String value) {
-        boolean blacklisted = false;
-        for (String blackitem : blacklist) {
-            if (blackitem.equals(value)) {
-                blacklisted = true; 
-                break;
-            }
-        }
-        return blacklisted;
-    }
-    
-    /**
      * 
      * This function is used to return a list of predicates given a Class
      * 
@@ -299,6 +285,20 @@ public class StaticDataServiceRDF implements StaticDataService {
         }
         
         return label;
+    }
+    
+    /**
+     * Checks if a value is in the blacklist returns a boolean accordingly
+     */
+    public boolean isBlacklisted (String value) {
+        boolean blacklisted = false;
+        for (String blackitem : blacklist) {
+            if (blackitem.equals(value)) {
+                blacklisted = true; 
+                break;
+            }
+        }
+        return blacklisted;
     }
 
 }
