@@ -69,8 +69,8 @@ public class AppModule
         // change, to force the browser to download new versions.
         configuration.add(SymbolConstants.APPLICATION_VERSION, "1.0-SNAPSHOT");
         
-        //TODO: add the actual default port for 4store here.
-        configuration.add(QuestionsSymbolConstants.SPARQL_ENDPOINT_URL, "http://localhost:6666/sparql/");
+        //Configuration for where the SPARQL endpoint lives
+        configuration.add(QuestionsSymbolConstants.SPARQL_ENDPOINT_URL, "http://localhost:8081/sparql/");
     }
     
     /**
