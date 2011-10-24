@@ -8,11 +8,13 @@ import java.util.Map;
 import org.linkedgov.questions.model.Pair;
 import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.QuestionType;
+import org.linkedgov.questions.model.SparqlUtils;
 import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 import org.linkedgov.questions.services.SparqlDao;
 import org.slf4j.Logger;
 
+import uk.me.mmt.sprotocol.Literal;
 import uk.me.mmt.sprotocol.SelectResult;
 import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlResource;
@@ -26,6 +28,14 @@ import uk.me.mmt.sprotocol.SparqlResource;
  */
 public class QueryDataServiceImpl implements QueryDataService {
 
+    /**
+     * Used to get the reliability score
+     */
+    private static final String GET_RELIABILITY = "SELECT DISTINCT ?rel WHERE " +
+    "{<%s> <http://data.linkedgov.org/ns#reliability> ?rel } LIMIT 1 ";
+
+    private static final String XSD_INTEGER = "http://www.w3.org/2001/XMLSchema#integer";
+    
     /**
      * To do the actual querying with.
      */
@@ -144,6 +154,9 @@ public class QueryDataServiceImpl implements QueryDataService {
 
     }
     
+    /**
+     * This get all of the dataset's used to answer a query created by the user
+     */
     public Map<String,String> executeGetAllGraphNames(Query query) {
         final String queryGraphs = query.toSparqlString(QuestionType.SELECT, false, true);
         final SelectResultSet graphs = sparqlDao.executeQuery(queryGraphs);
@@ -161,4 +174,34 @@ public class QueryDataServiceImpl implements QueryDataService {
         return retValues;             
     }
 
+    /**
+     * This get the reliability score by querying the knowledge base
+     * 
+     * @return the average reliability score of the graphs or 0
+     */
+    public int executeReliabilityScore(Map<String,String> graphs) {
+        SelectResultSet results = new SelectResultSet();
+        int reliability = 0;
+        int count = 0;
+        for (String dataSet : graphs.keySet()) {
+            String query = String.format(GET_RELIABILITY, dataSet);
+            results = sparqlDao.executeQuery(query);
+            for (SelectResult result : results.getResults()) {
+                SparqlResource element = result.getResult().get("rel");
+                if (element instanceof Literal) {
+                    if (((Literal) element).getDatatype().equals(XSD_INTEGER)) {
+                        if (SparqlUtils.isInteger(element.getValue())) {
+                            reliability = reliability + Integer.parseInt(element.getValue());
+                            count++;
+                        }
+                    }
+                }        
+            }
+        }
+        if (reliability > 0 && count > 0) {
+            reliability = reliability / count;
+        } 
+        
+        return reliability;
+    }
 }

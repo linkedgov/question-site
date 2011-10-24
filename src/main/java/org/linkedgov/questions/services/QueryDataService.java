@@ -28,5 +28,7 @@ public interface QueryDataService {
     public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy);
     
     public Map<String,String> executeGetAllGraphNames(Query query);
+    
+    public int executeReliabilityScore(Map<String,String> graphs);
  
 }

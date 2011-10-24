@@ -188,6 +188,10 @@ public class Results {
         return queryDataService.executeGetAllGraphNames(query);
     }
     
+    /**
+     * 
+     * @return the label for a given dataset
+     */
     public String getDataSetValue() {
         return getDataSets().get(datasetKey);
     }
@@ -196,14 +200,14 @@ public class Results {
      *
      * Return the reliability score
      * 
-     * @return an int between 1 and 10
+     * @return a random number ;)
      * 
-     * @throws IOException
      */
     public int getReliability() {
         //TODO: Ongoing implement this.
-        //This is the namespace : http://data.linkedgov.org/ns#reliability
-        return 5;
+        //This is the namespace : 
+
+        return queryDataService.executeReliabilityScore(getDataSets());
     }
     
 }
