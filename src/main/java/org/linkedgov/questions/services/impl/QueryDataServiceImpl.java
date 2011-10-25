@@ -157,7 +157,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         for (Triple triple : triples) {
             if (triple.getObject().getFirst() instanceof IRI) {
                 List<Triple> iriTriples = executeIRIQuery(triple.getObject().getFirst().getValue());
-                System.err.println("This size of the triples for a Given IRI is"+iriTriples.size());
+                log.info("This size of the triples for a Given IRI is"+iriTriples.size());
                 boolean isAddress = false;
                 for (Triple row : iriTriples) {
                     if (row.getPredicate().getFirst().getValue().equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") && row.getObject().getFirst().getValue().equals("http://www.w3.org/2006/vcard/ns#Address")) {
