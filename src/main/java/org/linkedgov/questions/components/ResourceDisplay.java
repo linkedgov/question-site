@@ -101,6 +101,7 @@ public class ResourceDisplay {
             return locationBlock;
         }
 
+        //This should catch all of the resources which have been preprocess as "special cases"
         if (!SparqlUtils.isBnode(resource.getFirst().getValue())) {
             return literalBlock;
         }
