@@ -11,7 +11,6 @@ import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.QuestionType;
 import org.linkedgov.questions.model.SparqlUtils;
 import org.linkedgov.questions.model.Triple;
-import org.linkedgov.questions.pages.Bnode;
 import org.linkedgov.questions.services.QueryDataService;
 import org.linkedgov.questions.services.SparqlDao;
 import org.slf4j.Logger;
