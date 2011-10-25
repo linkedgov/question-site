@@ -39,7 +39,7 @@ public class QueryDataServiceImpl implements QueryDataService {
     "{<%s> <http://data.linkedgov.org/ns#reliability> ?rel } LIMIT 1 ";
 
     private static final String XSD_INTEGER = "http://www.w3.org/2001/XMLSchema#integer";
-    
+
     /**
      * To do the actual querying with.
      */
@@ -109,10 +109,10 @@ public class QueryDataServiceImpl implements QueryDataService {
                 triple.setObject(obj);
             }
         }
-       
+
         return triple;
     }
-    
+
     /**
      * This function shows how if a URI of a certain rdf:type is returned it can be 
      * implemented as a special case
@@ -151,7 +151,7 @@ public class QueryDataServiceImpl implements QueryDataService {
                 triples.add(triple);
             }
         }
-        
+
         //Specialising bnode.size = 1 and where we define vcard#Address functionality
         final List<Triple> finalTriples = new ArrayList<Triple>();
         for (Triple triple : triples) {
@@ -165,7 +165,7 @@ public class QueryDataServiceImpl implements QueryDataService {
                         break;
                     }
                 }
-                
+
                 //Am now handling the special cases here 
                 if (isAddress) {
                     Triple newTriple = triple;
@@ -221,14 +221,14 @@ public class QueryDataServiceImpl implements QueryDataService {
 
         return Integer.valueOf(count);
     }
-    
+
     /**
      * This get all of the dataset's used to answer a query created by the user
      */
     public Map<String,String> executeGetAllGraphNames(Query query) {
         final String queryGraphs = query.toSparqlString(QuestionType.SELECT, false, true);
         final SelectResultSet graphs = sparqlDao.executeQuery(queryGraphs);
-        
+
         Map<String,String> retValues = new HashMap<String,String>();
 
         for (SelectResult result : graphs.getResults()) {
@@ -271,7 +271,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         } 
         return reliability;
     }
-    
+
     /**
      * 
      * @param an iri is passed in, this is used to perform the special case's
@@ -287,7 +287,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         query.append(iri);
         query.append("> ?pred ?obj . ");    
         query.append("}");
-        
+
         final String sparqlString = query.toString();
         log.info("SPARQL ASKED to grab IRI Info:{}", sparqlString);
         final SelectResultSet results = sparqlDao.executeQuery(sparqlString);
@@ -299,7 +299,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         }    
         return triples;
     }
-    
+
     /**
      * This function is used to return triples about a given Bnode
      * This is used to fill out the Grid Component 
@@ -322,7 +322,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         query.append("OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . ");
         query.append("OPTIONAL {?obj <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . ");
         query.append("}");
-        
+
         final String sparqlString = query.toString();
         log.info("SPARQL ASKED to grab Bnode Info:{}", sparqlString);
         final SelectResultSet results = sparqlDao.executeQuery(sparqlString);
