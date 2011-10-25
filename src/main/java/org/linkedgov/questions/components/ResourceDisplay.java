@@ -7,6 +7,7 @@ import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.linkedgov.questions.model.Pair;
+import org.linkedgov.questions.model.SparqlUtils;
 import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 
@@ -100,6 +101,10 @@ public class ResourceDisplay {
             return locationBlock;
         }
 
+        if (!SparqlUtils.isBnode(resource.getFirst().getValue())) {
+            return literalBlock;
+        }
+        
         return bnodeLinkBlock;
     }
 
