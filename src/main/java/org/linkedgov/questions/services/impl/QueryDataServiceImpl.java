@@ -152,6 +152,7 @@ public class QueryDataServiceImpl implements QueryDataService {
             }
         }
         
+        //Specialising bnode.size = 1 and where we define vcard#Address functionality
         final List<Triple> finalTriples = new ArrayList<Triple>();
         for (Triple triple : triples) {
             if (triple.getObject().getFirst() instanceof IRI) {
@@ -271,6 +272,12 @@ public class QueryDataServiceImpl implements QueryDataService {
         return reliability;
     }
     
+    /**
+     * 
+     * @param an iri is passed in, this is used to perform the special case's
+     * the only special case currently implemented is the vcard#Address
+     * @return a list of triples
+     */
     public List<Triple> executeIRIQuery(String iri) {
         StringBuilder query = new StringBuilder();
         query.append("SELECT DISTINCT (<");
@@ -296,7 +303,10 @@ public class QueryDataServiceImpl implements QueryDataService {
     /**
      * This function is used to return triples about a given Bnode
      * This is used to fill out the Grid Component 
-     *
+
+     * @param a bnode id is passed in, this is used to perform the special case's
+     * the only special case currently implemented is the "single bnode case"
+     * @return a list of triples
      */
     public List<Triple> executeBnodeQuery(String bnode) {
         StringBuilder query = new StringBuilder();

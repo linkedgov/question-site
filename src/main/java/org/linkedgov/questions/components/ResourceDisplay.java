@@ -1,6 +1,5 @@
 package org.linkedgov.questions.components;
 
-
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -136,5 +135,5 @@ public class ResourceDisplay {
     public String getValue(){
         return resource.getFirst().getValue();
     }
-
+    
 }

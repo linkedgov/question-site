@@ -41,5 +41,4 @@ public class ExcelStreamResponse implements StreamResponse {
         response.setHeader("Pragma", "public");
     }
 
-
 }

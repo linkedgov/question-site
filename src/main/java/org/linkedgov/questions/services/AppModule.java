@@ -40,7 +40,7 @@ public class AppModule
      * @param configClassBlacklist
      */
     public static void contributeStaticDataService (Configuration<String> configuration) {
-        
+        //TODO ongoing to change blacklist to be per namespace
         //OWL namespace blacklist
         configuration.add("http://www.w3.org/2002/07/owl#Class");
         configuration.add("http://www.w3.org/2002/07/owl#Restriction");
@@ -57,7 +57,7 @@ public class AppModule
         //CC namespace blacklist
         configuration.add("http://creativecommons.org/ns#Requirement");
         configuration.add("http://creativecommons.org/ns#Permission");
-        
+
         /*
         configuration.add("http://creativecommons.org/ns#Permission");
         configuration.add("http://creativecommons.org/ns#Permission");
@@ -68,8 +68,8 @@ public class AppModule
         configuration.add("http://creativecommons.org/ns#Permission");
         configuration.add("http://creativecommons.org/ns#Permission");
         configuration.add("http://creativecommons.org/ns#Permission");
-        */
-        
+         */
+
     }
 
     public static void contributeApplicationDefaults(
