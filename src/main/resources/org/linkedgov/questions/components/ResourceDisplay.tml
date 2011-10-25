@@ -19,10 +19,6 @@
         <p>${locationString}</p>
     </t:block>
     
-    <t:block id="readingBlock">
-        <p>${readingString}</p>
-    </t:block>
-    
 	<t:block id="nonLiteralBlock">
 		<t:if test="labelDisplayed">
 			${label}
@@ -31,7 +27,5 @@
 			</t:parameter>
 		</t:if>
 	</t:block>
-	
-	
 	
 </t:container>

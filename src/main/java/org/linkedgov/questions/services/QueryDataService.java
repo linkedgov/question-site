@@ -27,6 +27,10 @@ public interface QueryDataService {
       
     public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy);
     
+    public List<Triple> executeBnodeQuery(String bnode);
+    
+    public List<Triple> executeIRIQuery(String iri);
+    
     public Map<String,String> executeGetAllGraphNames(Query query);
     
     public int executeReliabilityScore(Map<String,String> graphs);

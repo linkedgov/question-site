@@ -16,7 +16,6 @@ import org.linkedgov.questions.services.SparqlDao;
 import org.slf4j.Logger;
 
 import uk.me.mmt.sprotocol.Literal;
-import uk.me.mmt.sprotocol.BNode;
 import uk.me.mmt.sprotocol.SelectResult;
 import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlResource;
@@ -123,9 +122,7 @@ public class QueryDataServiceImpl implements QueryDataService {
                 triples.add(triple);
             }
         }
-        
-        triples.get(0).getPredicate().getFirst().setValue("location");
-        triples.get(0).getObject().setFirst(new BNode("something"));
+
         return triples;
     }
 
@@ -157,7 +154,6 @@ public class QueryDataServiceImpl implements QueryDataService {
         }
 
         return Integer.valueOf(count);
-
     }
     
     /**
@@ -207,7 +203,60 @@ public class QueryDataServiceImpl implements QueryDataService {
         if (reliability > 0 && count > 0) {
             reliability = reliability / count;
         } 
-        
         return reliability;
+    }
+    
+    public List<Triple> executeIRIQuery(String iri) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT DISTINCT (<");
+        query.append(iri);
+        query.append("> as ?sub) ?pred ?obj ");
+        query.append("WHERE { <");
+        query.append(iri);
+        query.append("> ?pred ?obj . ");    
+        query.append("}");
+        
+        final String sparqlString = query.toString();
+        log.info("SPARQL ASKED to grab IRI Info:{}", sparqlString);
+        final SelectResultSet results = sparqlDao.executeQuery(sparqlString);
+        final List<Triple> triples = new ArrayList<Triple>();
+
+        for (SelectResult result : results.getResults()) {
+            final Triple triple = resultToTriple(results.getHead(), result);
+            triples.add(triple);
+        }    
+        return triples;
+    }
+    
+    /**
+     * This function is used to return triples about a given Bnode
+     * This is used to fill out the Grid Component 
+     *
+     */
+    public List<Triple> executeBnodeQuery(String bnode) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT DISTINCT (<bnode:");
+        query.append(bnode);
+        query.append("> as ?sub) ?pred ?obj ?slabel ?plabel ?olabel ");
+        query.append("WHERE { <bnode:");
+        query.append(bnode);
+        query.append("> ?pred ?obj . ");    
+        query.append("OPTIONAL {<bnode:");
+        query.append(bnode);
+        query.append("> <http://www.w3.org/2000/01/rdf-schema#label> ?slabel } . ");
+        query.append("OPTIONAL {?pred <http://www.w3.org/2000/01/rdf-schema#label> ?plabel } . ");
+        query.append("OPTIONAL {?obj <http://www.w3.org/2000/01/rdf-schema#label> ?olabel } . ");
+        query.append("}");
+        
+        final String sparqlString = query.toString();
+        log.info("SPARQL ASKED to grab Bnode Info:{}", sparqlString);
+        final SelectResultSet results = sparqlDao.executeQuery(sparqlString);
+        final List<Triple> triples = new ArrayList<Triple>();
+
+        for (SelectResult result : results.getResults()) {
+            final Triple triple = resultToTriple(results.getHead(), result);
+            triples.add(triple);
+        }    
+        return triples;
     }
 }

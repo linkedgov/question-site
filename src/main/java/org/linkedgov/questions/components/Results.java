@@ -34,13 +34,13 @@ public class Results {
     @Property
     @Parameter
     private Query query;
-    
+
     /**
      * Dataset value; 
      */
     @Property
     private String datasetKey;
-    
+
     /**
      * A row in the list of triples that come back as results.
      */
@@ -83,7 +83,7 @@ public class Results {
      */
     @InjectPage
     private CommaSeparatedResults csvResults;
-    
+
     /**
      * Page to go to if somebody asks for a tsv file.
      */
@@ -164,7 +164,7 @@ public class Results {
         csvResults.setQuery(query);
         return csvResults;
     }
-    
+
     /**
      * Handles clicks on the excel link
      * 
@@ -178,7 +178,7 @@ public class Results {
         tsvResults.setQuery(query);
         return tsvResults;
     }
-    
+
     /**
      * Return a list of datasets.
      * 
@@ -187,7 +187,7 @@ public class Results {
     public Map<String,String> getDataSets() {
         return queryDataService.executeGetAllGraphNames(query);
     }
-    
+
     /**
      * 
      * @return the label for a given dataset
@@ -195,7 +195,7 @@ public class Results {
     public String getDataSetValue() {
         return getDataSets().get(datasetKey);
     }
-    
+
     /**
      *
      * Return the reliability score
@@ -204,10 +204,7 @@ public class Results {
      * 
      */
     public int getReliability() {
-        //TODO: Ongoing implement this.
-        //This is the namespace : 
-
         return queryDataService.executeReliabilityScore(getDataSets());
     }
-    
+
 }
