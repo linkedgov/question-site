@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.linkedgov.questions.model.Pair;
 import org.linkedgov.questions.model.Query;
@@ -15,6 +16,8 @@ import org.linkedgov.questions.services.QueryDataService;
 import org.linkedgov.questions.services.SparqlDao;
 import org.slf4j.Logger;
 
+import uk.me.mmt.sprotocol.BNode;
+import uk.me.mmt.sprotocol.IRI;
 import uk.me.mmt.sprotocol.Literal;
 import uk.me.mmt.sprotocol.SelectResult;
 import uk.me.mmt.sprotocol.SelectResultSet;
@@ -106,7 +109,33 @@ public class QueryDataServiceImpl implements QueryDataService {
                 triple.setObject(obj);
             }
         }
+       
         return triple;
+    }
+    
+    /**
+     * This function shows how if a URI of a certain rdf:type is returned it can be 
+     * implemented as a special case
+     */
+    private String makeAddressPretty(List<Triple> triples) {
+        String street = "";
+        String region = "";
+        String locality = "";
+        String postcode = "";
+        for (Triple triple : triples) {
+            if (triple.getPredicate().getFirst().getValue().equals("http://www.w3.org/2006/vcard/ns#street-address")) {
+                street = triple.getObject().getFirst().getValue(); 
+            } else if (triple.getPredicate().getFirst().getValue().equals("http://www.w3.org/2006/vcard/ns#region")) {
+                region = triple.getObject().getFirst().getValue(); 
+            } else if (triple.getPredicate().getFirst().getValue().equals("http://www.w3.org/2006/vcard/ns#locality")) {
+                locality = triple.getObject().getFirst().getValue(); 
+            } else if (triple.getPredicate().getFirst().getValue().equals("http://www.w3.org/2006/vcard/ns#postcode")) {
+                postcode = triple.getObject().getFirst().getValue().substring(triple.getObject().getFirst().getValue().lastIndexOf("/")+1); 
+            }
+        }
+        String pretty = StringUtils.strip(street)+", "+StringUtils.strip(region)+", "+StringUtils.strip(locality)+", "+StringUtils.strip(postcode);
+        pretty.replaceAll(", ,", "");
+        return pretty;
     }
 
     public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy) {
@@ -122,8 +151,44 @@ public class QueryDataServiceImpl implements QueryDataService {
                 triples.add(triple);
             }
         }
+        
+        final List<Triple> finalTriples = new ArrayList<Triple>();
+        for (Triple triple : triples) {
+            if (triple.getObject().getFirst() instanceof IRI) {
+                List<Triple> iriTriples = executeIRIQuery(triple.getObject().getFirst().getValue());
+                System.err.println("This size of the triples for a Given IRI is"+iriTriples.size());
+                boolean isAddress = false;
+                for (Triple row : iriTriples) {
+                    if (row.getPredicate().getFirst().getValue().equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") && row.getObject().getFirst().getValue().equals("http://www.w3.org/2006/vcard/ns#Address")) {
+                        isAddress = true;
+                        break;
+                    }
+                }
+                
+                //Am now handling the special cases here 
+                if (isAddress) {
+                    Triple newTriple = triple;
+                    newTriple.getObject().getFirst().setValue(makeAddressPretty(iriTriples));
+                    finalTriples.add(newTriple);
+                } else {
+                    finalTriples.add(triple);
+                }
+            } else if (triple.getObject().getFirst() instanceof BNode) {
+                List<Triple> bnodeTriples = executeBnodeQuery(triple.getObject().getFirst().getValue());
 
-        return triples;
+                if (bnodeTriples.size() == 1) {
+                    Triple newTriple = triple;
+                    newTriple.getObject().getFirst().setValue(bnodeTriples.get(0).getObject().getFirst().getValue());
+                    finalTriples.add(newTriple);
+                } else {
+                    finalTriples.add(triple);
+                }
+            } else {
+                finalTriples.add(triple);
+            }
+        }
+
+        return finalTriples;
     }
 
     /**
