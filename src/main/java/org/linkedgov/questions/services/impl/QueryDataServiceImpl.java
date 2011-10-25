@@ -11,11 +11,13 @@ import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.QuestionType;
 import org.linkedgov.questions.model.SparqlUtils;
 import org.linkedgov.questions.model.Triple;
+import org.linkedgov.questions.pages.Bnode;
 import org.linkedgov.questions.services.QueryDataService;
 import org.linkedgov.questions.services.SparqlDao;
 import org.slf4j.Logger;
 
 import uk.me.mmt.sprotocol.Literal;
+import uk.me.mmt.sprotocol.BNode;
 import uk.me.mmt.sprotocol.SelectResult;
 import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlResource;
@@ -122,6 +124,9 @@ public class QueryDataServiceImpl implements QueryDataService {
                 triples.add(triple);
             }
         }
+        
+        triples.get(0).getPredicate().getFirst().setValue("location");
+        triples.get(0).getObject().setFirst(new BNode("something"));
         return triples;
     }
 

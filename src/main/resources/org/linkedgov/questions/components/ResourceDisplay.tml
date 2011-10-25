@@ -10,7 +10,19 @@
 			</t:parameter>
 		</t:if>
 	</t:block>
-	
+
+    <t:block id="bnodeLinkBlock">
+        <t:PageLink page="bnode" context="${value}">${value}</t:PageLink>
+    </t:block>
+    
+    <t:block id="locationBlock">
+        <p>${locationString}</p>
+    </t:block>
+    
+    <t:block id="readingBlock">
+        <p>${readingString}</p>
+    </t:block>
+    
 	<t:block id="nonLiteralBlock">
 		<t:if test="labelDisplayed">
 			${label}
@@ -19,5 +31,7 @@
 			</t:parameter>
 		</t:if>
 	</t:block>
+	
+	
 	
 </t:container>
