@@ -3,7 +3,27 @@
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
       xmlns:p="tapestry:parameter">
 
-    <!-- TODO: put a grid and stuff in here -->
-    ${bnodeString}
-        
+    <t:delegate to="resultsBlock"/>
+
+    <t:block id="resultsTableBlock">
+        <t:grid inplace="true" source="dataSource" pagerPosition="both" row="triple" add="${gridColumns}">
+            <t:parameter name="resultSubjectCell">
+                <t:resourceDisplay resource="prop:triple.subject"/> 
+            </t:parameter>
+            <t:parameter name="resultPredicateCell">
+                <t:resourceDisplay resource="prop:triple.predicate"/>   
+            </t:parameter>
+            <t:parameter name="resultObjectCell">
+                <t:resourceDisplay resource="prop:triple.object" context="prop:triple.predicate.first.value"/>  
+            </t:parameter>
+            <t:parameter name="resultCountCell">
+                <t:resourceDisplay resource="prop:triple.subject"/>  
+            </t:parameter>
+        </t:grid>
+    </t:block>
+    
+    <t:block id="emptyResultsBlock">
+        <t:noAnswerForm />
+    </t:block>
+            
 </html>
