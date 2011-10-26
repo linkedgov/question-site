@@ -79,7 +79,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         final Triple triple = new Triple();    
 
         for (String variable : head) {
-            final SparqlResource resource =  result.getResult().get(variable);
+            final SparqlResource resource = result.getResult().get(variable);
 
             final Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
             final Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
@@ -101,8 +101,8 @@ public class QueryDataServiceImpl implements QueryDataService {
                 sub.setFirst(resource);
                 triple.setSubject(sub);
             } else if (variable.equals("plabel") && resource != null) {
-                resource.setValue(WordUtils.capitalize(resource.getValue()));
-                pred.setFirst(resource);
+                Literal newLit = new Literal(WordUtils.capitalize(resource.getValue()),null,null);
+                pred.setFirst(newLit);
                 triple.setPredicate(pred);
             } else if (variable.equals("olabel") && resource != null) {
                 obj.setFirst(resource);
@@ -168,8 +168,11 @@ public class QueryDataServiceImpl implements QueryDataService {
 
                 //Am now handling the special cases here 
                 if (isAddress) {
-                    Triple newTriple = triple;
-                    newTriple.getObject().getFirst().setValue(makeAddressPretty(iriTriples));
+                    Triple newTriple = new Triple();
+                    newTriple.setSubject(triple.getSubject());
+                    newTriple.setPredicate(triple.getPredicate());
+                    Literal newObject = new Literal(makeAddressPretty(iriTriples),null,null);
+                    newTriple.setObject(new Pair<SparqlResource,String>(newObject,null));
                     finalTriples.add(newTriple);
                 } else {
                     finalTriples.add(triple);
@@ -178,8 +181,11 @@ public class QueryDataServiceImpl implements QueryDataService {
                 List<Triple> bnodeTriples = executeBnodeQuery(triple.getObject().getFirst().getValue());
 
                 if (bnodeTriples.size() == 1) {
-                    Triple newTriple = triple;
-                    newTriple.getObject().getFirst().setValue(bnodeTriples.get(0).getObject().getFirst().getValue());
+                    Triple newTriple = new Triple();
+                    newTriple.setSubject(triple.getSubject());
+                    newTriple.setPredicate(triple.getPredicate());
+                    Literal newObject = new Literal(bnodeTriples.get(0).getObject().getFirst().getValue(),null,null);
+                    newTriple.setObject(new Pair<SparqlResource,String>(newObject,null));
                     finalTriples.add(newTriple);
                 } else {
                     finalTriples.add(triple);
