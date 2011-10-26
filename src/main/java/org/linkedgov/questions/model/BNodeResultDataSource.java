@@ -8,7 +8,7 @@ import org.linkedgov.questions.services.QueryDataService;
 
 /**
  * 
- * Basic implementation of {@Link GridDataSource} for a Sparql query.
+ * Basic implementation of {@Link GridDataSource} for a given bnode
  * 
  * @author Luke Wilson-Mawer <a href="http://viscri.co.uk/">Viscri</a> and 
  * @author <a href="http://mmt.me.uk/foaf.rdf#mischa">Mischa Tuffield</a> for LinkedGov
@@ -17,7 +17,7 @@ import org.linkedgov.questions.services.QueryDataService;
 public class BNodeResultDataSource implements GridDataSource {
 
     /**
-     * The results of the query.
+     * The results of the bnode query.
      */
     private List<Triple> currentPage;
 
@@ -32,7 +32,7 @@ public class BNodeResultDataSource implements GridDataSource {
     private final QueryDataService queryDataService;
 
     /**
-     * Constructs a new SelectResultDataSource.
+     * Constructs a new BNodeResultDataSource.
      * 
      * @param query - the query to get the data.
      * @param queryService - the service to send the query to to get the data.
@@ -44,7 +44,6 @@ public class BNodeResultDataSource implements GridDataSource {
     }
 
     public int getAvailableRows() {
-        // TODO Auto-generated method stub
         if (currentPage == null) {
             return 0;
         }
@@ -53,10 +52,7 @@ public class BNodeResultDataSource implements GridDataSource {
 
     public void prepare(int startIndex, int endIndex,
             List<SortConstraint> sortConstraints) {
-        System.err.println("GAY");
         this.currentPage = queryDataService.executeBnodeQuery(this.bnode);
-        // TODO Auto-generated method stub
-
     }
 
     public Object getRowValue(int index) {
@@ -64,21 +60,7 @@ public class BNodeResultDataSource implements GridDataSource {
     }
 
     public  Class<?>  getRowType() {
-        // TODO Auto-generated method stub
         return Triple.class;
     }
-
-    /*
-    public int getAvailableRows() { 
-        return queryDataService.executeCountForQuery(query, true);
-    }
-
-    public Object getRowValue(int index) {
-        return currentPage.get(index - startIndex);
-    } 
-
-    public Class<?> getRowType() {
-        return Triple.class;
-    }*/
-
+    
 }
