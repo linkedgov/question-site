@@ -62,7 +62,9 @@ public class SelectResultDataSource implements GridDataSource {
         try {
             this.currentPage = queryDataService.executeQuery(query, endIndex-startIndex+1, startIndex, null);
         } catch (SprotocolException e) {
-            System.err.println("Problem talking to sparqlstore"+e.getMessage());
+            System.err.println("Problem talking to sparqlstore, SprotocolException: "+e.getMessage());
+        } catch (IOException e) {
+            System.err.println("Problem talking to sparqlstore, IOException: "+e.getMessage());
         }
     }
 

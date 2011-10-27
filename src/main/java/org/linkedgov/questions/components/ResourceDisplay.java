@@ -8,7 +8,6 @@ import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.linkedgov.questions.model.Pair;
-import org.linkedgov.questions.model.SparqlUtils;
 import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 
@@ -107,9 +106,8 @@ public class ResourceDisplay {
             return locationBlock;
         }
 
-        //This should catch all of the resources which have been preprocess as "special cases"
-        if (!SparqlUtils.isBnode(resource.getFirst().getValue())) {
-            return literalBlock;
+        if (resource.getFirst() instanceof BNode && resource.getSecond() != null) {
+            return literalBlock; 
         }
         
         return bnodeLinkBlock;
@@ -145,6 +143,9 @@ public class ResourceDisplay {
      * @return the actual value (e.g. the URI for a uri, a string representing a bnode, or the literal value.
      */
     public String getValue(){
+        if (resource.getSecond() != null ) {
+            return resource.getSecond();
+        }
         return resource.getFirst().getValue();
     }
     

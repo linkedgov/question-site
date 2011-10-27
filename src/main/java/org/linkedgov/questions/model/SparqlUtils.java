@@ -79,7 +79,7 @@ public class SparqlUtils {
      * @return a boolean stating whether something is a bnode or not
      */
     public static boolean isBnode (String input) {
-        if (input.startsWith("b") && input.length() > 16 && !input.contains(" ")) {
+        if (input.startsWith("b") && input.length() >= 16 && !input.contains(" ")) {
             return true;
         }
         return false;

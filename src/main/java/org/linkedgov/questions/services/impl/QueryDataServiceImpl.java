@@ -65,8 +65,9 @@ public class QueryDataServiceImpl implements QueryDataService {
      * 
      * @param Query object representing a user's question.
      * @return a list of triples representing the answer to the question.
+     * @throws IOException 
      */
-    public List<Triple> executeQuery(Query query) throws SprotocolException {
+    public List<Triple> executeQuery(Query query) throws SprotocolException, IOException {
         return executeQuery(query, null, null, null) ;
     }
 
@@ -103,8 +104,9 @@ public class QueryDataServiceImpl implements QueryDataService {
                 sub.setFirst(resource);
                 triple.setSubject(sub);
             } else if (variable.equals("plabel") && resource != null) {
-                Literal newLit = new Literal(WordUtils.capitalize(resource.getValue()),null,null);
-                pred.setFirst(newLit);
+                //Literal newLit = new Literal(WordUtils.capitalize(resource.getValue()),null,null);
+                pred.setFirst(resource);
+                pred.setSecond(WordUtils.capitalize(resource.getValue()));
                 triple.setPredicate(pred);
             } else if (variable.equals("olabel") && resource != null) {
                 obj.setFirst(resource);
@@ -140,7 +142,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         return pretty;
     }
 
-    public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy) throws SprotocolException {
+    public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy) throws SprotocolException, IOException {
         final List<Triple> triples = new ArrayList<Triple>();
 
         if (!query.isNull()) {          
@@ -173,8 +175,11 @@ public class QueryDataServiceImpl implements QueryDataService {
                     Triple newTriple = new Triple();
                     newTriple.setSubject(triple.getSubject());
                     newTriple.setPredicate(triple.getPredicate());
-                    Literal newObject = new Literal(makeAddressPretty(iriTriples),null,null);
-                    newTriple.setObject(new Pair<SparqlResource,String>(newObject,null));
+                    //(makeAddressPretty(iriTriples)
+                    newTriple.setObject(triple.getObject());
+                    newTriple.getObject().setSecond((makeAddressPretty(iriTriples)));
+                    //Literal newObject = new Literal(makeAddressPretty(iriTriples),null,null);
+                    //newTriple.setObject(new Pair<SparqlResource,String>(newObject,null));
                     finalTriples.add(newTriple);
                 } else {
                     finalTriples.add(triple);
@@ -186,8 +191,10 @@ public class QueryDataServiceImpl implements QueryDataService {
                     Triple newTriple = new Triple();
                     newTriple.setSubject(triple.getSubject());
                     newTriple.setPredicate(triple.getPredicate());
-                    Literal newObject = new Literal(bnodeTriples.get(0).getObject().getFirst().getValue(),null,null);
-                    newTriple.setObject(new Pair<SparqlResource,String>(newObject,null));
+                    newTriple.setObject(triple.getObject());
+                    newTriple.getObject().setSecond(bnodeTriples.get(0).getObject().getFirst().getValue());
+                    //Literal newObject = new Literal(bnodeTriples.get(0).getObject().getFirst().getValue(),null,null);
+                    //newTriple.setObject(new Pair<SparqlResource,String>(newObject,null));
                     finalTriples.add(newTriple);
                 } else {
                     finalTriples.add(triple);
@@ -197,7 +204,7 @@ public class QueryDataServiceImpl implements QueryDataService {
             }
         }
 
-        return finalTriples;
+        return triples;
     }
 
     /**

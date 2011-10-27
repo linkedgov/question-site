@@ -1,5 +1,6 @@
 package org.linkedgov.questions.pages;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.tapestry5.StreamResponse;
@@ -35,9 +36,10 @@ public class CommaSeparatedResults {
      * 
      * @return returns a csv file to the user via their browser
      * @throws SprotocolException 
+     * @throws IOException  
      */
     @SuppressWarnings("unused")
-    private StreamResponse onActivate() throws SprotocolException{
+    private StreamResponse onActivate() throws SprotocolException, IOException {
         final StreamResponse streamResponse;
         //TODO: Ongoing. Stream this response.
         final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);

@@ -18,7 +18,7 @@ import uk.me.mmt.sprotocol.SprotocolException;
  */
 public interface QueryDataService {
 
-    public List<Triple> executeQuery(Query query) throws SprotocolException;
+    public List<Triple> executeQuery(Query query) throws SprotocolException, IOException;
     
     /**
      * IF query is a count, returns 1. Otherwise, executes a query that is the equivalent to the query being executed with questionType={@Link QuestionType.COUNT}.
@@ -31,7 +31,7 @@ public interface QueryDataService {
      */
     public int executeCountForQuery(Query query, boolean forPagination) throws SprotocolException, IOException;
       
-    public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy) throws SprotocolException;
+    public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy) throws SprotocolException, IOException;
     
     public List<Triple> executeBnodeQuery(String bnode) throws SprotocolException, IOException;
     
