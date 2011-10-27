@@ -20,7 +20,6 @@ public class Triple {
     private Pair<SparqlResource,String> object;
     
     public Triple(){
-        
     }
 
     public Triple(

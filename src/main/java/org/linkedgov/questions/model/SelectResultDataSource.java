@@ -1,10 +1,13 @@
 package org.linkedgov.questions.model;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.tapestry5.grid.GridDataSource;
 import org.apache.tapestry5.grid.SortConstraint;
 import org.linkedgov.questions.services.QueryDataService;
+
+import uk.me.mmt.sprotocol.SprotocolException;
 
 /**
  * 
@@ -39,7 +42,6 @@ public class SelectResultDataSource implements GridDataSource {
     /**
      * The end index.
      */
-    @SuppressWarnings("unused")
     private int endIndex = 0;
     
     /**
@@ -57,11 +59,22 @@ public class SelectResultDataSource implements GridDataSource {
             List<SortConstraint> sortConstraints) {
         this.endIndex = endIndex;
         this.startIndex = startIndex;
-        this.currentPage = queryDataService.executeQuery(query, endIndex-startIndex+1, startIndex, null);
+        try {
+            this.currentPage = queryDataService.executeQuery(query, endIndex-startIndex+1, startIndex, null);
+        } catch (SprotocolException e) {
+            System.err.println("Problem talking to sparqlstore"+e.getMessage());
+        }
     }
 
     public int getAvailableRows() { 
-        return queryDataService.executeCountForQuery(query, true);
+        try {
+            return queryDataService.executeCountForQuery(query, true);
+        } catch (SprotocolException e) {
+            System.err.println("Problem talking to sparqlstore SprotocolException: "+e.getMessage());
+        } catch (IOException e) {
+            System.err.println("Problem talking to sparqlstore IOException: "+e.getMessage());
+        }
+        return endIndex;
     }
     
     public Object getRowValue(int index) {

@@ -1,5 +1,6 @@
 package org.linkedgov.questions.components;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.QueryFilter;
 import org.linkedgov.questions.services.StaticDataService;
+
+import uk.me.mmt.sprotocol.SprotocolException;
 
 /**
  * The main component for asking questions of the data.
@@ -130,11 +133,13 @@ public class Question {
      * 
      * Set up an empty list to be used as a model by select elements that get their options populated later via ajax,
      * setup a new query object, and get the list of all available subjects.
+     * @throws SprotocolException 
+     * @throws IOException 
      * 
      */
     @SuppressWarnings("unused")
     @SetupRender
-    private void setup() {    
+    private void setup() throws SprotocolException, IOException {    
         System.out.println("Setup Render");
         query = new Query();        
         subjects =  staticDataService.getClasses();
@@ -158,9 +163,11 @@ public class Question {
 
     /**
      * Does stuff for the new dropdown.
+     * @throws SprotocolException 
+     * @throws IOException 
      */
     @OnEvent("startingPredicateChange")
-    public Object handleStartingPredicateChange(@RequestParameter(value="startingPredicate",allowBlank=true) String startingPredicate) {
+    public Object handleStartingPredicateChange(@RequestParameter(value="startingPredicate",allowBlank=true) String startingPredicate) throws SprotocolException, IOException {
         final Map<String,String> predicates = staticDataService.getClasses(startingPredicate);
         return generateSelectOptionsJson((HashMap<String, String>) predicates, SUBJECTS);
     }
@@ -170,10 +177,12 @@ public class Question {
      * @param subject - the subject of the query.
      * @return a {@Link org.apache.tapestry5.json.JSONObject} object containing an array of predicates, e.g. {predicates : [{value:"http://viscri.co.uk/hats",label:"Hats"}]}. 
      * This is used to populate the select element on the client side.
+     * @throws SprotocolException 
+     * @throws IOException 
      * 
      */
     @OnEvent(ADD_FIRST_FILTER)
-    public Object handleAddFirstFilterEvent(@RequestParameter("subject") String subject) {
+    public Object handleAddFirstFilterEvent(@RequestParameter("subject") String subject) throws SprotocolException, IOException {
         final Map<String,String> predicates = staticDataService.getPredicates(subject);
         return generateSelectOptionsJson((HashMap<String, String>) predicates, PREDICATES);
     }
@@ -186,12 +195,14 @@ public class Question {
      * @param object - the object of the first filter.
      * @return a {@Link org.apache.tapestry5.json.JSONObject} object containing an array of predicates, e.g. {predicates : [{value:"http://viscri.co.uk/hat",label:"Hat"}]}. 
      * This is used to populate the select element on the client side.
+     * @throws SprotocolException 
+     * @throws IOException 
      */
     @OnEvent(ADD_SECOND_FILTER)
     public Object handleAddSecondFilterEvent(
             @RequestParameter("subject") String subject, 
             @RequestParameter("predicate")  String predicate, 
-            @RequestParameter("object") String object) {
+            @RequestParameter("object") String object) throws SprotocolException, IOException {
         final Map<String,String> predicates = staticDataService.getPredicates(subject, new QueryFilter(predicate,object));
         return generateSelectOptionsJson((HashMap<String, String>) predicates, PREDICATES);
     }
@@ -204,12 +215,14 @@ public class Question {
      * @param predicate - the predicate of the first filter.
      * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display, 
      * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
+     * @throws SprotocolException 
+     * @throws IOException 
      *
      */
     @OnEvent(FIRST_FILTER_PREDICATE)
     public Object handleFirstFilterPredicateChanged(
             @RequestParameter("subject") String subject,
-            @RequestParameter("predicate") String predicate) {
+            @RequestParameter("predicate") String predicate) throws SprotocolException, IOException {
         final Map<String,String> objects = staticDataService.getObjects(subject, predicate);
         return generateJsonForPredicateEvent(subject, (HashMap<String, String>) objects);
     }
@@ -223,13 +236,15 @@ public class Question {
      * @param firstFilterObject - the predicate of the third filter.
      * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display, 
      * e.g. {objects : [{value : "http://viscri.co.uk/trilby",label:"Trilby"}, editor : myHatEditor]} used on the client side to populate the object editor, if appropriate.
+     * @throws SprotocolException 
+     * @throws IOException 
      */
     @OnEvent(SECOND_FILTER_PREDICATE)
     public Object handleSecondFilterPredicateChanged(
             @RequestParameter("subject") String subject,
             @RequestParameter("predicate") String predicate,
             @RequestParameter("firstFilterPredicate") String firstFilterPredicate,
-            @RequestParameter("firstFilterObject") String firstFilterObject) {
+            @RequestParameter("firstFilterObject") String firstFilterObject) throws SprotocolException, IOException {
         final QueryFilter firstFilterQueryFilter = new QueryFilter(firstFilterPredicate, firstFilterObject);
         final Map<String, String> objects = staticDataService.getObjects(subject, predicate, firstFilterQueryFilter);        
         return generateJsonForSecondPredicateEvent(subject, (HashMap<String, String>) objects);

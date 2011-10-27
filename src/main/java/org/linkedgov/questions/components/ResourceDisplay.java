@@ -1,5 +1,6 @@
 package org.linkedgov.questions.components;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,6 +15,7 @@ import org.linkedgov.questions.services.QueryDataService;
 import uk.me.mmt.sprotocol.BNode;
 import uk.me.mmt.sprotocol.Literal;
 import uk.me.mmt.sprotocol.SparqlResource;
+import uk.me.mmt.sprotocol.SprotocolException;
 
 /**
  * Displays a literal, bNode, or URI.
@@ -70,8 +72,10 @@ public class ResourceDisplay {
      * Returns the appropriate block, bNode or URI.
      * 
      * @return
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public Block getDisplayBlock(){
+    public Block getDisplayBlock() throws SprotocolException, IOException{
         if (resource.getFirst() instanceof BNode && !StringUtils.isBlank(context)) {
             return getBlockForBnodeDisplay();
         } 
@@ -84,8 +88,10 @@ public class ResourceDisplay {
      * i.e. does the particular class of bnode want to be treated as a special case ?
      * 
      * @return a block to be rendered in the Grid Component
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    private Block getBlockForBnodeDisplay() {
+    private Block getBlockForBnodeDisplay() throws SprotocolException, IOException {
         //TODO ongoing, special handling of given predicates in the Grid should be added here
         List<Triple> bnodeTriples = queryDataService.executeBnodeQuery(getValue());
 

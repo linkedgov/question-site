@@ -20,6 +20,7 @@ import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 
 import uk.me.mmt.sprotocol.SparqlResource;
+import uk.me.mmt.sprotocol.SprotocolException;
 
 public class ExcelResults {
 
@@ -36,10 +37,11 @@ public class ExcelResults {
      * Called when the page is activated, returns an excel file containing the triples in query.
      * @return
      * @throws IOException
+     * @throws SprotocolException 
      */
 
     @SuppressWarnings("unused")
-    public StreamResponse onActivate() throws IOException{   	
+    public StreamResponse onActivate() throws IOException, SprotocolException{   	
         //TODO: Ongoing. stream this response.
         final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);
 

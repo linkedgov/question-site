@@ -1,10 +1,13 @@
 package org.linkedgov.questions.model;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.tapestry5.grid.GridDataSource;
 import org.apache.tapestry5.grid.SortConstraint;
 import org.linkedgov.questions.services.QueryDataService;
+
+import uk.me.mmt.sprotocol.SprotocolException;
 
 /**
  * 
@@ -36,8 +39,10 @@ public class BNodeResultDataSource implements GridDataSource {
      * 
      * @param query - the query to get the data.
      * @param queryService - the service to send the query to to get the data.
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public BNodeResultDataSource(String bnodeURI, QueryDataService queryDataService) {
+    public BNodeResultDataSource(String bnodeURI, QueryDataService queryDataService) throws SprotocolException, IOException {
         this.queryDataService = queryDataService;
         this.bnode = bnodeURI;
         this.currentPage = queryDataService.executeBnodeQuery(bnodeURI);
@@ -52,7 +57,14 @@ public class BNodeResultDataSource implements GridDataSource {
 
     public void prepare(int startIndex, int endIndex,
             List<SortConstraint> sortConstraints) {
-        this.currentPage = queryDataService.executeBnodeQuery(this.bnode);
+        try {
+            this.currentPage = queryDataService.executeBnodeQuery(this.bnode);
+        } catch (SprotocolException e) {
+            System.err.println("Error querying sparql - SprotocolException: "+e.getMessage());
+        } catch (IOException e) {
+            System.err.println("Error querying sparql - IOException: "+e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public Object getRowValue(int index) {

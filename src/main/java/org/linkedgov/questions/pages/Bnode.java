@@ -1,5 +1,7 @@
 package org.linkedgov.questions.pages;
 
+import java.io.IOException;
+
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
@@ -8,6 +10,8 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.linkedgov.questions.services.QueryDataService;
 import org.linkedgov.questions.model.BNodeResultDataSource;
 import org.linkedgov.questions.model.Triple;
+
+import uk.me.mmt.sprotocol.SprotocolException;
 
 
 /**
@@ -64,9 +68,11 @@ public class Bnode {
 
     /**
      * Select Result Data Source
+     * @throws SprotocolException 
+     * @throws IOException 
      */
     @SetupRender
-    public void setupDataSource(){
+    public void setupDataSource() throws SprotocolException, IOException{
         dataSource = new BNodeResultDataSource(bnodeString, queryDataService);
     }
 

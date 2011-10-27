@@ -1,5 +1,6 @@
 package org.linkedgov.questions.services.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +21,9 @@ import uk.me.mmt.sprotocol.BNode;
 import uk.me.mmt.sprotocol.IRI;
 import uk.me.mmt.sprotocol.Literal;
 import uk.me.mmt.sprotocol.SelectResult;
-import uk.me.mmt.sprotocol.SelectResultSet;
+import uk.me.mmt.sprotocol.SelectResultSetSimple;
 import uk.me.mmt.sprotocol.SparqlResource;
+import uk.me.mmt.sprotocol.SprotocolException;
 
 /**
  * This class generates the object needed by the dataTable component
@@ -64,8 +66,8 @@ public class QueryDataServiceImpl implements QueryDataService {
      * @param Query object representing a user's question.
      * @return a list of triples representing the answer to the question.
      */
-    public List<Triple> executeQuery(Query query) {
-        return executeQuery(query, null, null, null);
+    public List<Triple> executeQuery(Query query) throws SprotocolException {
+        return executeQuery(query, null, null, null) ;
     }
 
     /**
@@ -138,14 +140,14 @@ public class QueryDataServiceImpl implements QueryDataService {
         return pretty;
     }
 
-    public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy) {
+    public List<Triple> executeQuery(Query query, Integer limit, Integer offset, String orderBy) throws SprotocolException {
         final List<Triple> triples = new ArrayList<Triple>();
 
         if (!query.isNull()) {          
             final String sparqlString = query.toSparqlString();
             log.info("SPARQL ASKED:{}", sparqlString);
             log.info("QUESTION ASKED:{}", query.toString());
-            final SelectResultSet results = sparqlDao.executeQuery(sparqlString, limit, offset, orderBy);
+            final SelectResultSetSimple results = sparqlDao.executeQuery(sparqlString, limit, offset, orderBy);
             for (SelectResult result : results.getResults()) {
                 final Triple triple = resultToTriple(results.getHead(), result);
                 triples.add(triple);
@@ -200,8 +202,9 @@ public class QueryDataServiceImpl implements QueryDataService {
 
     /**
      * Executes a count for this query. If the query itself is a count, it returns 1.
+     * @throws IOException 
      */
-    public int executeCountForQuery(Query query, boolean forPagination) {
+    public int executeCountForQuery(Query query, boolean forPagination) throws SprotocolException, IOException {
 
         if (QuestionType.COUNT.equals(query.getQuestionType())) {
             return 1;
@@ -211,7 +214,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         }
 
         final String countSparqlString = query.toSparqlString(QuestionType.COUNT, forPagination, false);
-        final SelectResultSet results = sparqlDao.executeQuery(countSparqlString);
+        final SelectResultSetSimple results = sparqlDao.executeQuery(countSparqlString);
 
         if (results.getResults().isEmpty()) {
             return 0;
@@ -230,10 +233,11 @@ public class QueryDataServiceImpl implements QueryDataService {
 
     /**
      * This get all of the dataset's used to answer a query created by the user
+     * @throws IOException 
      */
-    public Map<String,String> executeGetAllGraphNames(Query query) {
+    public Map<String,String> executeGetAllGraphNames(Query query) throws SprotocolException, IOException {
         final String queryGraphs = query.toSparqlString(QuestionType.SELECT, false, true);
-        final SelectResultSet graphs = sparqlDao.executeQuery(queryGraphs);
+        final SelectResultSetSimple graphs = sparqlDao.executeQuery(queryGraphs);
 
         Map<String,String> retValues = new HashMap<String,String>();
 
@@ -252,14 +256,14 @@ public class QueryDataServiceImpl implements QueryDataService {
      * This get the reliability score by querying the knowledge base
      * 
      * @return the average reliability score of the graphs or 0
+     * @throws IOException 
      */
-    public int executeReliabilityScore(Map<String,String> graphs) {
-        SelectResultSet results = new SelectResultSet();
+    public int executeReliabilityScore(Map<String,String> graphs) throws SprotocolException, IOException {
         int reliability = 0;
         int count = 0;
         for (String dataSet : graphs.keySet()) {
             String query = String.format(GET_RELIABILITY, dataSet);
-            results = sparqlDao.executeQuery(query);
+            SelectResultSetSimple results = sparqlDao.executeQuery(query);
             for (SelectResult result : results.getResults()) {
                 SparqlResource element = result.getResult().get("rel");
                 if (element instanceof Literal) {
@@ -283,8 +287,9 @@ public class QueryDataServiceImpl implements QueryDataService {
      * @param an iri is passed in, this is used to perform the special case's
      * the only special case currently implemented is the vcard#Address
      * @return a list of triples
+     * @throws IOException 
      */
-    public List<Triple> executeIRIQuery(String iri) {
+    public List<Triple> executeIRIQuery(String iri) throws SprotocolException, IOException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT DISTINCT (<");
         query.append(iri);
@@ -296,7 +301,7 @@ public class QueryDataServiceImpl implements QueryDataService {
 
         final String sparqlString = query.toString();
         log.info("SPARQL ASKED to grab IRI Info:{}", sparqlString);
-        final SelectResultSet results = sparqlDao.executeQuery(sparqlString);
+        final SelectResultSetSimple results = sparqlDao.executeQuery(sparqlString);
         final List<Triple> triples = new ArrayList<Triple>();
 
         for (SelectResult result : results.getResults()) {
@@ -313,8 +318,9 @@ public class QueryDataServiceImpl implements QueryDataService {
      * @param a bnode id is passed in, this is used to perform the special case's
      * the only special case currently implemented is the "single bnode case"
      * @return a list of triples
+     * @throws IOException 
      */
-    public List<Triple> executeBnodeQuery(String bnode) {
+    public List<Triple> executeBnodeQuery(String bnode) throws SprotocolException, IOException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT DISTINCT (<bnode:");
         query.append(bnode);
@@ -331,7 +337,7 @@ public class QueryDataServiceImpl implements QueryDataService {
 
         final String sparqlString = query.toString();
         log.info("SPARQL ASKED to grab Bnode Info:{}", sparqlString);
-        final SelectResultSet results = sparqlDao.executeQuery(sparqlString);
+        final SelectResultSetSimple results = sparqlDao.executeQuery(sparqlString);
         final List<Triple> triples = new ArrayList<Triple>();
 
         for (SelectResult result : results.getResults()) {

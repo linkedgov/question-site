@@ -20,6 +20,8 @@ import org.linkedgov.questions.pages.ExcelResults;
 import org.linkedgov.questions.pages.TabSeparatedResults;
 import org.linkedgov.questions.services.QueryDataService;
 
+import uk.me.mmt.sprotocol.SprotocolException;
+
 /**
  * Component that represents results.
  * 
@@ -183,16 +185,20 @@ public class Results {
      * Return a list of datasets.
      * 
      * @return
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public Map<String,String> getDataSets() {
+    public Map<String,String> getDataSets() throws SprotocolException, IOException {
         return queryDataService.executeGetAllGraphNames(query);
     }
 
     /**
      * 
      * @return the label for a given dataset
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public String getDataSetValue() {
+    public String getDataSetValue() throws SprotocolException, IOException {
         return getDataSets().get(datasetKey);
     }
 
@@ -201,9 +207,11 @@ public class Results {
      * Return the reliability score
      * 
      * @return a random number ;)
+     * @throws SprotocolException 
+     * @throws IOException 
      * 
      */
-    public int getReliability() {
+    public int getReliability() throws SprotocolException, IOException {
         return queryDataService.executeReliabilityScore(getDataSets());
     }
 

@@ -10,6 +10,8 @@ import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 
+import uk.me.mmt.sprotocol.SprotocolException;
+
 /**
  * Class that serves up comma separated results from the ResultsGrid in the UI
  * 
@@ -32,9 +34,10 @@ public class CommaSeparatedResults {
      * This is used to iterate through the triples used to generate the Grid component
      * 
      * @return returns a csv file to the user via their browser
+     * @throws SprotocolException 
      */
     @SuppressWarnings("unused")
-    private StreamResponse onActivate(){
+    private StreamResponse onActivate() throws SprotocolException{
         final StreamResponse streamResponse;
         //TODO: Ongoing. Stream this response.
         final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);

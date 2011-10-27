@@ -1,11 +1,13 @@
 package org.linkedgov.questions.services.impl;
 
+import java.io.IOException;
+
 import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.linkedgov.questions.services.QuestionsSymbolConstants;
 import org.linkedgov.questions.services.SparqlDao;
 import org.slf4j.Logger;
 
-import uk.me.mmt.sprotocol.SelectResultSet;
+import uk.me.mmt.sprotocol.SelectResultSetSimple;
 import uk.me.mmt.sprotocol.SparqlProtocolClient;
 import uk.me.mmt.sprotocol.SprotocolException;
 
@@ -45,15 +47,15 @@ public class SparqlDaoImpl implements SparqlDao {
      * @param query - the sparql select query string, e.g. SELECT ?x ?y ?z
      * @return a {@Link SelectResultSet} representing the results of the query.
      * @throws SprotocolException 
+     * @throws IOException 
      */
-    public SelectResultSet executeQuery(String query)  {
+    public SelectResultSetSimple executeQuery(String query) throws SprotocolException, IOException  {
         log.info("The is query being fired "+query);
     	try {
             return client.executeSelect(query);
         } catch (SprotocolException e) {
-            log.error("Error making SPARQL protocol call"+e.getMessage());
+            throw new SprotocolException("Error making SPARQL protocol call", e);
         }
-        return new SelectResultSet();
     }
     
     /**
@@ -62,8 +64,9 @@ public class SparqlDaoImpl implements SparqlDao {
      * @param query
      * @return
      * @throws SprotocolException 
+     * @throws IOException 
      */
-    public String getTsv(String query) throws SprotocolException {
+    public String getTsv(String query) throws SprotocolException, IOException {
         return client.sparqlQueryRawAccept(query, "text/tab-separated-values");
     }
     
@@ -72,8 +75,9 @@ public class SparqlDaoImpl implements SparqlDao {
      * @param query
      * @return
      * @throws SprotocolException 
+     * @throws IOException 
      */
-    public String getCsv(String query) throws SprotocolException {
+    public String getCsv(String query) throws SprotocolException, IOException {
 		return client.sparqlQueryRawAccept(query,"text/csv");
     }
     
@@ -83,16 +87,16 @@ public class SparqlDaoImpl implements SparqlDao {
      * @param query - the sparql select query string, e.g. SELECT ?x ?y ?z
      * @return a {@Link SelectResultSet} representing the results of the query.
      * @throws SprotocolException 
+     * @throws IOException 
      */
-    public SelectResultSet executeQuery(String query, Integer limit, Integer offset, String orderBy) {
+    public SelectResultSetSimple executeQuery(String query, Integer limit, Integer offset, String orderBy) throws SprotocolException, IOException {
         
         query = appendLimitOffsetOrderBy(query, limit, offset, orderBy);
         try {
             return client.executeSelect(query);
         } catch (SprotocolException e) {
-            log.error("Error making SPARQL protocol call"+e.getMessage());
+            throw new SprotocolException("Error making SPARQL protocol call", e);
         }
-        return new SelectResultSet();
     }
 
     /**

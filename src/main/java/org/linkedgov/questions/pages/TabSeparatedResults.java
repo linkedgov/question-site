@@ -10,6 +10,8 @@ import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.Triple;
 import org.linkedgov.questions.services.QueryDataService;
 
+import uk.me.mmt.sprotocol.SprotocolException;
+
 /**
  *  Class that serves up tab separated results based on the Grid component
  * 
@@ -32,9 +34,10 @@ public class TabSeparatedResults {
      * This is used to iterate through the triples used to generate the Grid component
      * 
      * @return returns a tsv file to the user via their browser
+     * @throws SprotocolException 
      */
     @SuppressWarnings("unused")
-    private StreamResponse onActivate(){
+    private StreamResponse onActivate() throws SprotocolException{
         final StreamResponse streamResponse;
         //TODO: Ongoing. stream this response.
         //TODO: Ongoing. stream this response.

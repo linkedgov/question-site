@@ -1,5 +1,6 @@
 package org.linkedgov.questions.services.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,8 +15,9 @@ import org.linkedgov.questions.services.SparqlDao;
 import org.linkedgov.questions.services.StaticDataService;
 
 import uk.me.mmt.sprotocol.SelectResult;
-import uk.me.mmt.sprotocol.SelectResultSet;
+import uk.me.mmt.sprotocol.SelectResultSetSimple;
 import uk.me.mmt.sprotocol.SparqlResource;
+import uk.me.mmt.sprotocol.SprotocolException;
 
 /**
  * 
@@ -91,8 +93,10 @@ public class StaticDataServiceRDF implements StaticDataService {
     
     /**
      * This is used to populate the initial list of predicates
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public Map<String,String> getPredicates() {
+    public Map<String,String> getPredicates() throws SprotocolException, IOException {
         return predicates.isEmpty() ? queryForGetPredicates() : predicates;
     }
     
@@ -102,11 +106,13 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @param firstFilterPredicate - the predicate of the third filter.
      * @param firstFilterObject - the predicate of the third filter.
      * @return a {@Link org.apache.tapestry5.json.JSONObject} containing a list of potential objects and the id of the editor to display,
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public Map<String,String> getObjects(String subject, String predicate) {
+    public Map<String,String> getObjects(String subject, String predicate) throws SprotocolException, IOException {
         String query = String.format(GET_FIRSTFILTER_OBJECTS_QUERY, subject, predicate);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSet results = sparqlDao.executeQuery(query);        
+        final SelectResultSetSimple results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
             if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
@@ -125,8 +131,10 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @param subject : The Class type to find a list of predicates for
      * @param filter : This contains the first filter 
      * @return A List of Strings for the second list of predicates 
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public Map<String,String> getObjects(String subject, String predicate, QueryFilter filter) {
+    public Map<String,String> getObjects(String subject, String predicate, QueryFilter filter) throws SprotocolException, IOException {
         String toPopulate = "";
         String filterObject = filter.getObject();
         String filterPredicate = filter.getPredicate();
@@ -147,7 +155,7 @@ public class StaticDataServiceRDF implements StaticDataService {
         
         String query = String.format(GET_SECONDFILTER_OBJECT_QUERY, subject, toPopulate, predicate);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSet results = sparqlDao.executeQuery(query);        
+        final SelectResultSetSimple results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
             if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
@@ -166,8 +174,10 @@ public class StaticDataServiceRDF implements StaticDataService {
      * @param subject : The Class type to find a list of predicates for
      * @param filter : This contains the first filter 
      * @return A List of Strings for the second list of predicates 
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public Map<String,String> getPredicates(String subject, QueryFilter filter) {
+    public Map<String,String> getPredicates(String subject, QueryFilter filter) throws SprotocolException, IOException {
         String toPopulate = "";
         String object = filter.getObject();
         String predicate = filter.getPredicate();
@@ -188,7 +198,7 @@ public class StaticDataServiceRDF implements StaticDataService {
 
         String query = String.format(GET_SECONDFILTER_PREDICATE_QUERY, subject, toPopulate);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSet results = sparqlDao.executeQuery(query);        
+        final SelectResultSetSimple results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
             if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
@@ -201,8 +211,8 @@ public class StaticDataServiceRDF implements StaticDataService {
     }
     
     
-    public Map<String,String> queryForGetPredicates() {
-        final SelectResultSet results = sparqlDao.executeQuery(GET_INITIALPREDICATE_QUERY);        
+    public Map<String,String> queryForGetPredicates() throws SprotocolException, IOException {
+        final SelectResultSetSimple results = sparqlDao.executeQuery(GET_INITIALPREDICATE_QUERY);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
             if (!isBlacklisted(element.getValue())) {
@@ -222,11 +232,13 @@ public class StaticDataServiceRDF implements StaticDataService {
      * 
      * @param subject : The Class type to find a list of predicates for
      * @return A List of Strings for the first list of predicates 
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public Map<String,String> getPredicates(String subject) {
+    public Map<String,String> getPredicates(String subject) throws SprotocolException, IOException {
         String query = String.format(GET_FIRSTFILTER_PREDICATE_QUERY, subject);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSet results = sparqlDao.executeQuery(query);        
+        final SelectResultSetSimple results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
 
@@ -245,18 +257,22 @@ public class StaticDataServiceRDF implements StaticDataService {
      * This function will get a list of all the classes in the KB
      * if no label then return a Map of URI,URI
      * @return A Map of Strings (value to label) for the first drop-down
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public Map<String,String> getClasses() {            
+    public Map<String,String> getClasses() throws SprotocolException, IOException {            
         return getClasses(null);
     }
     
     /**
      * This function will get a list of all the classes in the KB for the given predicate.
      * @return
+     * @throws SprotocolException 
+     * @throws IOException 
      */
-    public Map<String,String> getClasses(String predicate) {
+    public Map<String,String> getClasses(String predicate) throws SprotocolException, IOException {
         final String query = StringUtils.isBlank(predicate) ? GET_CLASSES_QUERY : String.format(GET_CLASSES_WITHPRED_QUERY, predicate);
-        final SelectResultSet results = sparqlDao.executeQuery(query);  
+        final SelectResultSetSimple results = sparqlDao.executeQuery(query);  
         Map<String,String> retValues = new HashMap<String,String>();
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
