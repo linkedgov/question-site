@@ -21,7 +21,7 @@ import uk.me.mmt.sprotocol.BNode;
 import uk.me.mmt.sprotocol.IRI;
 import uk.me.mmt.sprotocol.Literal;
 import uk.me.mmt.sprotocol.SelectResult;
-import uk.me.mmt.sprotocol.SelectResultSetSimple;
+import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlResource;
 import uk.me.mmt.sprotocol.SprotocolException;
 
@@ -149,7 +149,7 @@ public class QueryDataServiceImpl implements QueryDataService {
             final String sparqlString = query.toSparqlString();
             log.info("SPARQL ASKED:{}", sparqlString);
             log.info("QUESTION ASKED:{}", query.toString());
-            final SelectResultSetSimple results = sparqlDao.executeQuery(sparqlString, limit, offset, orderBy);
+            final SelectResultSet results = sparqlDao.executeQuery(sparqlString, limit, offset, orderBy);
             for (SelectResult result : results.getResults()) {
                 final Triple triple = resultToTriple(results.getHead(), result);
                 triples.add(triple);
@@ -221,7 +221,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         }
 
         final String countSparqlString = query.toSparqlString(QuestionType.COUNT, forPagination, false);
-        final SelectResultSetSimple results = sparqlDao.executeQuery(countSparqlString);
+        final SelectResultSet results = sparqlDao.executeQuery(countSparqlString);
 
         if (results.getResults().isEmpty()) {
             return 0;
@@ -244,7 +244,7 @@ public class QueryDataServiceImpl implements QueryDataService {
      */
     public Map<String,String> executeGetAllGraphNames(Query query) throws SprotocolException, IOException {
         final String queryGraphs = query.toSparqlString(QuestionType.SELECT, false, true);
-        final SelectResultSetSimple graphs = sparqlDao.executeQuery(queryGraphs);
+        final SelectResultSet graphs = sparqlDao.executeQuery(queryGraphs);
 
         Map<String,String> retValues = new HashMap<String,String>();
 
@@ -270,7 +270,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         int count = 0;
         for (String dataSet : graphs.keySet()) {
             String query = String.format(GET_RELIABILITY, dataSet);
-            SelectResultSetSimple results = sparqlDao.executeQuery(query);
+            SelectResultSet results = sparqlDao.executeQuery(query);
             for (SelectResult result : results.getResults()) {
                 SparqlResource element = result.getResult().get("rel");
                 if (element instanceof Literal) {
@@ -308,7 +308,7 @@ public class QueryDataServiceImpl implements QueryDataService {
 
         final String sparqlString = query.toString();
         log.info("SPARQL ASKED to grab IRI Info:{}", sparqlString);
-        final SelectResultSetSimple results = sparqlDao.executeQuery(sparqlString);
+        final SelectResultSet results = sparqlDao.executeQuery(sparqlString);
         final List<Triple> triples = new ArrayList<Triple>();
 
         for (SelectResult result : results.getResults()) {
@@ -344,7 +344,7 @@ public class QueryDataServiceImpl implements QueryDataService {
 
         final String sparqlString = query.toString();
         log.info("SPARQL ASKED to grab Bnode Info:{}", sparqlString);
-        final SelectResultSetSimple results = sparqlDao.executeQuery(sparqlString);
+        final SelectResultSet results = sparqlDao.executeQuery(sparqlString);
         final List<Triple> triples = new ArrayList<Triple>();
 
         for (SelectResult result : results.getResults()) {

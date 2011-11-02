@@ -2,7 +2,7 @@ package org.linkedgov.questions.services;
 
 import java.io.IOException;
 
-import uk.me.mmt.sprotocol.SelectResultSetSimple;
+import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SprotocolException;
 
 /**
@@ -15,9 +15,9 @@ import uk.me.mmt.sprotocol.SprotocolException;
  */
 public interface SparqlDao {
 
-    public SelectResultSetSimple executeQuery(String query) throws SprotocolException, IOException;
+    public SelectResultSet executeQuery(String query) throws SprotocolException, IOException;
 
-    public SelectResultSetSimple executeQuery(String query, Integer offset, Integer limit, String orderBy) throws SprotocolException, IOException;
+    public SelectResultSet executeQuery(String query, Integer offset, Integer limit, String orderBy) throws SprotocolException, IOException;
 
     public String getCsv(String query) throws SprotocolException, IOException;
 

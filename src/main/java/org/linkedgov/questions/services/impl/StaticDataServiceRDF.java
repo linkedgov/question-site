@@ -15,7 +15,7 @@ import org.linkedgov.questions.services.SparqlDao;
 import org.linkedgov.questions.services.StaticDataService;
 
 import uk.me.mmt.sprotocol.SelectResult;
-import uk.me.mmt.sprotocol.SelectResultSetSimple;
+import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlResource;
 import uk.me.mmt.sprotocol.SprotocolException;
 
@@ -112,7 +112,7 @@ public class StaticDataServiceRDF implements StaticDataService {
     public Map<String,String> getObjects(String subject, String predicate) throws SprotocolException, IOException {
         String query = String.format(GET_FIRSTFILTER_OBJECTS_QUERY, subject, predicate);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSetSimple results = sparqlDao.executeQuery(query);        
+        final SelectResultSet results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
             if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
@@ -155,7 +155,7 @@ public class StaticDataServiceRDF implements StaticDataService {
         
         String query = String.format(GET_SECONDFILTER_OBJECT_QUERY, subject, toPopulate, predicate);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSetSimple results = sparqlDao.executeQuery(query);        
+        final SelectResultSet results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
             if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
@@ -198,7 +198,7 @@ public class StaticDataServiceRDF implements StaticDataService {
 
         String query = String.format(GET_SECONDFILTER_PREDICATE_QUERY, subject, toPopulate);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSetSimple results = sparqlDao.executeQuery(query);        
+        final SelectResultSet results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
             if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
@@ -212,7 +212,7 @@ public class StaticDataServiceRDF implements StaticDataService {
     
     
     public Map<String,String> queryForGetPredicates() throws SprotocolException, IOException {
-        final SelectResultSetSimple results = sparqlDao.executeQuery(GET_INITIALPREDICATE_QUERY);        
+        final SelectResultSet results = sparqlDao.executeQuery(GET_INITIALPREDICATE_QUERY);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
             if (!isBlacklisted(element.getValue())) {
@@ -238,7 +238,7 @@ public class StaticDataServiceRDF implements StaticDataService {
     public Map<String,String> getPredicates(String subject) throws SprotocolException, IOException {
         String query = String.format(GET_FIRSTFILTER_PREDICATE_QUERY, subject);
         Map<String,String> retValues = new HashMap<String,String>();
-        final SelectResultSetSimple results = sparqlDao.executeQuery(query);        
+        final SelectResultSet results = sparqlDao.executeQuery(query);        
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
 
@@ -272,7 +272,7 @@ public class StaticDataServiceRDF implements StaticDataService {
      */
     public Map<String,String> getClasses(String predicate) throws SprotocolException, IOException {
         final String query = StringUtils.isBlank(predicate) ? GET_CLASSES_QUERY : String.format(GET_CLASSES_WITHPRED_QUERY, predicate);
-        final SelectResultSetSimple results = sparqlDao.executeQuery(query);  
+        final SelectResultSet results = sparqlDao.executeQuery(query);  
         Map<String,String> retValues = new HashMap<String,String>();
         for (SelectResult result : results.getResults()) {
             final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
