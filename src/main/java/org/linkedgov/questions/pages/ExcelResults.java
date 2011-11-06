@@ -42,7 +42,7 @@ public class ExcelResults {
 
     @SuppressWarnings("unused")
     public StreamResponse onActivate() throws IOException, SprotocolException{   	
-        //TODO: Ongoing. stream this response.
+        //Note, this only gives the first 1000 results.
         final List<Triple> triples = queryDataService.executeQuery(query, 1000, 0,  null);
 
         final StreamResponse streamResponse;

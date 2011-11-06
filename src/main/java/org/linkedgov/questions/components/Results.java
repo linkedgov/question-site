@@ -15,9 +15,8 @@ import org.linkedgov.questions.model.Query;
 import org.linkedgov.questions.model.QuestionType;
 import org.linkedgov.questions.model.SelectResultDataSource;
 import org.linkedgov.questions.model.Triple;
-import org.linkedgov.questions.pages.CommaSeparatedResults;
+import org.linkedgov.questions.pages.DelimeterSeparatedResults;
 import org.linkedgov.questions.pages.ExcelResults;
-import org.linkedgov.questions.pages.TabSeparatedResults;
 import org.linkedgov.questions.services.QueryDataService;
 
 import uk.me.mmt.sprotocol.SprotocolException;
@@ -81,16 +80,10 @@ public class Results {
     private ExcelResults excelResults;
 
     /**
-     * Page to go to if somebody asks for a csv file.
+     * Page to go to if somebody asks for delimeter separated results (csv or tsv).
      */
     @InjectPage
-    private CommaSeparatedResults csvResults;
-
-    /**
-     * Page to go to if somebody asks for a tsv file.
-     */
-    @InjectPage
-    private TabSeparatedResults tsvResults;
+    private DelimeterSeparatedResults delimeterResults;
 
     /**
      * Datasource to back the result table.
@@ -163,8 +156,8 @@ public class Results {
     @SuppressWarnings("unused")
     @OnEvent("csvEvent")
     private Object csv() {
-        csvResults.setQuery(query);
-        return csvResults;
+        delimeterResults.initialize(query, ",", "text/csv", "csv");
+        return delimeterResults;
     }
 
     /**
@@ -177,8 +170,8 @@ public class Results {
     @SuppressWarnings("unused")
     @OnEvent("tsvEvent")
     private Object tsv() {
-        tsvResults.setQuery(query);
-        return tsvResults;
+        delimeterResults.initialize(query, "\t", "text/tab-separated-values", "tsv");
+        return delimeterResults;
     }
 
     /**
