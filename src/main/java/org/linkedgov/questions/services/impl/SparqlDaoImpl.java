@@ -8,7 +8,7 @@ import org.linkedgov.questions.services.SparqlDao;
 import org.slf4j.Logger;
 
 import uk.me.mmt.sprotocol.SelectResultSet;
-import uk.me.mmt.sprotocol.SparqlProtocolClient;
+import uk.me.mmt.sprotocol.SparqlQueryProtocolClient;
 import uk.me.mmt.sprotocol.SprotocolException;
 
 /**
@@ -28,7 +28,7 @@ public class SparqlDaoImpl implements SparqlDao {
     /**
      * The client that does the actual querying.
      */
-    private final SparqlProtocolClient client;
+    private final SparqlQueryProtocolClient client;
 
     /**
      * Creates a new sparqlDaoImpl which points to a sparql protocol server on the passed endpoint.
@@ -37,7 +37,7 @@ public class SparqlDaoImpl implements SparqlDao {
      * The default is in {@Link AppModule}
      */
     public SparqlDaoImpl(@Symbol(QuestionsSymbolConstants.SPARQL_ENDPOINT_URL) String endpoint, Logger log) {
-        this.client = new SparqlProtocolClient(endpoint);
+        this.client = new SparqlQueryProtocolClient(endpoint);
         this.log = log;
     } 
 
