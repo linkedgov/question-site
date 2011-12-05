@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import uk.me.mmt.sprotocol.BNode;
 import uk.me.mmt.sprotocol.IRI;
 import uk.me.mmt.sprotocol.Literal;
-import uk.me.mmt.sprotocol.SelectResult;
+import uk.me.mmt.sprotocol.SelectResultRow;
 import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlResource;
 import uk.me.mmt.sprotocol.SprotocolException;
@@ -78,11 +78,11 @@ public class QueryDataServiceImpl implements QueryDataService {
      * @param result the result to convert.
      * @return the triple that represents the result. 
      */
-    private Triple resultToTriple(List<String> head, SelectResult result) {
+    private Triple resultToTriple(List<String> head, SelectResultRow result) {
         final Triple triple = new Triple();    
 
         for (String variable : head) {
-            final SparqlResource resource = result.getResult().get(variable);
+            final SparqlResource resource = result.get(variable);
 
             final Pair<SparqlResource,String> sub = new Pair<SparqlResource,String>();
             final Pair<SparqlResource,String> pred = new Pair<SparqlResource,String>();
@@ -150,7 +150,7 @@ public class QueryDataServiceImpl implements QueryDataService {
             log.info("SPARQL ASKED:{}", sparqlString);
             log.info("QUESTION ASKED:{}", query.toString());
             final SelectResultSet results = sparqlDao.executeQuery(sparqlString, limit, offset, orderBy);
-            for (SelectResult result : results.getResults()) {
+            for (SelectResultRow result : results) {
                 final Triple triple = resultToTriple(results.getHead(), result);
                 triples.add(triple);
             }
@@ -223,13 +223,13 @@ public class QueryDataServiceImpl implements QueryDataService {
         final String countSparqlString = query.toSparqlString(QuestionType.COUNT, forPagination, false);
         final SelectResultSet results = sparqlDao.executeQuery(countSparqlString);
 
-        if (results.getResults().isEmpty()) {
+        if (!results.iterator().hasNext()) {
             return 0;
         }
 
         final String countLabel = results.getHead().get(0);
-        final SelectResult firstResult = results.getResults().get(0);
-        final String count = firstResult.getResult().get(countLabel).getValue();
+        final SelectResultRow firstResult = results.iterator().next();
+        final String count = firstResult.get(countLabel).getValue();
 
         if(count == null){
             return 0;
@@ -248,10 +248,10 @@ public class QueryDataServiceImpl implements QueryDataService {
 
         Map<String,String> retValues = new HashMap<String,String>();
 
-        for (SelectResult result : graphs.getResults()) {
-            final SparqlResource element = result.getResult().get("g");
-            if (result.getResult().get("glabel") != null) {
-                retValues.put(element.getValue(),result.getResult().get("glabel").getValue());
+        for (SelectResultRow result : graphs) {
+            final SparqlResource element = result.get("g");
+            if (result.get("glabel") != null) {
+                retValues.put(element.getValue(),result.get("glabel").getValue());
             } else {
                 retValues.put(element.getValue(),element.getValue());
             }            
@@ -271,8 +271,8 @@ public class QueryDataServiceImpl implements QueryDataService {
         for (String dataSet : graphs.keySet()) {
             String query = String.format(GET_RELIABILITY, dataSet);
             SelectResultSet results = sparqlDao.executeQuery(query);
-            for (SelectResult result : results.getResults()) {
-                SparqlResource element = result.getResult().get("rel");
+            for (SelectResultRow result : results) {
+                SparqlResource element = result.get("rel");
                 if (element instanceof Literal) {
                     if (((Literal) element).getDatatype().equals(XSD_INTEGER)) {
                         if (SparqlUtils.isInteger(element.getValue())) {
@@ -311,7 +311,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         final SelectResultSet results = sparqlDao.executeQuery(sparqlString);
         final List<Triple> triples = new ArrayList<Triple>();
 
-        for (SelectResult result : results.getResults()) {
+        for (SelectResultRow result : results) {
             final Triple triple = resultToTriple(results.getHead(), result);
             triples.add(triple);
         }    
@@ -347,7 +347,7 @@ public class QueryDataServiceImpl implements QueryDataService {
         final SelectResultSet results = sparqlDao.executeQuery(sparqlString);
         final List<Triple> triples = new ArrayList<Triple>();
 
-        for (SelectResult result : results.getResults()) {
+        for (SelectResultRow result : results) {
             final Triple triple = resultToTriple(results.getHead(), result);
             triples.add(triple);
         }    

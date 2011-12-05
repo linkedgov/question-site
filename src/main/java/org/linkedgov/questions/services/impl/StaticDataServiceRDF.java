@@ -14,7 +14,8 @@ import org.linkedgov.questions.model.SparqlUtils;
 import org.linkedgov.questions.services.SparqlDao;
 import org.linkedgov.questions.services.StaticDataService;
 
-import uk.me.mmt.sprotocol.SelectResult;
+
+import uk.me.mmt.sprotocol.SelectResultRow;
 import uk.me.mmt.sprotocol.SelectResultSet;
 import uk.me.mmt.sprotocol.SparqlResource;
 import uk.me.mmt.sprotocol.SprotocolException;
@@ -113,10 +114,10 @@ public class StaticDataServiceRDF implements StaticDataService {
         String query = String.format(GET_FIRSTFILTER_OBJECTS_QUERY, subject, predicate);
         Map<String,String> retValues = new HashMap<String,String>();
         final SelectResultSet results = sparqlDao.executeQuery(query);        
-        for (SelectResult result : results.getResults()) {
-            final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
-            if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
-                retValues.put(element.getValue(), WordUtils.capitalize(result.getResult().get(OBJECT_VARIABLE_LABEL).getValue()));
+        for (SelectResultRow result : results) {
+            final SparqlResource element = result.get(OBJECT_VARIABLE);
+            if (result.get(OBJECT_VARIABLE_LABEL) != null) {
+                retValues.put(element.getValue(), WordUtils.capitalize(result.get(OBJECT_VARIABLE_LABEL).getValue()));
             } else {
                 retValues.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
             }
@@ -156,10 +157,10 @@ public class StaticDataServiceRDF implements StaticDataService {
         String query = String.format(GET_SECONDFILTER_OBJECT_QUERY, subject, toPopulate, predicate);
         Map<String,String> retValues = new HashMap<String,String>();
         final SelectResultSet results = sparqlDao.executeQuery(query);        
-        for (SelectResult result : results.getResults()) {
-            final SparqlResource element = result.getResult().get(OBJECT_VARIABLE);
-            if (result.getResult().get(OBJECT_VARIABLE_LABEL) != null) {
-                retValues.put(element.getValue(), WordUtils.capitalize(result.getResult().get(OBJECT_VARIABLE_LABEL).getValue()));
+        for (SelectResultRow result : results) {
+            final SparqlResource element = result.get(OBJECT_VARIABLE);
+            if (result.get(OBJECT_VARIABLE_LABEL) != null) {
+                retValues.put(element.getValue(), WordUtils.capitalize(result.get(OBJECT_VARIABLE_LABEL).getValue()));
             } else {
                 retValues.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
             }            
@@ -199,10 +200,10 @@ public class StaticDataServiceRDF implements StaticDataService {
         String query = String.format(GET_SECONDFILTER_PREDICATE_QUERY, subject, toPopulate);
         Map<String,String> retValues = new HashMap<String,String>();
         final SelectResultSet results = sparqlDao.executeQuery(query);        
-        for (SelectResult result : results.getResults()) {
-            final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
-            if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
-                retValues.put(element.getValue(), WordUtils.capitalize(result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue()));
+        for (SelectResultRow result : results) {
+            final SparqlResource element = result.get(PREDICATE_VARIABLE);
+            if (result.get(PREDICATE_VARIABLE_LABEL) != null) {
+                retValues.put(element.getValue(), WordUtils.capitalize(result.get(PREDICATE_VARIABLE_LABEL).getValue()));
             } else {
                 retValues.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
             }
@@ -213,11 +214,11 @@ public class StaticDataServiceRDF implements StaticDataService {
     
     public Map<String,String> queryForGetPredicates() throws SprotocolException, IOException {
         final SelectResultSet results = sparqlDao.executeQuery(GET_INITIALPREDICATE_QUERY);        
-        for (SelectResult result : results.getResults()) {
-            final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
+        for (SelectResultRow result : results) {
+            final SparqlResource element = result.get(PREDICATE_VARIABLE);
             if (!isBlacklisted(element.getValue())) {
-                if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
-                    predicates.put(element.getValue(), WordUtils.capitalize(result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue()));
+                if (result.get(PREDICATE_VARIABLE_LABEL) != null) {
+                    predicates.put(element.getValue(), WordUtils.capitalize(result.get(PREDICATE_VARIABLE_LABEL).getValue()));
                 } else {
                     predicates.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
                 }
@@ -239,12 +240,12 @@ public class StaticDataServiceRDF implements StaticDataService {
         String query = String.format(GET_FIRSTFILTER_PREDICATE_QUERY, subject);
         Map<String,String> retValues = new HashMap<String,String>();
         final SelectResultSet results = sparqlDao.executeQuery(query);        
-        for (SelectResult result : results.getResults()) {
-            final SparqlResource element = result.getResult().get(PREDICATE_VARIABLE);
+        for (SelectResultRow result : results) {
+            final SparqlResource element = result.get(PREDICATE_VARIABLE);
 
             if (!isBlacklisted(element.getValue())) {
-                if (result.getResult().get(PREDICATE_VARIABLE_LABEL) != null) {
-                    retValues.put(element.getValue(), WordUtils.capitalize(result.getResult().get(PREDICATE_VARIABLE_LABEL).getValue()));
+                if (result.get(PREDICATE_VARIABLE_LABEL) != null) {
+                    retValues.put(element.getValue(), WordUtils.capitalize(result.get(PREDICATE_VARIABLE_LABEL).getValue()));
                 } else {
                     retValues.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
                 }
@@ -274,11 +275,11 @@ public class StaticDataServiceRDF implements StaticDataService {
         final String query = StringUtils.isBlank(predicate) ? GET_CLASSES_QUERY : String.format(GET_CLASSES_WITHPRED_QUERY, predicate);
         final SelectResultSet results = sparqlDao.executeQuery(query);  
         Map<String,String> retValues = new HashMap<String,String>();
-        for (SelectResult result : results.getResults()) {
-            final SparqlResource element = result.getResult().get(CLASS_VARIABLE);
+        for (SelectResultRow result : results) {
+            final SparqlResource element = result.get(CLASS_VARIABLE);
             if (!isBlacklisted(element.getValue())) {
-                if (result.getResult().get(CLASS_VARIABLE_LABEL) != null) {
-                    retValues.put(element.getValue(), WordUtils.capitalize(result.getResult().get(CLASS_VARIABLE_LABEL).getValue()));
+                if (result.get(CLASS_VARIABLE_LABEL) != null) {
+                    retValues.put(element.getValue(), WordUtils.capitalize(result.get(CLASS_VARIABLE_LABEL).getValue()));
                 } else {
                     retValues.put(element.getValue(), WordUtils.capitalize(createLabel(element.getValue())));
                 }
